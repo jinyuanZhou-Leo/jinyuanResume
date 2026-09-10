@@ -1,0 +1,81 @@
+.github-section {
+  padding-top: 0;
+}
+.github-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 50px;
+  gap: 20px;
+}
+.github-heading h2 {
+  font-size: 28px;
+  margin-top: 15px;
+}
+.github-heading p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 12px;
+  border-bottom: 1px solid;
+  padding: 9px 0;
+  background: none;
+  white-space: nowrap;
+}
+.text-link:hover span {
+  transform: translate(2px, -2px);
+}
+.github-status {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 20px;
+}
+.repo-item {
+  padding: 18px 24px;
+  border-left: 1px solid var(--line);
+  transition: background 0.25s;
+}
+.repo-item:first-child {
+  padding-left: 0;
+  border: 0;
+}
+.repo-item:hover {
+  background: #e9ebe3;
+}
+.repo-item > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.repo-item h3 {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.repo-item > p {
+  font-size: 10px;
+  margin-top: 8px;
+  color: var(--muted);
+}
+.repo-stats {
+  display: flex;
+  gap: 17px;
+  font-size: 12px;
+  margin-top: 25px;
+}
+.repo-item .repo-date {
+  font-size: 9px;
+}

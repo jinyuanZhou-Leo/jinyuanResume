@@ -1,0 +1,65 @@
+.experience-section {
+  background: var(--surface);
+}
+.experience-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr;
+  gap: 80px;
+}
+.experience-sign {
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin-top: 72px;
+  color: #6c7161;
+}
+.experience-sign span {
+  padding: 0 15px;
+  font-weight: 400;
+}
+.experience-date {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+.experience-detail h3 {
+  font-size: 25px;
+  line-height: 1.4;
+  margin-top: 22px;
+}
+.company {
+  font-size: 14px;
+  margin-top: 10px;
+}
+.location {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+.experience-detail > ul:not(.tags) {
+  margin-top: 28px;
+}
+.experience-detail > ul:not(.tags) li {
+  display: flex;
+  gap: 20px;
+  padding-block: 18px;
+  border-top: 1px solid #d3d6cc;
+}
+.experience-detail li > span {
+  font-size: 10px;
+  margin-top: 3px;
+  color: var(--accent);
+}
+.experience-detail li > p {
+  font-size: 13px;
+  line-height: 1.9;
+}

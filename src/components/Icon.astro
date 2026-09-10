@@ -1,0 +1,31 @@
+---
+import {
+  ArrowUpRight,
+  ArrowDown,
+  Download,
+  Phone,
+  Mail,
+  Copy,
+  MapPin,
+  Coffee,
+} from '@lucide/astro';
+interface Props {
+  name?:
+    'arrow' | 'down' | 'download' | 'phone' | 'mail' | 'copy' | 'pin' | 'cup';
+  size?: number;
+}
+const { name = 'arrow', size = 20 } = Astro.props;
+const icons = {
+  arrow: ArrowUpRight,
+  down: ArrowDown,
+  download: Download,
+  phone: Phone,
+  mail: Mail,
+  copy: Copy,
+  pin: MapPin,
+  cup: Coffee,
+};
+const Glyph = icons[name];
+---
+
+<Glyph size={size} stroke-width={1.5} aria-hidden="true" />

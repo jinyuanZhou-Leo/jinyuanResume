@@ -1,0 +1,153 @@
+---
+import BrandIcon from '../BrandIcon.astro';
+import { content, projects, profile, type Locale } from '../../data/resume';
+import Icon from '../Icon.astro';
+const { locale } = Astro.props as { locale: Locale };
+const t = content[locale].projects;
+const board = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0,
+  1, 2, 1, 0, 0, 0, 0, 0, 2, 1, 2, 1, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
+---
+
+<section id="work" class="section work-section" aria-labelledby="work-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">01 / {t.label}</p>
+      <h2 id="work-title" data-reveal>
+        {t.title}
+      </h2>
+    </div>
+    <p class="section-intro">{t.intro}</p>
+  </div>
+  <div class="featured-projects">
+    {projects.slice(0, 2).map((project, i) => (
+      <article class="featured-project" data-project-reveal id={project.id}>
+        <div
+          class:list={[
+            'project-visual',
+            i === 0 ? 'terminal-visual' : 'reversi-visual',
+          ]}
+        >
+          <span class="visual-index">
+            0{i + 1} / {project.category[locale]}
+          </span>
+          {i === 0 ? (
+            <div class="terminal-window">
+              <div class="terminal-chrome">
+                <span>jsh</span>
+                <span>— &nbsp; □ &nbsp; ×</span>
+              </div>
+              <div class="terminal-code">
+                <p>
+                  <span>~</span> jsh
+                </p>
+                <p class="terminal-muted">
+                  {locale === 'zh'
+                    ? '从第一行代码开始。'
+                    : 'Start with the first line.'}
+                </p>
+                <p>
+                  <span>➜</span> echo "Hello, world."
+                </p>
+                <p>Hello, world.</p>
+                <p>
+                  <span>➜</span> <span class="cursor" />
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div class="board-composition">
+              <div class="reversi-board" aria-hidden="true">
+                {board.map((cell) => (
+                  <span class="board-cell">
+                    {cell > 0 && (
+                      <i
+                        class:list={['stone', cell === 1 ? 'black' : 'white']}
+                      />
+                    )}
+                  </span>
+                ))}
+              </div>
+              <div class="rank-label">
+                <strong>
+                  2<span>/440</span>
+                </strong>
+                <span>
+                  {locale === 'zh'
+                    ? 'APS105 · 课程排名'
+                    : 'APS105 · COURSE RANK'}
+                </span>
+              </div>
+            </div>
+          )}
+          <span class="visual-footer">
+            {i === 0
+              ? 'RUST / BUILT FROM SCRATCH'
+              : 'THINK DEEPER. PLAY SMARTER.'}
+          </span>
+        </div>
+        <div class="project-heading">
+          <h3>{project.name}</h3>
+          {project.repo && (
+            <a
+              class="circle-link"
+              href={`https://github.com/${profile.github}/${project.repo}`}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${t.view}: ${project.name}`}
+            >
+              <Icon />
+            </a>
+          )}
+        </div>
+        <p class="project-tagline">{project.title[locale]}</p>
+        <p class="project-description">{project.description[locale]}</p>
+        <p class="project-date">{project.date[locale]}</p>
+        <ul class="tags" aria-label={locale === 'zh' ? '技术' : 'Technologies'}>
+          {project.tags.map((tag) => (
+            <li>
+              <BrandIcon name={tag} size={13} />
+              {tag}
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+  <div class="project-list">
+    {projects.slice(2).map((project, i) => (
+      <article class="project-row" data-project-reveal id={project.id}>
+        <div class="project-row-name">
+          <span class="project-number">0{i + 3}</span>
+          <div>
+            <p class="eyebrow">{project.category[locale]}</p>
+            <h3>
+              <a
+                href={`https://github.com/${profile.github}/${project.repo}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {project.name}
+                <Icon size={19} />
+              </a>
+            </h3>
+            <p class="project-date">{project.date[locale]}</p>
+          </div>
+        </div>
+        <div>
+          <p class="project-description">{project.description[locale]}</p>
+          <ul class="tags">
+            {project.tags.map((tag) => (
+              <li>
+                <BrandIcon name={tag} size={13} />
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

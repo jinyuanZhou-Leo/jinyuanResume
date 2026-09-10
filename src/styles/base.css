@@ -1,0 +1,120 @@
+:root {
+  /* Semantic tokens keep a future theme independent of component structure. */
+  --paper: #f8f8f5;
+  --surface: #eeeeea;
+  --ink: #232520;
+  --muted: #62645c;
+  --line: #d9dbd3;
+  --accent: #526337;
+  --accent-light: #c4cea7;
+  --dark: #252821;
+  --font-body: 'Manrope Variable', 'Noto Sans SC', sans-serif;
+  --font-display: 'Manrope Variable', 'Noto Sans SC', sans-serif;
+  --gutter: clamp(24px, 6.2vw, 104px);
+  --max-width: 1440px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-height: 92px;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 110px;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+::selection {
+  background: var(--accent-light);
+  color: var(--ink);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  border: 0;
+}
+button:disabled {
+  cursor: wait;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+svg {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.section {
+  max-width: var(--max-width);
+  padding: 110px var(--gutter);
+  margin-inline: auto;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+}
+h2 {
+  font-size: clamp(32px, 3.55vw, 52px);
+  letter-spacing: -0.035em;
+  line-height: 1.32;
+  white-space: pre-line;
+}
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 20px;
+  padding: 12px 24px;
+  background: var(--ink);
+  color: white;
+  z-index: 30;
+  transform: translateY(-150%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}

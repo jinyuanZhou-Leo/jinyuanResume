@@ -1,0 +1,102 @@
+---
+import { content, profile, type Locale } from '../../data/resume';
+import Icon from '../Icon.astro';
+import BrandIcon from '../BrandIcon.astro';
+const { locale } = Astro.props as { locale: Locale };
+const t = content[locale].contact;
+const emails = [
+  { address: profile.personalEmail, label: t.personal },
+  { address: profile.email, label: t.university },
+];
+---
+
+<footer id="contact" class="contact-section">
+  <div class="section">
+    <div class="contact-top">
+      <div>
+        <p class="eyebrow">04 / {t.label}</p>
+        <h2 data-reveal>{t.title}</h2>
+        <p class="contact-description">{t.text}</p>
+        <a class="button button-light" href={`mailto:${profile.personalEmail}`}>
+          {t.email}
+          <Icon name="arrow" size={18} />
+        </a>
+      </div>
+      <img
+        class="contact-art"
+        src="/images/contact-crane.webp"
+        alt=""
+        width="1024"
+        height="1024"
+        loading="lazy"
+      />
+    </div>
+    <section class="contact-bottom" aria-labelledby="contact-details-title">
+      <h3 class="eyebrow" id="contact-details-title">
+        {t.social}
+      </h3>
+      <div class="contact-directory">
+        {emails.map(({ address, label }) => (
+          <div class="contact-item email-item">
+            <Icon name="mail" size={21} />
+            <div class="contact-item-content">
+              <span class="contact-label">{label}</span>
+              <a href={`mailto:${address}`}>{address}</a>
+            </div>
+            <button
+              class="copy-email"
+              aria-label={`${t.copy}: ${address}`}
+              data-email={address}
+              data-success={t.copied}
+              data-error={t.copyError}
+            >
+              <Icon name="copy" size={16} />
+            </button>
+            <p class="copy-status" role="status"></p>
+          </div>
+        ))}
+        <a class="contact-item" href={`tel:${profile.phoneHref}`}>
+          <Icon name="phone" size={21} />
+          <span class="contact-item-content">
+            <span class="contact-label">{t.phone}</span>
+            <span>{profile.phone}</span>
+          </span>
+          <Icon size={16} />
+        </a>
+        <a
+          class="contact-item"
+          href={`https://github.com/${profile.github}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <BrandIcon name="GitHub" size={23} />
+          <span class="contact-item-content">
+            <span class="contact-label">GitHub</span>
+            <span>{profile.github}</span>
+          </span>
+          <Icon size={16} />
+        </a>
+        <a
+          class="contact-item"
+          href={profile.linkedin}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <BrandIcon name="LinkedIn" size={22} />
+          <span class="contact-item-content">
+            <span class="contact-label">LinkedIn</span>
+            <span>Jinyuan Zhou</span>
+          </span>
+          <Icon size={16} />
+        </a>
+      </div>
+    </section>
+    <div class="footer-line">
+      <span>
+        © {new Date().getFullYear()} Jinyuan Zhou{' '}
+        <span class="footer-motto">/ {t.footer}</span>
+      </span>
+      <a href="#top">{t.back} ↑</a>
+    </div>
+  </div>
+</footer>

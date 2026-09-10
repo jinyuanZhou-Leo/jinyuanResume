@@ -1,0 +1,24 @@
+---
+import type { Locale } from '../data/resume';
+import Layout from '../layouts/Layout.astro';
+import Header from './Header.astro';
+import Hero from './sections/Hero.astro';
+import Projects from './sections/Projects.astro';
+import Experience from './sections/Experience.astro';
+import About from './sections/About.astro';
+import Contact from './sections/Contact.astro';
+import GitHubActivity from './interactive/GitHubActivity';
+const { locale } = Astro.props as { locale: Locale };
+---
+
+<Layout locale={locale}>
+  <Header locale={locale} />
+  <main id="main">
+    <Hero locale={locale} />
+    <Projects locale={locale} />
+    <Experience locale={locale} />
+    <About locale={locale} />
+    <GitHubActivity locale={locale} client:visible />
+  </main>
+  <Contact locale={locale} />
+</Layout>

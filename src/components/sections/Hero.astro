@@ -1,0 +1,51 @@
+---
+import { content, type Locale } from '../../data/resume';
+import Icon from '../Icon.astro';
+const { locale } = Astro.props as { locale: Locale };
+const t = content[locale].hero;
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <img
+    class="hero-image"
+    src="/images/hero.webp"
+    alt=""
+    width="1536"
+    height="1024"
+    fetchpriority="high"
+  />
+  <div class="hero-content">
+    <p class="hero-intro">
+      {t.intro}
+      <span class="greeting-star" aria-hidden="true">
+        ✳
+      </span>
+    </p>
+    <h1 id="hero-title">
+      Jinyuan
+      <br />
+      Zhou<span class="name-period">.</span>
+    </h1>
+    <h2>
+      {t.line}
+      <br />
+      {t.emphasis}
+    </h2>
+    <p class="hero-description">{t.description}</p>
+    <a class="button button-dark" href="#work">
+      {t.cta}
+      <Icon name="down" size={18} />
+    </a>
+  </div>
+  <div class="hero-bottom">
+    <span>
+      <Icon name="pin" size={14} />
+      {t.location}
+    </span>
+    <span class="hero-caption">{t.caption}</span>
+    <a href="#work">
+      {t.scroll}
+      <span aria-hidden="true">↓</span>
+    </a>
+  </div>
+</section>

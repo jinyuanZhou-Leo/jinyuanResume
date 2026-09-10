@@ -1,0 +1,63 @@
+---
+import BrandIcon from '../BrandIcon.astro';
+import { content, type Locale } from '../../data/resume';
+const { locale } = Astro.props as { locale: Locale };
+const t = content[locale].experience;
+---
+
+<section
+  id="experience"
+  class="experience-section"
+  aria-labelledby="experience-title"
+>
+  <div class="section experience-layout">
+    <div>
+      <p class="eyebrow">02 / {t.label}</p>
+      <h2 id="experience-title" data-reveal>
+        {t.title}
+      </h2>
+      <div class="experience-sign" aria-hidden="true">
+        learn <span>→</span> practice
+      </div>
+    </div>
+    <article class="experience-detail">
+      <p class="experience-date">
+        <span class="status-dot" />
+        {t.date}
+      </p>
+      <h3>{t.role}</h3>
+      <p class="company">{t.company}</p>
+      <p class="location">{t.location}</p>
+      <ul>
+        {t.points.map((point, i) => (
+          <li>
+            <span>0{i + 1}</span>
+            <p>{point}</p>
+          </li>
+        ))}
+      </ul>
+      <ul class="tags">
+        <li>
+          <BrandIcon name="React 19" size={13} />
+          React 19
+        </li>
+        <li>
+          <BrandIcon name="FastAPI" size={13} />
+          FastAPI
+        </li>
+        <li>
+          <BrandIcon name="Qdrant / RAG" size={13} />
+          Qdrant / RAG
+        </li>
+        <li>
+          <BrandIcon name="MQTT" size={13} />
+          MQTT
+        </li>
+        <li>
+          <BrandIcon name="ROS 2" size={13} />
+          ROS 2
+        </li>
+      </ul>
+    </article>
+  </div>
+</section>

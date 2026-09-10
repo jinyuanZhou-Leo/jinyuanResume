@@ -1,0 +1,90 @@
+.site-header {
+  height: var(--header-height);
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgb(248 248 245 / 0.96);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgb(35 37 32 / 0.06);
+}
+.wordmark {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.brand-mark {
+  position: relative;
+  font-size: 47px;
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 1;
+}
+.brand-mark > span {
+  font-size: 9px;
+  position: absolute;
+  top: 4px;
+  right: -9px;
+}
+.wordmark-name {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 750;
+  line-height: 1.25;
+  margin-left: 5px;
+}
+.desktop-nav {
+  display: flex;
+  gap: 34px;
+  font-size: 13px;
+}
+.desktop-nav a {
+  position: relative;
+  padding-block: 12px;
+}
+.desktop-nav a::after {
+  content: '';
+  position: absolute;
+  height: 1px;
+  background: var(--ink);
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease);
+}
+.desktop-nav a:hover::after {
+  transform: scaleX(1);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 12px;
+}
+.language-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.language-switch a {
+  padding-block: 10px;
+  color: var(--muted);
+}
+.language-switch a[aria-current] {
+  color: var(--ink);
+  font-weight: 800;
+}
+.language-switch > span {
+  color: #a4a69c;
+}
+.header-download {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--ink);
+  padding-block: 9px;
+}

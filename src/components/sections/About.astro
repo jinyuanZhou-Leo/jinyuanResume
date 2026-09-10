@@ -1,0 +1,57 @@
+---
+import BrandIcon from '../BrandIcon.astro';
+import { content, skills, type Locale } from '../../data/resume';
+const { locale } = Astro.props as { locale: Locale };
+const t = content[locale].about;
+---
+
+<section id="about" class="section about-section" aria-labelledby="about-title">
+  <div class="about-intro">
+    <div>
+      <p class="eyebrow">03 / {t.label}</p>
+      <h2 id="about-title" data-reveal>
+        {t.title}
+      </h2>
+    </div>
+    <p>{t.text}</p>
+  </div>
+  <div class="about-details">
+    <div class="education">
+      <h3 class="detail-title">{t.education}</h3>
+      {t.schools.map((school) => (
+        <article class="school">
+          <p class="project-date">{school.date}</p>
+          <h4>{school.name}</h4>
+          <p>{school.degree}</p>
+          <div class="school-result">
+            {school.gpa ? (
+              <p class="school-gpa">
+                <span>GPA</span>
+                <strong>{school.gpa}</strong>
+              </p>
+            ) : (
+              <span class="school-note">{school.note}</span>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="skills">
+      <h3 class="detail-title">{t.skills}</h3>
+      <ul class="skill-list">
+        {skills.map((skill) => (
+          <li>
+            <BrandIcon name={skill} size={22} />
+            <span>{skill}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="soft-skills">
+        <h4>{t.people}</h4>
+        <p>{t.professional}</p>
+        <h4>{t.languages}</h4>
+        <p>{t.languageText}</p>
+      </div>
+    </div>
+  </div>
+</section>
