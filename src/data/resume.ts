@@ -239,7 +239,7 @@ export const projects = [
     name: 'jsh',
     category: { zh: '系统开发', en: 'SYSTEMS' },
     date: { zh: '个人项目', en: 'Personal project' },
-    tags: ['Rust', 'REPL', 'Shell'],
+    tags: ['Rust'],
     title: {
       zh: '从零开始，理解一个 Shell。',
       en: 'A shell. Built from first principles.',
@@ -258,7 +258,7 @@ export const projects = [
       zh: '2026.03 · 多伦多大学 APS105 · 开发者',
       en: 'MAR 2026 · University of Toronto APS105 · Developer',
     },
-    tags: ['C', 'Minimax', 'Alpha–beta'],
+    tags: ['C'],
     title: { zh: '每一步，都多想几步。', en: 'Every move. A few steps ahead.' },
     description: {
       zh: '在 APS105 课程 440 名学生的提交中排名第 2。构建可自主评估棋盘并选择最优落子的 AI，结合极小极大搜索、迭代加深、走法排序和 Alpha–beta 剪枝，在固定时限内探索更深的博弈树。',
@@ -287,13 +287,13 @@ export const projects = [
   {
     id: 'ischedule',
     repo: 'iSchedule',
-    name: 'Calendar File Generator',
+    name: 'iSchedule',
     category: { zh: '自动化工具', en: 'AUTOMATION' },
     date: {
       zh: '2024.08 — 2025.01 · 南京外国语学校 · 开发者',
       en: 'AUG 2024 — JAN 2025 · Nanjing Foreign Language School · Developer',
     },
-    tags: ['Python', 'Web crawling', 'LMS'],
+    tags: ['Python'],
     title: { zh: '少一点手动，多一点时间。', en: 'Less admin. More time.' },
     description: {
       zh: '通过 Python 爬虫与网络库读取学校 LMS 数据，自动生成可导入的课程日历。优化解析逻辑，实现最高 2 倍速度提升，日历文件体积减少 50% 以上，让学生轻松导入课表。',
@@ -309,7 +309,7 @@ export const projects = [
       zh: 'AP Statistics 12 研究项目',
       en: 'AP Statistics 12 Research Project',
     },
-    tags: ['Python', 'LLM', 'Research'],
+    tags: ['Python'],
     title: {
       zh: '模型，如何反复确认自己？',
       en: 'How do models double-check themselves?',

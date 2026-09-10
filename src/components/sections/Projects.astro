@@ -15,15 +15,13 @@ const board = [
   <div class="section-heading">
     <div>
       <p class="eyebrow">01 / {t.label}</p>
-      <h2 id="work-title" data-reveal>
-        {t.title}
-      </h2>
+      <h2 id="work-title">{t.title}</h2>
     </div>
     <p class="section-intro">{t.intro}</p>
   </div>
   <div class="featured-projects">
     {projects.slice(0, 2).map((project, i) => (
-      <article class="featured-project" data-project-reveal id={project.id}>
+      <article class="featured-project" id={project.id}>
         <div
           class:list={[
             'project-visual',
@@ -82,11 +80,6 @@ const board = [
               </div>
             </div>
           )}
-          <span class="visual-footer">
-            {i === 0
-              ? 'RUST / BUILT FROM SCRATCH'
-              : 'THINK DEEPER. PLAY SMARTER.'}
-          </span>
         </div>
         <div class="project-heading">
           <h3>{project.name}</h3>
@@ -117,10 +110,9 @@ const board = [
     ))}
   </div>
   <div class="project-list">
-    {projects.slice(2).map((project, i) => (
-      <article class="project-row" data-project-reveal id={project.id}>
+    {projects.slice(2).map((project) => (
+      <article class="project-row" id={project.id}>
         <div class="project-row-name">
-          <span class="project-number">0{i + 3}</span>
           <div>
             <p class="eyebrow">{project.category[locale]}</p>
             <h3>

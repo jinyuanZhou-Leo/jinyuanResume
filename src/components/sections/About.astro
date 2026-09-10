@@ -9,9 +9,7 @@ const t = content[locale].about;
   <div class="about-intro">
     <div>
       <p class="eyebrow">03 / {t.label}</p>
-      <h2 id="about-title" data-reveal>
-        {t.title}
-      </h2>
+      <h2 id="about-title">{t.title}</h2>
     </div>
     <p>{t.text}</p>
   </div>
@@ -21,18 +19,17 @@ const t = content[locale].about;
       {t.schools.map((school) => (
         <article class="school">
           <p class="project-date">{school.date}</p>
-          <h4>{school.name}</h4>
-          <p>{school.degree}</p>
-          <div class="school-result">
-            {school.gpa ? (
+          <div class="school-heading">
+            <h4>{school.name}</h4>
+            {school.gpa && (
               <p class="school-gpa">
                 <span>GPA</span>
                 <strong>{school.gpa}</strong>
               </p>
-            ) : (
-              <span class="school-note">{school.note}</span>
             )}
           </div>
+          <p>{school.degree}</p>
+          {school.note && <span class="school-note">{school.note}</span>}
         </article>
       ))}
     </div>

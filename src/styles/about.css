@@ -63,23 +63,31 @@
   margin-top: 8px;
 }
 
+.school-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 9px;
+}
+.school-heading h4 {
+  margin-top: 0;
+}
 .school-gpa {
   display: inline-flex;
   align-items: baseline;
-  gap: 12px;
-  margin-top: 18px;
-  color: var(--accent);
+  gap: 6px;
+  color: var(--muted);
+  white-space: nowrap;
 }
 .school-gpa > span {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 11px;
 }
 .school-gpa strong {
-  font-size: 38px;
-  font-weight: 650;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .skill-list li {
   display: inline-flex;

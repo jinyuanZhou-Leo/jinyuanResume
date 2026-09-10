@@ -44,14 +44,6 @@
   font-size: 10px;
   letter-spacing: 0.05em;
 }
-.visual-footer {
-  position: absolute;
-  bottom: 20px;
-  left: 23px;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: #66695e;
-}
 .terminal-window {
   width: 72%;
   background: #292c25;
@@ -208,13 +200,12 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 8px 16px;
   margin-top: 20px;
 }
 .tags li {
   font-size: 10px;
-  padding: 3px 9px;
-  border: 1px solid var(--line);
+  padding: 3px 0;
   color: #52574b;
 }
 .project-list {
@@ -233,11 +224,6 @@
 .project-row-name {
   display: flex;
   gap: 28px;
-}
-.project-number {
-  font-size: 11px;
-  color: var(--muted);
-  padding-top: 2px;
 }
 .project-row .eyebrow {
   color: var(--muted);

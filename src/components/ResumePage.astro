@@ -18,7 +18,10 @@ const { locale } = Astro.props as { locale: Locale };
     <Projects locale={locale} />
     <Experience locale={locale} />
     <About locale={locale} />
-    <GitHubActivity locale={locale} client:visible />
+    <!-- Animate the Astro wrapper without mutating React's hydration-owned DOM. -->
+    <div class="github-reveal">
+      <GitHubActivity locale={locale} client:visible />
+    </div>
   </main>
   <Contact locale={locale} />
 </Layout>

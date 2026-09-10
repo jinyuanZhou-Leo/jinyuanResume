@@ -6,13 +6,6 @@
   grid-template-columns: 0.9fr 1fr;
   gap: 80px;
 }
-.experience-sign {
-  font-size: 23px;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  margin-top: 72px;
-  color: #6c7161;
-}
 .experience-sign span {
   padding: 0 15px;
   font-weight: 400;
