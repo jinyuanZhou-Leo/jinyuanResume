@@ -1,0 +1,39 @@
+---
+// Adapted from React Bits Grid Motion: opposing tilted rows, driven by scroll instead of mouse.
+// Source and license: docs/licenses/react-bits.txt, docs/react-bits.md.
+import { projects, type Locale } from '../data/resume';
+import BrandIcon from './BrandIcon.astro';
+const { locale } = Astro.props as { locale: Locale };
+const rows = [projects.slice(0, 3), projects.slice(3)];
+---
+
+<div
+  class="project-overview"
+  aria-label={locale === 'zh' ? '全部项目概览' : 'All projects'}
+>
+  <div class="project-grid-stage">
+    <div class="project-grid-tilt">
+      {rows.map((row, rowIndex) => (
+        <div class="project-grid-row" data-grid-row={rowIndex}>
+          {row.map((project) => (
+            <a
+              class:list={['project-grid-tile', `grid-tile-${project.id}`]}
+              href={`#${project.id}`}
+              data-astro-reload
+            >
+              <span class="grid-tile-category">{project.category[locale]}</span>
+              <div class="grid-tile-mark" aria-hidden="true">
+                <BrandIcon name={project.tags[0]} size={56} />
+              </div>
+              <div class="grid-tile-caption">
+                <h3>{project.name}</h3>
+                <span aria-hidden="true">↗</span>
+              </div>
+              <span class="grid-tile-stack">{project.tags.join(' / ')}</span>
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>

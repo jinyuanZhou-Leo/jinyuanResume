@@ -5,7 +5,7 @@ const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].hero;
 ---
 
-<section class="hero" id="top" aria-labelledby="hero-title">
+<section class="hero" aria-labelledby="hero-title">
   <img
     class="hero-image"
     src="/images/hero.webp"
@@ -32,7 +32,7 @@ const t = content[locale].hero;
       {t.emphasis}
     </h2>
     <p class="hero-description">{t.description}</p>
-    <a class="button button-dark" href="#work">
+    <a class="button button-dark" href="#work" data-astro-reload>
       {t.cta}
       <Icon name="down" size={18} />
     </a>
@@ -43,7 +43,7 @@ const t = content[locale].hero;
       {t.location}
     </span>
     <span class="hero-caption">{t.caption}</span>
-    <a href="#work">
+    <a href="#work" data-astro-reload>
       {t.scroll}
       <span aria-hidden="true">↓</span>
     </a>

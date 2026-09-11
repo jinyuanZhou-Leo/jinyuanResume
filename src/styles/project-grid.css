@@ -1,0 +1,124 @@
+/* React Bits Grid Motion composition, reduced to the five actual projects. */
+.project-overview {
+  position: relative;
+  margin-bottom: 80px;
+}
+.project-grid-stage {
+  overflow: clip;
+  padding: 64px 32px;
+}
+.project-grid-tilt {
+  transform: rotate(-7deg);
+  display: grid;
+  gap: 22px;
+}
+.project-grid-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+}
+.project-grid-tile {
+  flex: 0 0 29%;
+  min-width: 220px;
+  padding: 25px;
+  background: #e7e9df;
+  color: var(--ink);
+  display: block;
+}
+.grid-tile-reversi {
+  background: #e8e5dd;
+}
+.grid-tile-semestra {
+  background: #dce2d3;
+}
+.grid-tile-ischedule {
+  background: #e5e6da;
+}
+.grid-tile-research {
+  background: #e8e6df;
+}
+.grid-tile-category,
+.grid-tile-stack {
+  font-size: 10px;
+  color: #62645c;
+}
+.grid-tile-mark {
+  height: 110px;
+  display: grid;
+  place-items: center;
+  color: #526337;
+}
+.grid-tile-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.grid-tile-caption h3 {
+  font-size: clamp(16px, 1.5vw, 22px);
+}
+.grid-tile-stack {
+  display: block;
+  margin-top: 8px;
+}
+.project-grid-tile:hover {
+  background: #d5ddc7;
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll .work-section > .section-heading {
+    position: sticky;
+    top: var(--nav-height, 92px);
+    z-index: 3;
+    background: var(--reading-paper, var(--paper));
+    padding-block: 24px;
+    margin-bottom: 0;
+  }
+  .cinematic-scroll .project-overview {
+    height: 135svh;
+  }
+  .cinematic-scroll .project-grid-stage {
+    position: sticky;
+    top: calc(var(--nav-height, 92px) + 160px);
+  }
+}
+@media (max-width: 760px) {
+  .project-grid-stage {
+    margin-inline: -24px;
+    padding: 48px 12px;
+  }
+  .project-grid-tile {
+    flex-basis: 52%;
+    min-width: 165px;
+    padding: 16px;
+  }
+  .project-grid-row {
+    gap: 12px;
+  }
+  .project-grid-tilt {
+    gap: 12px;
+  }
+  .grid-tile-mark {
+    height: 85px;
+  }
+  .grid-tile-caption h3 {
+    font-size: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce), print {
+  .project-grid-tilt {
+    transform: none;
+  }
+  .project-grid-row {
+    flex-wrap: wrap;
+    transform: none !important;
+  }
+  .project-grid-tile {
+    flex: 1 1 220px;
+  }
+}
+@media (min-width: 761px) {
+  .featured-project,
+  .project-row {
+    scroll-margin-top: 190px;
+  }
+}

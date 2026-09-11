@@ -1,0 +1,57 @@
+/* Keep the introduction in view while its supporting evidence unfolds. */
+@media screen and (min-width: 761px) {
+  .about-section {
+    display: grid;
+    grid-template-columns: 0.9fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-intro {
+    display: block;
+  }
+  .about-intro > p {
+    margin-top: 30px;
+  }
+  .about-details {
+    display: block;
+    margin-top: 0;
+  }
+  .about-details > * {
+    min-height: 65svh;
+    padding-block: 50px;
+  }
+  .about-details > .soft-skills {
+    min-height: 40svh;
+    margin-top: 0;
+  }
+  .about-details .detail-title {
+    font-size: 20px;
+  }
+  .experience-detail > ul:not(.tags) li {
+    min-height: 23svh;
+    align-items: center;
+  }
+  .experience-detail > ul:not(.tags) li p {
+    font-size: 15px;
+  }
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll .about-intro,
+  .cinematic-scroll .experience-layout > div:first-child {
+    position: sticky;
+    top: calc(var(--nav-height, 92px) + 55px);
+  }
+}
+@media (max-width: 760px) {
+  .about-details {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+  .about-details > .soft-skills {
+    margin-top: 0;
+  }
+  .experience-detail > ul:not(.tags) li {
+    padding-block: 32px;
+  }
+}

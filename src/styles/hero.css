@@ -18,7 +18,12 @@
 }
 .hero-content {
   position: relative;
-  padding: clamp(38px, 5.2vh, 76px) var(--gutter) 80px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(38px, 5.2vh, 76px) var(--gutter);
   width: 61%;
   max-width: 860px;
 }

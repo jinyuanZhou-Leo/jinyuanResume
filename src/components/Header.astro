@@ -27,7 +27,9 @@ const sections = ['work', 'experience', 'about', 'contact'];
     class="desktop-nav"
   >
     {sections.map((id, i) => (
-      <a href={`#${id}`}>{t.nav[i]}</a>
+      <a href={`#${id}`} data-astro-reload>
+        {t.nav[i]}
+      </a>
     ))}
   </nav>
   <div class="header-actions">

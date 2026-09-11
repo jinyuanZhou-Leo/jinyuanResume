@@ -4,7 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgb(248 248 245 / 0.96);
+  background: rgb(248 248 245 / 0.72);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
   position: sticky;
   top: 0;
   z-index: 10;

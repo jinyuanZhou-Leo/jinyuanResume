@@ -118,3 +118,14 @@ h2 {
 .skip-link:focus {
   transform: translateY(0);
 }
+
+.scroll-scene {
+  position: relative;
+}
+.scene-content {
+  transform-origin: center center;
+  display: flow-root;
+}
+html.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}

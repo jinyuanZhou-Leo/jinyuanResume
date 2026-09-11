@@ -114,6 +114,8 @@
   }
   .hero-content {
     width: 100%;
+    min-height: 0;
+    display: block;
     padding-top: 30px;
     padding-bottom: 300px;
     max-width: 500px;
@@ -332,8 +334,16 @@
 
 @media print {
   /* Scroll-linked inline animation styles must not fade printed résumé content. */
+  .scene-content,
   main *,
   footer * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-content {
     opacity: 1 !important;
     transform: none !important;
   }

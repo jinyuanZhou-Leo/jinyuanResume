@@ -14,14 +14,48 @@ const { locale } = Astro.props as { locale: Locale };
 <Layout locale={locale}>
   <Header locale={locale} />
   <main id="main">
-    <Hero locale={locale} />
-    <Projects locale={locale} />
-    <Experience locale={locale} />
-    <About locale={locale} />
+    <div class="scroll-scene" id="top" data-scene-first>
+      <div class="scene-stage">
+        <div class="scene-content">
+          <Hero locale={locale} />
+        </div>
+      </div>
+    </div>
+    <div class="scroll-scene" id="work">
+      <div class="scene-stage">
+        <div class="scene-content">
+          <Projects locale={locale} />
+        </div>
+      </div>
+    </div>
+    <div class="scroll-scene" id="experience">
+      <div class="scene-stage">
+        <div class="scene-content">
+          <Experience locale={locale} />
+        </div>
+      </div>
+    </div>
+    <div class="scroll-scene" id="about">
+      <div class="scene-stage">
+        <div class="scene-content">
+          <About locale={locale} />
+        </div>
+      </div>
+    </div>
     <!-- Animate the Astro wrapper without mutating React's hydration-owned DOM. -->
-    <div class="github-reveal">
-      <GitHubActivity locale={locale} client:visible />
+    <div class="scroll-scene" id="github">
+      <div class="scene-stage">
+        <div class="scene-content">
+          <GitHubActivity locale={locale} client:visible />
+        </div>
+      </div>
     </div>
   </main>
-  <Contact locale={locale} />
+  <div class="scroll-scene" id="contact" data-scene-last>
+    <div class="scene-stage">
+      <div class="scene-content">
+        <Contact locale={locale} />
+      </div>
+    </div>
+  </div>
 </Layout>

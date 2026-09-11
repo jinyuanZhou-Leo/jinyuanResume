@@ -5,7 +5,7 @@ const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].about;
 ---
 
-<section id="about" class="section about-section" aria-labelledby="about-title">
+<section class="section about-section" aria-labelledby="about-title">
   <div class="about-intro">
     <div>
       <p class="eyebrow">03 / {t.label}</p>
@@ -43,12 +43,12 @@ const t = content[locale].about;
           </li>
         ))}
       </ul>
-      <div class="soft-skills">
-        <h4>{t.people}</h4>
-        <p>{t.professional}</p>
-        <h4>{t.languages}</h4>
-        <p>{t.languageText}</p>
-      </div>
+    </div>
+    <div class="soft-skills">
+      <h4>{t.people}</h4>
+      <p>{t.professional}</p>
+      <h4>{t.languages}</h4>
+      <p>{t.languageText}</p>
     </div>
   </div>
 </section>

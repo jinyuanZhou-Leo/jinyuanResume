@@ -1,4 +1,5 @@
 ---
+import ProjectGrid from '../ProjectGrid.astro';
 import BrandIcon from '../BrandIcon.astro';
 import { content, projects, profile, type Locale } from '../../data/resume';
 import Icon from '../Icon.astro';
@@ -11,7 +12,7 @@ const board = [
 ];
 ---
 
-<section id="work" class="section work-section" aria-labelledby="work-title">
+<section class="section work-section" aria-labelledby="work-title">
   <div class="section-heading">
     <div>
       <p class="eyebrow">01 / {t.label}</p>
@@ -19,6 +20,7 @@ const board = [
     </div>
     <p class="section-intro">{t.intro}</p>
   </div>
+  <ProjectGrid locale={locale} />
   <div class="featured-projects">
     {projects.slice(0, 2).map((project, i) => (
       <article class="featured-project" id={project.id}>
@@ -81,31 +83,36 @@ const board = [
             </div>
           )}
         </div>
-        <div class="project-heading">
-          <h3>{project.name}</h3>
-          {project.repo && (
-            <a
-              class="circle-link"
-              href={`https://github.com/${profile.github}/${project.repo}`}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${t.view}: ${project.name}`}
-            >
-              <Icon />
-            </a>
-          )}
+        <div class="project-details">
+          <div class="project-heading">
+            <h3>{project.name}</h3>
+            {project.repo && (
+              <a
+                class="circle-link"
+                href={`https://github.com/${profile.github}/${project.repo}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${t.view}: ${project.name}`}
+              >
+                <Icon />
+              </a>
+            )}
+          </div>
+          <p class="project-tagline">{project.title[locale]}</p>
+          <p class="project-description">{project.description[locale]}</p>
+          <p class="project-date">{project.date[locale]}</p>
+          <ul
+            class="tags"
+            aria-label={locale === 'zh' ? '技术' : 'Technologies'}
+          >
+            {project.tags.map((tag) => (
+              <li>
+                <BrandIcon name={tag} size={13} />
+                {tag}
+              </li>
+            ))}
+          </ul>
         </div>
-        <p class="project-tagline">{project.title[locale]}</p>
-        <p class="project-description">{project.description[locale]}</p>
-        <p class="project-date">{project.date[locale]}</p>
-        <ul class="tags" aria-label={locale === 'zh' ? '技术' : 'Technologies'}>
-          {project.tags.map((tag) => (
-            <li>
-              <BrandIcon name={tag} size={13} />
-              {tag}
-            </li>
-          ))}
-        </ul>
       </article>
     ))}
   </div>

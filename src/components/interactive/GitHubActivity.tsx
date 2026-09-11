@@ -1,22 +1,47 @@
 import useSWR from 'swr';
+import { lazy, Suspense, useEffect, useState } from 'react';
+const PixelBlast = lazy(() => import('./PixelBlast.jsx'));
 import { content, profile, type Locale } from '../../data/resume';
-import { fetchRepositories, repositoryUrl } from '../../lib/github';
+import {
+  fetchRepositories,
+  repositoryUrl,
+  REPOSITORY_TTL,
+} from '../../lib/github';
 
 export default function GitHubActivity({ locale }: { locale: Locale }) {
   const t = content[locale].github;
+  const [showBackdrop, setShowBackdrop] = useState(false);
+  // Keep the résumé/data island responsive while the optional WebGL bundle loads.
+  useEffect(() => setShowBackdrop(true), []);
   // SWR owns cache, deduplication and refresh. Do not poll in hidden tabs or retry rate limits.
   const { data, error, isLoading, isValidating, mutate } = useSWR(
     repositoryUrl,
     fetchRepositories,
     {
-      refreshInterval: 300000,
-      dedupingInterval: 60000,
+      refreshInterval: 0,
+      dedupingInterval: REPOSITORY_TTL,
+      revalidateOnReconnect: false,
       revalidateOnFocus: false,
       shouldRetryOnError: false,
     },
   );
   return (
     <section className="github-section section" aria-labelledby="github-title">
+      {showBackdrop && (
+        <Suspense fallback={null}>
+          <PixelBlast
+            className="github-pixel-blast"
+            color="#526337"
+            pixelSize={4}
+            patternScale={2.2}
+            patternDensity={0.8}
+            edgeFade={0.8}
+            speed={0.18}
+            enableRipples={false}
+            autoPauseOffscreen
+          />
+        </Suspense>
+      )}
       <div className="github-heading">
         <div>
           <span className="eyebrow">OPEN SOURCE / GITHUB</span>

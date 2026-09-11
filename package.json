@@ -11,8 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "format": "prettier --write \"src/**/*.{astro,ts,tsx,css}\" astro.config.mjs tsconfig.json",
-    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css}\" astro.config.mjs tsconfig.json"
+    "format": "prettier --write \"src/**/*.{astro,ts,tsx,jsx,css}\" astro.config.mjs tsconfig.json",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,jsx,css}\" astro.config.mjs tsconfig.json"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
@@ -21,11 +21,14 @@
     "@fortawesome/free-brands-svg-icons": "^7.3.1",
     "@lucide/astro": "^1.42.0",
     "astro": "^7.3.2",
+    "lenis": "^1.3.26",
     "motion": "^13.2.0",
+    "postprocessing": "^6.39.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "simple-icons": "^16.30.0",
-    "swr": "^2.5.1"
+    "swr": "^2.5.1",
+    "three": "^0.186.0"
   },
   "allowScripts": {
     "esbuild": true

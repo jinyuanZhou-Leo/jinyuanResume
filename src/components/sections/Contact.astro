@@ -10,7 +10,7 @@ const emails = [
 ];
 ---
 
-<footer id="contact" class="contact-section">
+<footer class="contact-section">
   <div class="section">
     <div class="contact-top">
       <div>
@@ -96,7 +96,9 @@ const emails = [
         © {new Date().getFullYear()} Jinyuan Zhou{' '}
         <span class="footer-motto">/ {t.footer}</span>
       </span>
-      <a href="#top">{t.back} ↑</a>
+      <a href="#top" data-astro-reload>
+        {t.back} ↑
+      </a>
     </div>
   </div>
 </footer>

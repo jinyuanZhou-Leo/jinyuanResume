@@ -1,5 +1,16 @@
 .github-section {
+  width: 100%;
   padding-top: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.github-section .github-pixel-blast {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.16;
+  pointer-events: none;
 }
 .github-heading {
   display: flex;
@@ -9,9 +20,9 @@
   padding-top: 50px;
   gap: 20px;
 }
-.github-heading h2 {
-  font-size: 28px;
+.github-section .github-heading h2 {
   margin-top: 15px;
+  font-size: clamp(32px, 3.55vw, 52px);
 }
 .github-heading p {
   font-size: 12px;
@@ -61,8 +72,8 @@
   justify-content: space-between;
   gap: 10px;
 }
-.repo-item h3 {
-  font-size: 15px;
+.github-section .repo-item h3 {
+  font-size: 16px;
   overflow-wrap: anywhere;
 }
 .repo-item > p {
@@ -78,4 +89,14 @@
 }
 .repo-item .repo-date {
   font-size: 9px;
+}
+
+/* Reserve the live module's space so loading repositories cannot move anchor targets. */
+.github-section {
+  min-height: 500px;
+}
+@media (max-width: 760px) {
+  .github-section {
+    min-height: 680px;
+  }
 }

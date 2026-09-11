@@ -1,86 +1,242 @@
-import { animate, scroll, stagger } from 'motion';
-
-// Animate reading groups, not nested children: no compounded opacity or transforms.
-const revealGroups = [
-  '.section-heading',
-  '.featured-project',
-  '.project-row',
-  '.experience-layout > div:first-child',
-  '.experience-detail',
-  '.about-intro > div',
-  '.about-intro > p',
-  '.education',
-  '.skills',
-  '.github-reveal',
-  '.contact-top > div',
-  '.contact-art',
-  '.contact-bottom',
-  '.footer-line',
-].join(',');
+import { animate, scroll, stagger, interpolate } from 'motion';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 
 export function mountMotion() {
+  const header = document.querySelector<HTMLElement>('.site-header')!;
+  const measureHeader = () => {
+    document.documentElement.style.setProperty(
+      '--nav-height',
+      `${header.offsetHeight}px`,
+    );
+  };
+  measureHeader();
+  const headerResize = new ResizeObserver(measureHeader);
+  headerResize.observe(header);
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const disposers: (() => void)[] = [];
-  const stop = () => disposers.splice(0).forEach((dispose) => dispose());
+  const stop = () => {
+    disposers
+      .splice(0)
+      .reverse()
+      .forEach((dispose) => dispose());
+    document.documentElement.classList.remove('cinematic-scroll');
+  };
   const start = () => {
     stop();
     if (preference.matches) return;
+    document.documentElement.classList.add('cinematic-scroll');
+    const smoothScroll = new Lenis({
+      autoRaf: true,
+      lerp: 0.085,
+      smoothWheel: true,
+      syncTouch: false,
+      anchors: true,
+    });
+    disposers.push(() => smoothScroll.destroy());
+
     const intro = animate(
       '.hero-content > *',
       { opacity: [0.2, 1], y: [30, 0] },
-      {
-        duration: 1.05,
-        delay: stagger(0.1),
-        ease: [0.22, 1, 0.36, 1],
-      },
+      { duration: 1.05, delay: stagger(0.1), ease: [0.22, 1, 0.36, 1] },
     );
     disposers.push(() => intro.complete());
 
-    // Motion's scroll timelines reveal each group as it enters, and reverse on scrolling back.
-    // Without JavaScript (or with reduced motion), the CSS default remains fully visible.
-    document.querySelectorAll<HTMLElement>(revealGroups).forEach((element) => {
-      const visual = element.matches('.featured-project, .contact-art');
-      const reveal = animate(
-        element,
-        {
-          opacity: [0.12, 1],
-          y: [visual ? 64 : 40, 0],
-          scale: [visual ? 0.96 : 1, 1],
-        },
-        { ease: [0.16, 1, 0.3, 1] },
-      );
-      disposers.push(
-        scroll(reveal, {
-          target: element,
-          // Complete bottom content before the document reaches its scroll limit.
-          offset: element.matches('.contact-bottom, .footer-line')
-            ? ['start 100%', 'end 100%']
-            : ['start 98%', 'start 62%'],
-        }),
-      );
-      disposers.push(() => {
-        reveal.complete();
-        element.style.removeProperty('transform');
-        element.style.removeProperty('opacity');
+    const scenes = [...document.querySelectorAll<HTMLElement>('.scroll-scene')];
+    // Pin long chapters at their bottom so every line can be read before handoff.
+    // Observe untransformed layout dimensions, including asynchronously loaded repositories.
+    const resize = new ResizeObserver(() => {
+      scenes.forEach((scene) => {
+        const stage = scene.querySelector<HTMLElement>('.scene-stage')!;
+        scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
       });
+      smoothScroll.resize();
     });
+    scenes.forEach((scene, index) => {
+      scene.style.setProperty('--scene-order', String(index));
+      const stage = scene.querySelector<HTMLElement>('.scene-stage')!;
+      scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
+      resize.observe(stage);
+    });
+    disposers.push(() => resize.disconnect());
 
-    const hero = document.querySelector<HTMLElement>('.hero');
-    if (hero && window.matchMedia('(min-width: 761px)').matches) {
-      const depth = animate(
-        '.hero-image',
-        { scale: [1, 1.055] },
-        { ease: 'linear' },
-      );
-      disposers.push(
-        scroll(depth, { target: hero, offset: ['start start', 'end start'] }),
-      );
-      disposers.push(() => {
-        depth.cancel();
-        document
-          .querySelector<HTMLElement>('.hero-image')
-          ?.style.removeProperty('transform');
+    // Each project reveals over its own scroll interval, regardless of section length.
+    document
+      .querySelectorAll<HTMLElement>('.featured-project, .project-row')
+      .forEach((project) => {
+        const reveal = animate(
+          project,
+          { opacity: [0, 1], y: [160, 0], scale: [0.96, 1] },
+          { ease: 'linear', autoplay: false },
+        );
+        disposers.push(() => reveal.cancel());
+        disposers.push(
+          scroll(
+            (progress: number) => {
+              reveal.time = progress * reveal.duration;
+            },
+            {
+              target: project,
+              offset: ['start 100%', 'start 42%'],
+            },
+          ),
+        );
       });
+
+    // Interpolate a single shared canvas, including text contrast, across chapter boundaries.
+    const palette = [
+      ['#f8f8f5', '#232520', '#62645c', '#d9dbd3'],
+      ['#f8f8f5', '#232520', '#62645c', '#d9dbd3'],
+      ['#eeeeea', '#232520', '#53584b', '#d3d6cc'],
+      ['#f8f8f5', '#232520', '#62645c', '#d9dbd3'],
+      ['#f8f8f5', '#232520', '#62645c', '#d9dbd3'],
+      ['#252821', '#f8f8f5', '#c1c7b7', '#555a4e'],
+    ];
+    const tokens = [
+      '--reading-paper',
+      '--reading-ink',
+      '--reading-muted',
+      '--reading-line',
+    ];
+    let boundaries: number[] = [];
+    let colors: string[][] = [];
+    const measurePalette = () => {
+      boundaries = [0];
+      colors = [palette[0]];
+      scenes.slice(1).forEach((scene, index) => {
+        const top = scene.getBoundingClientRect().top + window.scrollY;
+        boundaries.push(
+          top - window.innerHeight,
+          top - window.innerHeight * 0.12,
+        );
+        colors.push(palette[index], palette[index + 1]);
+      });
+    };
+    measurePalette();
+    let samplers = tokens.map((_, i) =>
+      interpolate(
+        boundaries,
+        colors.map((color) => color[i]),
+      ),
+    );
+    const refreshPalette = () => {
+      measurePalette();
+      samplers = tokens.map((_, i) =>
+        interpolate(
+          boundaries,
+          colors.map((color) => color[i]),
+        ),
+      );
+    };
+    // Resize includes language-dependent text wrapping and live repository content.
+    const canvasResize = new ResizeObserver(refreshPalette);
+    scenes.forEach((scene) => canvasResize.observe(scene));
+    disposers.push(() => canvasResize.disconnect());
+    disposers.push(
+      scroll((_progress: number, info: { y: { current: number } }) => {
+        tokens.forEach((token, i) =>
+          document.documentElement.style.setProperty(
+            token,
+            samplers[i](info.y.current),
+          ),
+        );
+      }),
+    );
+    disposers.push(() =>
+      tokens.forEach((token) =>
+        document.documentElement.style.removeProperty(token),
+      ),
+    );
+
+    document
+      .querySelectorAll<HTMLElement>(
+        '.experience-detail > p, .experience-detail > h3, .experience-detail > ul:not(.tags) > li, .experience-detail > .tags, .about-details > *, #github .scene-content, .contact-top, .contact-bottom',
+      )
+      .forEach((element) => {
+        element.setAttribute('data-reading-reveal', '');
+        const reveal = animate(
+          element,
+          { opacity: [0, 1], y: [80, 0] },
+          { ease: 'linear', autoplay: false },
+        );
+        disposers.push(() => reveal.cancel());
+        disposers.push(
+          scroll(
+            (progress: number) => {
+              reveal.time = progress * reveal.duration;
+            },
+            { target: element, offset: ['start 96%', 'start 58%'] },
+          ),
+        );
+      });
+
+    const overview = document.querySelector<HTMLElement>('.project-overview')!;
+    document
+      .querySelectorAll<HTMLElement>('[data-grid-row]')
+      .forEach((row, index) => {
+        const direction = index % 2 === 0 ? 1 : -1;
+        const motion = animate(
+          row,
+          { x: [direction * 110, direction * -110] },
+          { ease: 'linear', autoplay: false },
+        );
+        disposers.push(() => motion.cancel());
+        disposers.push(
+          scroll(
+            (progress: number) => {
+              motion.time = progress * motion.duration;
+            },
+            {
+              target: overview,
+              offset: ['start 80%', 'end 25%'],
+            },
+          ),
+        );
+      });
+
+    // Release the outgoing text before the canvas crosses its mid-tone, then reveal contact.
+    const release = animate(
+      '#github .scene-stage',
+      { opacity: [1, 0] },
+      { ease: 'linear', autoplay: false },
+    );
+    disposers.push(() => release.cancel());
+    disposers.push(
+      scroll(
+        (progress: number) => {
+          release.time = progress * release.duration;
+        },
+        {
+          target: scenes[scenes.length - 1],
+          offset: ['start 100%', 'start 70%'],
+        },
+      ),
+    );
+
+    const hero = scenes[0];
+    const image = animate(
+      '.hero-image',
+      { scale: [1, 1.24] },
+      { ease: 'linear', autoplay: false },
+    );
+    const text = animate(
+      '.hero-content',
+      { opacity: [1, 1, 0], y: [0, -20, -90] },
+      { times: [0, 0.25, 1], ease: 'linear', autoplay: false },
+    );
+    for (const animation of [image, text]) {
+      disposers.push(() => animation.cancel());
+      disposers.push(
+        scroll(
+          (progress: number) => {
+            animation.time = progress * animation.duration;
+          },
+          {
+            target: hero,
+            offset: ['start start', 'end end'],
+          },
+        ),
+      );
     }
   };
   start();
@@ -88,5 +244,6 @@ export function mountMotion() {
   return () => {
     stop();
     preference.removeEventListener('change', start);
+    headerResize.disconnect();
   };
 }

@@ -7,3 +7,8 @@
 @import './github.css';
 @import './contact.css';
 @import './responsive.css';
+
+@import './motion.css';
+
+@import './project-grid.css';
+@import './reading-sequence.css';

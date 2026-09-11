@@ -20,8 +20,8 @@
 }
 .featured-projects {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 36px;
+  grid-template-columns: 1fr;
+  gap: clamp(64px, 10svh, 120px);
 }
 .project-visual {
   height: 340px;
@@ -253,4 +253,25 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+/* Give each featured project its own reading beat, without a viewport height cap. */
+@media (min-width: 761px) {
+  .featured-project {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+    min-height: 55svh;
+  }
+  .featured-project .project-visual {
+    height: clamp(340px, 48svh, 520px);
+  }
+  .project-details .project-heading {
+    margin-top: 0;
+  }
+  .project-row {
+    min-height: 30svh;
+    align-items: center;
+  }
 }

@@ -1,0 +1,134 @@
+/* One continuous reading surface; colors follow the current scroll position. */
+html {
+  scroll-padding-top: calc(var(--nav-height, var(--header-height)) + 18px);
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll body {
+    background: var(--reading-paper, var(--paper));
+    color: var(--reading-ink, var(--ink));
+  }
+  .cinematic-scroll .site-header {
+    color: var(--ink);
+  }
+  .cinematic-scroll .scroll-scene {
+    position: relative;
+  }
+  .cinematic-scroll .scene-content {
+    min-height: calc(100svh - var(--nav-height, var(--header-height)));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+  }
+  .cinematic-scroll .scene-content > * {
+    width: 100%;
+  }
+  /* Only the photographic opening pins. The résumé then flows as one document. */
+  .cinematic-scroll #top {
+    margin-bottom: -45svh;
+  }
+  .cinematic-scroll #top::after {
+    content: '';
+    display: block;
+    height: 90svh;
+  }
+  .cinematic-scroll #top .scene-stage {
+    position: sticky;
+    top: min(
+      var(--nav-height, var(--header-height)),
+      calc(100svh - var(--scene-height))
+    );
+  }
+  .cinematic-scroll #top .scene-content {
+    display: flow-root;
+    align-content: normal;
+  }
+  .cinematic-scroll #top .hero {
+    max-height: none;
+  }
+  .cinematic-scroll #work {
+    background: var(--reading-paper, var(--paper));
+  }
+  .cinematic-scroll #work::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 100%;
+    height: 20svh;
+    background: linear-gradient(
+      transparent,
+      var(--reading-paper, var(--paper))
+    );
+    pointer-events: none;
+  }
+  .cinematic-scroll .experience-section,
+  .cinematic-scroll .contact-section {
+    background: transparent;
+    color: inherit;
+  }
+  .cinematic-scroll .github-section {
+    min-height: 0;
+    padding-block: clamp(64px, 8svh, 110px);
+  }
+  .cinematic-scroll .github-heading {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .cinematic-scroll .contact-section .section {
+    padding-block: clamp(48px, 7svh, 85px);
+  }
+  .cinematic-scroll
+    :is(
+      .section-intro,
+      .project-description,
+      .project-date,
+      .location,
+      .about-intro > p,
+      .school > p,
+      .school-note,
+      .school-gpa,
+      .soft-skills p,
+      .tags li,
+      .github-heading p,
+      .github-status,
+      .repo-item > p,
+      .contact-description,
+      .contact-label,
+      .footer-line,
+      .footer-motto,
+      .contact-bottom > .eyebrow,
+      .contact-item > svg,
+      .copy-email
+    ) {
+    color: var(--reading-muted, var(--muted));
+  }
+  .cinematic-scroll :is(.skill-list .brand-icon, .school-gpa strong) {
+    color: inherit;
+  }
+  .cinematic-scroll
+    :is(
+      .project-row,
+      .detail-title,
+      .repo-item,
+      .contact-bottom,
+      .footer-line,
+      .experience-detail > ul:not(.tags) li
+    ) {
+    border-color: var(--reading-line, var(--line));
+  }
+  .cinematic-scroll .hero-image {
+    transform-origin: 72% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce), print {
+  .scene-stage,
+  .scene-content,
+  .hero-content,
+  .hero-image,
+  .featured-project,
+  .project-row,
+  [data-reading-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

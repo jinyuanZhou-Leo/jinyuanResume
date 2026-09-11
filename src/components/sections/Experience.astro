@@ -5,11 +5,7 @@ const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].experience;
 ---
 
-<section
-  id="experience"
-  class="experience-section"
-  aria-labelledby="experience-title"
->
+<section class="experience-section" aria-labelledby="experience-title">
   <div class="section experience-layout">
     <div>
       <p class="eyebrow">02 / {t.label}</p>
