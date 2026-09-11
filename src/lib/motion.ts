@@ -112,8 +112,12 @@ export function mountMotion() {
       colors = [palette[0]];
       scenes.slice(1).forEach((scene, index) => {
         const top = scene.getBoundingClientRect().top + window.scrollY;
+        // Start the closing palette while GitHub is still pinned, spreading the
+        // large luminance change over more than two viewport heights.
+        const transitionDistance =
+          scene.id === 'contact' && desktop.matches ? 2.6 : 1;
         boundaries.push(
-          top - window.innerHeight,
+          top - window.innerHeight * transitionDistance,
           top - window.innerHeight * 0.12,
         );
         colors.push(palette[index], palette[index + 1]);
@@ -237,7 +241,9 @@ export function mountMotion() {
         },
         {
           target: scenes[scenes.length - 1],
-          offset: ['start 100%', 'start 70%'],
+          offset: desktop.matches
+            ? ['start 240%', 'start 160%']
+            : ['start 100%', 'start 70%'],
         },
       ),
     );

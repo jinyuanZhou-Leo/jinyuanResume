@@ -47,7 +47,8 @@
     height: 260svh;
   }
   .cinematic-scroll #github::after {
-    height: 220svh;
+    /* Leave room for reading, then a gradual handoff to the closing chapter. */
+    height: 460svh;
   }
   .cinematic-scroll :is(#experience, #about, #github) > .scene-stage {
     position: sticky;
