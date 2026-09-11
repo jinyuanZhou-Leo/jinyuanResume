@@ -44,19 +44,43 @@ export function mountAboutJourney() {
   // Each school passes the same reading position before the line becomes the toolkit axis.
   move(
     '.journey-education',
-    [0, 0.08, 0.14, 0.23, 0.29, 0.4, 1],
-    [12, 0, 0, -50, -50, -120, -120],
+    [0, 0.08, 0.17, 0.28, 0.36, 0.48, 1],
+    [12, 0, 0, -38, -38, -112, -112],
   );
   fade(
     '.journey-school:first-child',
-    [0, 0.02, 0.15, 0.23, 1],
-    [0, 1, 1, 0, 0],
+    [0, 0.03, 0.12, 0.25, 0.35, 1],
+    [0, 1, 1, 1, 0, 0],
   );
   fade(
     '.journey-school:last-child',
-    [0, 0.13, 0.22, 0.3, 0.4, 1],
-    [0, 0, 1, 1, 0, 0],
+    [0, 0.18, 0.3, 0.4, 0.49, 0.54, 1],
+    [0, 0, 1, 1, 0, 0, 0],
   );
+  const line = root.querySelector<HTMLElement>('.journey-line');
+  const lineTitle = root.querySelector<HTMLElement>(
+    '.journey-toolkit-title h3',
+  );
+  let toolkitGap = 14;
+  const refreshToolkitGap = () => {
+    if (!line || !lineTitle) return;
+    // The split follows the actual heading width, so CJK and Latin titles share the same rhythm.
+    const lineWidth = line.offsetWidth || 1;
+    const headingWidth = lineTitle.offsetWidth;
+    toolkitGap = Math.min(
+      28,
+      Math.max(9, ((headingWidth + 64) / lineWidth) * 50),
+    );
+  };
+  refreshToolkitGap();
+  const gapObserver =
+    typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(refreshToolkitGap)
+      : null;
+  if (gapObserver && line && lineTitle) {
+    gapObserver.observe(line);
+    gapObserver.observe(lineTitle);
+  }
   track(
     '.journey-line',
     [0, 0.1, 0.35, 0.58, 0.68, 1],
@@ -66,17 +90,22 @@ export function mountAboutJourney() {
   track('.journey-line', [0, 0.58, 0.69, 1], [0, 0, 90, 90], (el, v) =>
     el.style.setProperty('--line-angle', `${v}deg`),
   );
-  track(
-    '.journey-line',
-    [0, 0.29, 0.4, 0.56, 0.68, 1],
-    [0, 0, 22, 22, 0, 0],
-    (el, v) => el.style.setProperty('--line-gap', `${v}%`),
+  const toolkitGapPhase = interpolate(
+    [0, 0.47, 0.55, 0.64, 0.72, 1],
+    [0, 0, 1, 1, 0, 0],
+    { ease },
   );
-  fade('.journey-toolkit', [0, 0.29, 0.38, 0.57, 0.67, 1], [0, 0, 1, 1, 0, 0]);
+  tracks.push((p) =>
+    line?.style.setProperty(
+      '--line-gap',
+      `${toolkitGap * toolkitGapPhase(p)}%`,
+    ),
+  );
+  fade('.journey-toolkit', [0, 0.48, 0.55, 0.64, 0.72, 1], [0, 0, 1, 1, 0, 0]);
   // Depth changes keep the reading anchor fixed instead of sliding whole panels away.
   track(
     '.journey-toolkit-title',
-    [0, 0.3, 0.41, 0.56, 0.68, 1],
+    [0, 0.48, 0.55, 0.64, 0.72, 1],
     [1, 1, 0, 0, 1, 1],
     (el, v) => {
       el.style.transform = `scale(${1 - v * 0.08})`;
@@ -85,10 +114,10 @@ export function mountAboutJourney() {
   );
   root.querySelectorAll('.journey-icon').forEach((_, i) => {
     const selector = `.journey-icon:nth-child(${i + 1})`;
-    fade(selector, [0, 0.31 + i * 0.008, 0.4 + i * 0.008, 1], [0, 0, 1, 1]);
+    fade(selector, [0, 0.49 + i * 0.006, 0.57 + i * 0.006, 1], [0, 0, 1, 1]);
     track(
       selector,
-      [0, 0.32, 0.49, 0.6, 0.67, 1],
+      [0, 0.5, 0.6, 0.68, 0.74, 1],
       [24, 24, 0, 0, -18, -18],
       (el, v) => {
         el.style.transform = `translate(-50%, -50%) translate(${v * (i % 2 ? -1 : 1)}px, ${v * (i < 5 ? -1 : 1)}px)`;
@@ -129,6 +158,7 @@ export function mountAboutJourney() {
   );
   return () => {
     stop();
+    gapObserver?.disconnect();
     styled.forEach((el) => {
       // Preserve icon coordinates authored by Astro while removing animation-owned properties.
       [
