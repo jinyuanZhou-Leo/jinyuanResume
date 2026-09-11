@@ -3,52 +3,67 @@ import BrandIcon from '../BrandIcon.astro';
 import { content, skills, type Locale } from '../../data/resume';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].about;
+const abilities = t.professional.split(locale === 'zh' ? '、' : ', ');
 ---
 
-<section class="section about-section" aria-labelledby="about-title">
-  <div class="about-intro">
-    <div>
-      <p class="eyebrow">03 / {t.label}</p>
-      <h2 id="about-title">{t.title}</h2>
-    </div>
-    <p>{t.text}</p>
+<section class="section about-journey" aria-labelledby="about-title">
+  <div class="journey-heading">
+    <p class="eyebrow">03 / {t.label}</p>
+    <h2 id="about-title">{t.title}</h2>
   </div>
-  <div class="about-details">
-    <div class="education">
-      <h3 class="detail-title">{t.education}</h3>
-      {t.schools.map((school) => (
-        <article class="school">
+  <div class="journey-stage">
+    <div class="journey-line" aria-hidden="true"></div>
+    <div class="journey-education">
+      {[...t.schools].reverse().map((school) => (
+        <article class="journey-school">
+          <span class="journey-node" aria-hidden="true" />
           <p class="project-date">{school.date}</p>
-          <div class="school-heading">
-            <h4>{school.name}</h4>
-            {school.gpa && (
-              <p class="school-gpa">
-                <span>GPA</span>
-                <strong>{school.gpa}</strong>
-              </p>
-            )}
-          </div>
+          <h3>{school.name}</h3>
           <p>{school.degree}</p>
-          {school.note && <span class="school-note">{school.note}</span>}
+          {school.gpa && (
+            <p class="school-gpa">
+              GPA <strong>{school.gpa}</strong>
+            </p>
+          )}
         </article>
       ))}
     </div>
-    <div class="skills">
-      <h3 class="detail-title">{t.skills}</h3>
-      <ul class="skill-list">
-        {skills.map((skill) => (
-          <li>
-            <BrandIcon name={skill} size={22} />
+    <div class="journey-toolkit">
+      <div class="journey-icons">
+        {skills.map((skill, i) => (
+          <div
+            class="journey-icon"
+            style={`--icon-x:${[14, 32, 50, 68, 86, 23, 41, 59, 77][i]}%;--icon-y:${[32, 32, 32, 32, 32, 70, 70, 70, 70][i]}%`}
+          >
+            <BrandIcon name={skill} size={30} />
             <span>{skill}</span>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
+      <div class="journey-toolkit-title">
+        <h3>{t.skills}</h3>
+        <p>
+          {locale === 'zh' ? '持续学习中' : 'Always learning'}
+          <span class="learning-dots" aria-label="…">
+            <i />
+            <i />
+            <i />
+          </span>
+        </p>
+      </div>
     </div>
-    <div class="soft-skills">
-      <h4>{t.people}</h4>
-      <p>{t.professional}</p>
-      <h4>{t.languages}</h4>
-      <p>{t.languageText}</p>
+    <div class="journey-people">
+      <h3>{t.people}</h3>
+      <div class="journey-abilities">
+        {abilities.map((ability, i) => (
+          <p class="journey-ability">
+            <span>0{i + 1}</span>
+            {ability}
+          </p>
+        ))}
+      </div>
+      <p class="journey-language">{t.languageText}</p>
     </div>
   </div>
+  <p class="journey-bio">{t.text}</p>
 </section>

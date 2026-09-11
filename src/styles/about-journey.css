@@ -1,0 +1,314 @@
+#about {
+  overflow: clip;
+}
+.about-journey {
+  position: relative;
+}
+.journey-heading h2 {
+  margin-top: 20px;
+}
+.journey-stage {
+  position: relative;
+  margin-block: 50px;
+  min-height: 440px;
+}
+.journey-line {
+  position: absolute;
+  top: 50%;
+  left: -20%;
+  width: 140%;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: center;
+  mask-image: linear-gradient(
+    90deg,
+    black calc(50% - var(--line-gap, 0%)),
+    transparent calc(50% - var(--line-gap, 0%) + 2%),
+    transparent calc(50% + var(--line-gap, 0%) - 2%),
+    black calc(50% + var(--line-gap, 0%))
+  );
+}
+.journey-education {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding-top: 220px;
+}
+.journey-school {
+  position: relative;
+  padding-top: 30px;
+}
+.journey-node {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.journey-school h3 {
+  font-size: 24px;
+  margin-block: 12px;
+}
+.journey-school > p {
+  font-size: 13px;
+}
+.journey-toolkit {
+  position: relative;
+  min-height: 440px;
+}
+.journey-icons {
+  position: absolute;
+  inset: 0;
+}
+.journey-icon {
+  position: absolute;
+  left: var(--icon-x);
+  top: var(--icon-y);
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+.journey-icon span {
+  font-size: 12px;
+}
+.journey-toolkit-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.journey-toolkit-title h3,
+.journey-people h3 {
+  font-size: clamp(30px, 4vw, 54px);
+}
+.journey-toolkit-title p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.learning-dots {
+  display: inline-flex;
+  gap: 5px;
+  margin-left: 10px;
+}
+.learning-dots i {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.journey-people {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 70px;
+  min-height: 440px;
+}
+.journey-ability {
+  font-size: clamp(24px, 3vw, 40px);
+  padding: 15px;
+}
+.journey-ability span {
+  font-size: 12px;
+  margin-right: 22px;
+  color: var(--accent);
+}
+.journey-language {
+  grid-column: 2;
+  font-size: 13px;
+  color: var(--muted);
+}
+.journey-bio {
+  max-width: 65ch;
+  font-size: 14px;
+  color: var(--muted);
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll #about::after {
+    height: 600svh;
+  }
+  .cinematic-scroll .about-journey {
+    min-height: calc(100svh - var(--nav-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cinematic-scroll .journey-stage {
+    height: 440px;
+  }
+  .cinematic-scroll :is(.journey-education, .journey-toolkit, .journey-people) {
+    position: absolute;
+    inset: 0;
+  }
+  .cinematic-scroll .journey-abilities {
+    display: grid;
+  }
+  .cinematic-scroll .journey-ability {
+    grid-area: 1/1;
+  }
+  .cinematic-scroll .journey-language {
+    align-self: end;
+  }
+}
+@media (max-width: 760px), (prefers-reduced-motion: reduce), print {
+  .journey-line {
+    display: none;
+  }
+  .journey-education {
+    padding-top: 0;
+    gap: 35px;
+    grid-template-columns: 1fr;
+  }
+  .journey-toolkit {
+    margin-block: 55px;
+  }
+  .journey-people {
+    display: block;
+  }
+  .journey-people h3 {
+    margin-bottom: 20px;
+  }
+  .journey-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+  .journey-icon span {
+    font-size: 10px;
+  }
+  .journey-ability {
+    font-size: 22px;
+  }
+  .journey-language {
+    margin-block: 25px;
+  }
+  .about-journey
+    :is(
+      .journey-heading,
+      .journey-education,
+      .journey-school,
+      .journey-toolkit,
+      .journey-people,
+      .journey-ability,
+      .journey-bio
+    ) {
+    transform: none !important;
+  }
+  .about-journey * {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}
+
+/* The line remains in the same coordinate system through all three chapters. */
+.journey-line {
+  transform: rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 1));
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent) 18%,
+    var(--accent) 82%,
+    transparent
+  );
+}
+.journey-toolkit-title h3 {
+  padding: 4px 28px;
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll #about::after {
+    height: 680svh;
+  }
+  .cinematic-scroll #about > .scene-stage {
+    top: var(--nav-height);
+  }
+  .cinematic-scroll .about-journey {
+    height: calc(100svh - var(--nav-height));
+    min-height: 0;
+    padding-block: 0;
+  }
+  .cinematic-scroll .journey-heading {
+    position: absolute;
+    top: 10%;
+    left: var(--gutter);
+    max-width: 52%;
+  }
+  .cinematic-scroll .journey-heading h2 {
+    font-size: clamp(32px, 3.7vw, 56px);
+  }
+  .cinematic-scroll .journey-stage {
+    position: absolute;
+    inset: 0 var(--gutter);
+    height: 100%;
+    margin: 0;
+    min-height: 0;
+  }
+  .cinematic-scroll .journey-education {
+    width: 200%;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding-top: calc((100svh - var(--nav-height)) * 0.5);
+  }
+  .cinematic-scroll .journey-school {
+    padding-top: 35px;
+    padding-right: 15vw;
+  }
+  .cinematic-scroll .journey-school h3 {
+    font-size: clamp(25px, 3vw, 42px);
+    white-space: normal;
+  }
+  .cinematic-scroll .journey-school > p {
+    font-size: 15px;
+  }
+  .cinematic-scroll .journey-school .school-gpa {
+    margin-top: 18px;
+    font-size: 16px;
+  }
+  .cinematic-scroll .journey-school .school-gpa strong {
+    font-size: 24px;
+  }
+  .cinematic-scroll .journey-bio {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 10%;
+    max-width: 38%;
+    line-height: 1.9;
+  }
+  .cinematic-scroll .journey-toolkit {
+    min-height: 0;
+  }
+  .cinematic-scroll .journey-icon {
+    top: var(--icon-y);
+  }
+  .cinematic-scroll .journey-people {
+    min-height: 0;
+    grid-template-rows: 1fr;
+    gap: 12%;
+  }
+  .cinematic-scroll .journey-people h3 {
+    text-align: right;
+    padding-right: 5%;
+  }
+  .cinematic-scroll .journey-abilities {
+    align-self: center;
+    height: min(480px, 65svh);
+    align-items: center;
+    mask-image: linear-gradient(transparent, black 12%, black 88%, transparent);
+  }
+  .cinematic-scroll .journey-ability {
+    padding: 0;
+    transform-origin: left center;
+    white-space: normal;
+    font-size: clamp(24px, 2.6vw, 38px);
+  }
+  .cinematic-scroll .journey-language {
+    position: absolute;
+    left: 56%;
+    bottom: 9%;
+  }
+}

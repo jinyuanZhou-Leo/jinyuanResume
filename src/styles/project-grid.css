@@ -1,29 +1,38 @@
 /* React Bits Grid Motion composition, reduced to the five actual projects. */
 .project-overview {
   position: relative;
-  margin-bottom: 80px;
+  width: var(--viewport-width, 100vw);
+  margin-inline: calc((100% - var(--viewport-width, 100vw)) / 2);
+  margin-bottom: clamp(96px, 13svh, 180px);
+  overflow: visible;
 }
 .project-grid-stage {
+  min-height: clamp(760px, 128svh, 1180px);
   overflow: clip;
-  padding: 64px 32px;
+  padding: clamp(108px, 14svh, 190px) clamp(32px, 6vw, 96px);
+  display: grid;
+  align-items: center;
 }
 .project-grid-tilt {
   transform: rotate(-7deg);
   display: grid;
-  gap: 22px;
+  gap: clamp(24px, 2.7vw, 44px);
 }
 .project-grid-row {
   display: flex;
   justify-content: center;
-  gap: 22px;
+  gap: clamp(24px, 2.7vw, 44px);
 }
 .project-grid-tile {
-  flex: 0 0 29%;
-  min-width: 220px;
-  padding: 25px;
+  flex: 0 0 clamp(300px, 34vw, 500px);
+  min-height: 290px;
+  padding: clamp(28px, 2.8vw, 46px);
   background: #e7e9df;
   color: var(--ink);
   display: block;
+  transition:
+    background 0.35s,
+    transform 0.35s var(--ease);
 }
 .grid-tile-reversi {
   background: #e8e5dd;
@@ -43,7 +52,7 @@
   color: #62645c;
 }
 .grid-tile-mark {
-  height: 110px;
+  height: clamp(138px, 13vw, 205px);
   display: grid;
   place-items: center;
   color: #526337;
@@ -55,7 +64,7 @@
   gap: 12px;
 }
 .grid-tile-caption h3 {
-  font-size: clamp(16px, 1.5vw, 22px);
+  font-size: clamp(20px, 2vw, 30px);
 }
 .grid-tile-stack {
   display: block;
@@ -63,6 +72,7 @@
 }
 .project-grid-tile:hover {
   background: #d5ddc7;
+  transform: translateY(-6px);
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
   .cinematic-scroll .work-section > .section-heading {
@@ -74,34 +84,46 @@
     margin-bottom: 0;
   }
   .cinematic-scroll .project-overview {
-    height: 135svh;
+    min-height: 280svh;
   }
   .cinematic-scroll .project-grid-stage {
+    min-height: calc(100svh - var(--nav-height, 92px));
+    mask-image: linear-gradient(transparent, black 14%, black 86%, transparent);
     position: sticky;
-    top: calc(var(--nav-height, 92px) + 160px);
+    top: var(--nav-height, 92px);
   }
 }
 @media (max-width: 760px) {
+  .project-overview {
+    margin-bottom: 72px;
+  }
   .project-grid-stage {
-    margin-inline: -24px;
-    padding: 48px 12px;
-  }
-  .project-grid-tile {
-    flex-basis: 52%;
-    min-width: 165px;
-    padding: 16px;
-  }
-  .project-grid-row {
-    gap: 12px;
+    min-height: auto;
+    padding: 48px 18px 60px;
   }
   .project-grid-tilt {
+    transform: rotate(-3deg);
     gap: 12px;
   }
+  .project-grid-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    transform: none !important;
+  }
+  .project-grid-tile {
+    min-width: 0;
+    min-height: 190px;
+    padding: 16px;
+  }
   .grid-tile-mark {
-    height: 85px;
+    height: 80px;
   }
   .grid-tile-caption h3 {
     font-size: 15px;
+  }
+  .grid-tile-stack {
+    overflow-wrap: anywhere;
   }
 }
 @media (prefers-reduced-motion: reduce), print {
@@ -121,4 +143,9 @@
   .project-row {
     scroll-margin-top: 190px;
   }
+}
+
+/* Clip only at the viewport, not at a visible rectangular chapter boundary. */
+body {
+  overflow-x: clip;
 }

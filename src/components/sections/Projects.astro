@@ -13,6 +13,7 @@ const board = [
 ---
 
 <section class="section work-section" aria-labelledby="work-title">
+  <ProjectGrid locale={locale} />
   <div class="section-heading">
     <div>
       <p class="eyebrow">01 / {t.label}</p>
@@ -20,7 +21,6 @@ const board = [
     </div>
     <p class="section-intro">{t.intro}</p>
   </div>
-  <ProjectGrid locale={locale} />
   <div class="featured-projects">
     {projects.slice(0, 2).map((project, i) => (
       <article class="featured-project" id={project.id}>

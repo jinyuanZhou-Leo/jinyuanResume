@@ -3,6 +3,7 @@
 // Adaptations: theme, lazy mounting, visibility/reduced-motion lifecycle, Three Timer.
 import { Effect, EffectComposer, EffectPass, RenderPass } from 'postprocessing';
 import { useEffect, useRef, useState } from 'react';
+import { scroll } from 'motion';
 import * as THREE from 'three';
 import './PixelBlast.css';
 
@@ -305,6 +306,12 @@ void main(){
 
 const MAX_CLICKS = 10;
 
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const smoothstep = (from, to, value) => {
+  const t = clamp((value - from) / (to - from), 0, 1);
+  return t * t * (3 - 2 * t);
+};
+
 const PixelBlast = ({
   variant = 'square',
   pixelSize = 3,
@@ -332,12 +339,31 @@ const PixelBlast = ({
   const containerRef = useRef(null);
   const visibilityRef = useRef({ visible: true });
   const speedRef = useRef(speed);
+  // Motion owns the scroll measurement. The render loop only consumes this ref,
+  // so it never needs to synchronously read layout or computed styles.
+  const chapterProgressRef = useRef(0);
 
   const threeRef = useRef(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const animationRef = useRef(null);
 
   const motionAllowedRef = useRef(true);
+  useEffect(() => {
+    const container = containerRef.current;
+    const chapter = container?.closest('#github');
+    if (!chapter) return;
+
+    return scroll(
+      (progress) => {
+        chapterProgressRef.current = clamp(progress, 0, 1);
+      },
+      {
+        target: chapter,
+        offset: ['start start', 'end end'],
+        trackContentSize: true,
+      },
+    );
+  }, []);
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -546,6 +572,8 @@ const PixelBlast = ({
       passive: true,
     });
     let raf = 0;
+    const fieldColor = new THREE.Color(color);
+    const quietColor = new THREE.Color('#979a92');
     const animate = () => {
       if (
         !motionAllowedRef.current ||
@@ -556,7 +584,23 @@ const PixelBlast = ({
         return;
       }
       clock.update();
-      uniforms.uTime.value = timeOffset + clock.getElapsed() * speedRef.current;
+      const chapterProgress = chapterProgressRef.current;
+      const settle = smoothstep(0.1, 0.88, chapterProgress);
+      uniforms.uColor.value
+        .copy(fieldColor)
+        .lerp(quietColor, smoothstep(0.45, 0.92, chapterProgress));
+      // The chapter controls the primary evolution. A small elapsed-time term
+      // keeps the field alive while the reader pauses within a scroll position.
+      uniforms.uTime.value =
+        timeOffset +
+        chapterProgress * 14 +
+        clock.getElapsed() * speedRef.current * (0.28 - settle * 0.16);
+      // Begin with a looser, larger olive pixel field, then tighten it as the
+      // repository copy becomes the focus near the end of the chapter.
+      uniforms.uPixelSize.value =
+        pixelSize * renderer.getPixelRatio() * (1.3 - settle * 0.5);
+      uniforms.uScale.value = patternScale * (1.13 - settle * 0.31);
+      uniforms.uDensity.value = patternDensity * (0.88 + settle * 0.18);
       if (liquidEffect)
         liquidEffect.uniforms.get('uTime').value = uniforms.uTime.value;
       if (composer) {

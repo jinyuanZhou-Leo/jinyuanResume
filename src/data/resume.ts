@@ -61,7 +61,7 @@ export const content = {
       title: '认真构建，\n保持好奇。',
       text: '我是 Jinyuan，多伦多大学计算机工程大二学生。喜欢拆开问题、理解原理，再把它们重新组合成有用的东西。从一颗棋子的落点，到一个 shell 的执行过程，我在动手中学习。',
       education: '教育背景',
-      skills: '我的工具箱',
+      skills: '学习与使用',
       people: '不止于代码',
       languages: '语言',
       schools: [
@@ -164,7 +164,7 @@ export const content = {
       title: 'Build thoughtfully.\nStay curious.',
       text: 'I’m Jinyuan, a second-year Computer Engineering student at the University of Toronto. I like taking problems apart, understanding the principles, and putting them back together as something useful. From a move on a board to a shell executing a command, I learn by building.',
       education: 'Education',
-      skills: 'My toolkit',
+      skills: 'Learning & building',
       people: 'Beyond the code',
       languages: 'Languages',
       schools: [

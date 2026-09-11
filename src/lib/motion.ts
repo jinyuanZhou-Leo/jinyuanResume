@@ -1,10 +1,16 @@
 import { animate, scroll, stagger, interpolate } from 'motion';
 import Lenis from 'lenis';
+import { mountAboutJourney } from './about-journey';
+import { mountChapters } from './chapters';
 import 'lenis/dist/lenis.css';
 
 export function mountMotion() {
   const header = document.querySelector<HTMLElement>('.site-header')!;
   const measureHeader = () => {
+    document.documentElement.style.setProperty(
+      '--viewport-width',
+      `${document.documentElement.clientWidth}px`,
+    );
     document.documentElement.style.setProperty(
       '--nav-height',
       `${header.offsetHeight}px`,
@@ -13,6 +19,7 @@ export function mountMotion() {
   measureHeader();
   const headerResize = new ResizeObserver(measureHeader);
   headerResize.observe(header);
+  const desktop = window.matchMedia('(min-width: 761px)');
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const disposers: (() => void)[] = [];
   const stop = () => {
@@ -150,7 +157,9 @@ export function mountMotion() {
 
     document
       .querySelectorAll<HTMLElement>(
-        '.experience-detail > p, .experience-detail > h3, .experience-detail > ul:not(.tags) > li, .experience-detail > .tags, .about-details > *, #github .scene-content, .contact-top, .contact-bottom',
+        desktop.matches
+          ? '.contact-top, .contact-bottom'
+          : '.experience-detail > p, .experience-detail > h3, .experience-detail > ul:not(.tags) > li, .experience-detail > .tags, .about-details > *, #github .scene-content, .contact-top, .contact-bottom',
       )
       .forEach((element) => {
         element.setAttribute('data-reading-reveal', '');
@@ -170,6 +179,21 @@ export function mountMotion() {
         );
       });
 
+    if (desktop.matches) {
+      disposers.push(mountChapters());
+      disposers.push(mountAboutJourney());
+    }
+    const github = document.querySelector<HTMLElement>('#github')!;
+    disposers.push(
+      scroll(
+        (progress: number) => {
+          github.style.setProperty('--chapter-progress', String(progress));
+        },
+        { target: github, offset: ['start start', 'end end'] },
+      ),
+    );
+    disposers.push(() => github.style.removeProperty('--chapter-progress'));
+
     const overview = document.querySelector<HTMLElement>('.project-overview')!;
     document
       .querySelectorAll<HTMLElement>('[data-grid-row]')
@@ -177,7 +201,12 @@ export function mountMotion() {
         const direction = index % 2 === 0 ? 1 : -1;
         const motion = animate(
           row,
-          { x: [direction * 110, direction * -110] },
+          {
+            x: [
+              direction * (desktop.matches ? 480 : 260),
+              direction * (desktop.matches ? -480 : -260),
+            ],
+          },
           { ease: 'linear', autoplay: false },
         );
         disposers.push(() => motion.cancel());
@@ -241,9 +270,11 @@ export function mountMotion() {
   };
   start();
   preference.addEventListener('change', start);
+  desktop.addEventListener('change', start);
   return () => {
     stop();
     preference.removeEventListener('change', start);
+    desktop.removeEventListener('change', start);
     headerResize.disconnect();
   };
 }
