@@ -70,7 +70,10 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
       lastTop - containerHeight * 0.1,
       lastTop - stackPositionPx,
     );
-    keyframes.push(Math.ceil(morphStart + containerHeight * 0.45));
+    const morphEnd = morphStart + containerHeight * 0.45;
+    keyframes.push(Math.ceil(morphEnd));
+    // Keep the completed switcher as its own scroll stop for a little longer.
+    keyframes.push(Math.ceil(morphEnd + containerHeight * 0.5));
   }
 
   // --- SECTION 2: #experience (实习中的学习与实践) ---
@@ -125,6 +128,8 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
   const github = document.querySelector<HTMLElement>('#github');
   if (github) {
     const githubTop = getElementTop(github);
+    // Hold the completed opacity/scale handoff before continuing through GitHub.
+    keyframes.push(Math.round(githubTop - navHeight));
     if (isDesktop) {
       // reading-sequence.css pins #github over 460svh:
       // ~0.26: Heading revealed

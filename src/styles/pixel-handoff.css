@@ -1,0 +1,52 @@
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* Keep layout and anchor coordinates stable while the two stages are fixed. */
+  .cinematic-scroll :is(#about, #github)[data-pixel-handoff] {
+    min-height: var(--handoff-scene-height, var(--scene-height));
+  }
+  .cinematic-scroll #github[data-pixel-handoff='before'] > .scene-stage,
+  .cinematic-scroll #about[data-pixel-handoff='after'] > .scene-stage {
+    visibility: hidden;
+  }
+  .cinematic-scroll #about[data-pixel-handoff='active'] > .scene-stage,
+  .cinematic-scroll #github[data-pixel-handoff='active'] > .scene-stage {
+    position: fixed;
+    inset-inline: 0;
+    width: 100%;
+  }
+  .cinematic-scroll #about[data-pixel-handoff='active'] > .scene-stage {
+    top: var(--handoff-outgoing-top);
+    z-index: 5;
+  }
+  .cinematic-scroll #github[data-pixel-handoff='active'] > .scene-stage {
+    top: var(--nav-height);
+    z-index: 6;
+  }
+  .cinematic-scroll
+    :is(#about, #github)[data-pixel-handoff='active']
+    > .scene-stage
+    > .scene-content {
+    opacity: var(--handoff-opacity);
+    transform: scale(var(--handoff-scale));
+    transform-origin: 50% var(--handoff-origin-y);
+  }
+  .cinematic-scroll
+    #github[data-pixel-handoff]
+    > .scene-stage
+    > .scene-content {
+    background: var(--reading-paper, var(--paper));
+  }
+  .cinematic-scroll
+    #github[data-pixel-handoff]
+    :is(.github-heading, .github-status, .repo-grid, .github-section > button) {
+    opacity: var(--handoff-copy);
+    transform: none;
+  }
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll #about[data-pixel-handoff] {
+    min-height: calc(var(--handoff-scene-height, var(--scene-height)) + 850svh);
+  }
+  .cinematic-scroll #github[data-pixel-handoff] {
+    min-height: calc(var(--handoff-scene-height, var(--scene-height)) + 460svh);
+  }
+}

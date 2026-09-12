@@ -149,7 +149,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       getElementOffset(lastCard) - stackPositionPx,
     );
     const morphEnd = morphStart + containerHeight * 0.45;
-    const pinEnd = morphEnd + containerHeight * 0.3;
+    // Give the finished horizontal track a longer, readable pause before it
+    // releases into the next section.
+    const pinEnd = morphEnd + containerHeight * 0.5;
     const progress = calculateProgress(scrollTop, morphStart, morphEnd);
     const morph = progress * progress * (3 - 2 * progress);
     const ready = progress === 1;
@@ -173,13 +175,38 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       (1 - Math.exp(-elapsed / 85));
     if (Math.abs(positionRef.current - selectedRef.current) < 0.001)
       positionRef.current = selectedRef.current;
+    // Keep the browsing cards at their original size. Center them in the
+    // content viewport below the fixed header, rather than the full viewport.
+    const browseScale = 1;
+    const trackGap = window.innerWidth <= 760 ? 12 : 24;
+    const navHeight =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--nav-height',
+        ),
+      ) || 0;
+    const heading = scrollerRef.current
+      ?.closest('.work-showcase')
+      ?.querySelector<HTMLElement>('.section-heading');
+    const headingHeight = heading?.offsetHeight ?? 0;
+    const headingGap = heading
+      ? parseFloat(getComputedStyle(heading).marginBottom) || 0
+      : 0;
+    const groupHeight = headingHeight + headingGap + cardHeight * browseScale;
+    const groupTop =
+      navHeight + Math.max(0, (containerHeight - navHeight - groupHeight) / 2);
+    if (heading && window.innerWidth >= 761) {
+      heading.style.top = `${groupTop}px`;
+    }
+    const browsePositionPx = groupTop + headingHeight + headingGap;
+    const trackPositionPx =
+      stackPositionPx + (browsePositionPx - stackPositionPx) * morph;
     if (controlsRef.current && scrollerRef.current) {
       controlsRef.current.style.top =
         String(
           Math.min(scrollTop, pinEnd) +
-            stackPositionPx +
-            cardHeight +
-            16 -
+            trackPositionPx +
+            (cardHeight * browseScale) / 2 -
             getElementOffset(scrollerRef.current),
         ) + 'px';
     }
@@ -221,16 +248,20 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
       }
 
-      const trackY = Math.min(scrollTop, pinEnd) - cardTop + stackPositionPx;
+      const trackY = Math.min(scrollTop, pinEnd) - cardTop + trackPositionPx;
       translateY += (trackY - translateY) * morph;
       card.inert = ready && i !== selectedRef.current;
       const nextTransform: TransformState = {
         translateX:
           Math.round(
-            (i - positionRef.current) * (card.offsetWidth + 24) * morph * 100,
+            (i - positionRef.current) *
+              (card.offsetWidth * browseScale + trackGap) *
+              morph *
+              100,
           ) / 100,
         translateY: Math.round(translateY * 100) / 100,
-        scale: Math.round((scale + (1 - scale) * morph) * 1000) / 1000,
+        scale:
+          Math.round((scale + (browseScale - scale) * morph) * 1000) / 1000,
         rotation: Math.round(rotation * (1 - morph) * 100) / 100,
         blur: Math.round(blur * (1 - morph) * 100) / 100,
       };
@@ -356,6 +387,10 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         card.style.willChange = '';
         card.style.removeProperty('-webkit-perspective');
       });
+      const heading = root
+        ?.closest('.work-showcase')
+        ?.querySelector<HTMLElement>('.section-heading');
+      if (heading) heading.style.top = '';
       stackCompletedRef.current = false;
       cardsRef.current = [];
       lastTransformsRef.current.clear();

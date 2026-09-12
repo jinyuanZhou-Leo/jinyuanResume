@@ -122,7 +122,7 @@
     z-index: 4;
     background: var(--reading-paper, var(--paper));
     padding-block: 24px;
-    margin-bottom: 0;
+    margin-bottom: clamp(20px, 2.5svh, 32px);
   }
   .cinematic-scroll .work-showcase {
     position: relative;

@@ -46,7 +46,10 @@ const { locale } = Astro.props as { locale: Locale };
     <div class="scroll-scene" id="github">
       <div class="scene-stage">
         <div class="scene-content">
-          <GitHubActivity locale={locale} client:visible />
+          <GitHubActivity
+            locale={locale}
+            client:visible={{ rootMargin: '150%' }}
+          />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { animate, scroll, stagger, interpolate } from 'motion';
 import Lenis from 'lenis';
 import { mountAboutJourney } from './about-journey';
 import { mountChapters } from './chapters';
+import { mountPixelHandoff } from './pixel-handoff';
 import { mountSnapTimeline } from './snap-timeline';
 import 'lenis/dist/lenis.css';
 
@@ -172,7 +173,7 @@ export function mountMotion() {
       .querySelectorAll<HTMLElement>(
         desktop.matches
           ? '.contact-top, .contact-bottom'
-          : '.experience-detail > p, .experience-detail > h3, .experience-detail > ul:not(.tags) > li, .experience-detail > .tags, .about-details > *, #github .scene-content, .contact-top, .contact-bottom',
+          : '.experience-detail > p, .experience-detail > h3, .experience-detail > ul:not(.tags) > li, .experience-detail > .tags, .about-details > *, .contact-top, .contact-bottom',
       )
       .forEach((element) => {
         element.setAttribute('data-reading-reveal', '');
@@ -196,6 +197,7 @@ export function mountMotion() {
       disposers.push(mountChapters());
       disposers.push(mountAboutJourney());
     }
+    disposers.push(mountPixelHandoff());
     const github = document.querySelector<HTMLElement>('#github');
     if (github) {
       disposers.push(
@@ -260,29 +262,25 @@ export function mountMotion() {
             row.style.transform = `translate3d(${Math.round(wrappedX * 10) / 10}px, 0, 0)`;
           });
 
-          // 2. Overview layer opacity: starts at full opacity (1.0), then in the latter section
-          // fades to 0.18 to serve as the ambient background behind ScrollStack (never disappears)
-          if (progress < 0.15) {
-            overviewLayer.style.opacity = '1';
-          } else if (progress < 0.9) {
-            const fade = 1 - (progress - 0.15) / 0.75;
-            const opacity = 0.18 + fade * (1.0 - 0.18);
-            overviewLayer.style.opacity = String(
-              Math.round(opacity * 100) / 100,
-            );
-          } else {
-            overviewLayer.style.opacity = '0.18';
-          }
-          overviewLayer.style.visibility = 'visible';
+          // Finish the grid fade before revealing the showcase to avoid translucent ghosting.
+          const backgroundFade = Math.max(
+            0,
+            Math.min(1, (progress - 0.05) / 0.3),
+          );
+          const easedFade =
+            backgroundFade * backgroundFade * (3 - 2 * backgroundFade);
+          overviewLayer.style.opacity = String(1 - easedFade);
+          overviewLayer.style.visibility =
+            backgroundFade === 1 ? 'hidden' : 'visible';
           overviewLayer.style.pointerEvents = 'none';
 
           // 3. Showcase (Heading + ScrollStack Card 0) in-place appearance
-          if (progress < 0.25) {
+          if (progress < 0.35) {
             showcase.style.opacity = '0';
             showcase.style.transform = 'translate3d(0, 30px, 0) scale(0.98)';
             showcase.style.pointerEvents = 'none';
           } else if (progress < 0.9) {
-            const sp = (progress - 0.25) / 0.65;
+            const sp = (progress - 0.35) / 0.55;
             const easeSp = sp * sp * (3 - 2 * sp);
             showcase.style.opacity = String(easeSp);
             const translateY = Math.round((1 - easeSp) * 30 * 10) / 10;
