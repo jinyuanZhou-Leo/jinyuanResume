@@ -44,21 +44,10 @@ html {
   }
   .cinematic-scroll #top .hero {
     max-height: none;
+    background: transparent;
   }
   .cinematic-scroll #work {
     background: var(--reading-paper, var(--paper));
-  }
-  .cinematic-scroll #work::before {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    bottom: 100%;
-    height: 20svh;
-    background: linear-gradient(
-      transparent,
-      var(--reading-paper, var(--paper))
-    );
-    pointer-events: none;
   }
   .cinematic-scroll .experience-section,
   .cinematic-scroll .contact-section {
@@ -116,7 +105,10 @@ html {
     border-color: var(--reading-line, var(--line));
   }
   .cinematic-scroll .hero-image {
-    transform-origin: 72% 50%;
+    position: fixed;
+    top: var(--nav-height, var(--header-height));
+    height: calc(100svh - var(--nav-height, var(--header-height)));
+    pointer-events: none;
   }
 }
 @media (prefers-reduced-motion: reduce), print {

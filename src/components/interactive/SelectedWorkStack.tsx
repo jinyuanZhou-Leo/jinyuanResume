@@ -78,6 +78,8 @@ const SelectedWorkStack: React.FC<SelectedWorkStackProps> = ({ locale }) => {
       stackPosition="20%"
       scaleEndPosition="10%"
       baseScale={0.88}
+      previousLabel={locale === 'zh' ? '上一个项目' : 'Previous project'}
+      nextLabel={locale === 'zh' ? '下一个项目' : 'Next project'}
     >
       {projects.map((project, i) => (
         <ScrollStackItem

@@ -340,7 +340,7 @@ export function mountMotion() {
     const hero = scenes[0];
     const image = animate(
       '.hero-image',
-      { scale: [1, 1.24] },
+      { opacity: [1, 0] },
       { ease: 'linear', autoplay: false },
     );
     const text = animate(
@@ -348,7 +348,18 @@ export function mountMotion() {
       { opacity: [1, 1, 0], y: [0, -20, -90] },
       { times: [0, 0.25, 1], ease: 'linear', autoplay: false },
     );
-    for (const animation of [image, text]) {
+    disposers.push(() => image.cancel());
+    if (work) {
+      disposers.push(
+        scroll(
+          (progress: number) => {
+            image.time = progress * image.duration;
+          },
+          { target: work, offset: ['start 125%', 'start 105%'] },
+        ),
+      );
+    }
+    for (const animation of [text]) {
       disposers.push(() => animation.cancel());
       disposers.push(
         scroll(

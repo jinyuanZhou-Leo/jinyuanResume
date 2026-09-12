@@ -51,7 +51,7 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
     const requestedStackPositionPx = 0.2 * containerHeight;
     const stackPositionPx = Math.min(
       requestedStackPositionPx,
-      Math.max(0, containerHeight - cardHeight - 24),
+      Math.max(0, containerHeight - cardHeight - 80),
     );
     const itemStackDistance = 26;
 
@@ -64,14 +64,13 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
       }
     });
 
-    const stackEnd = work.querySelector<HTMLElement>('.scroll-stack-end');
-    if (stackEnd) {
-      const endTop = getElementTop(stackEnd);
-      const stackFinish = endTop - containerHeight / 2;
-      if (stackFinish > 0) {
-        keyframes.push(Math.round(stackFinish));
-      }
-    }
+    // Stop on the fully unfolded track so snapping cannot skip its controls.
+    const lastTop = getElementTop(cards[cards.length - 1]);
+    const morphStart = Math.max(
+      lastTop - containerHeight * 0.1,
+      lastTop - stackPositionPx,
+    );
+    keyframes.push(Math.ceil(morphStart + containerHeight * 0.45));
   }
 
   // --- SECTION 2: #experience (实习中的学习与实践) ---

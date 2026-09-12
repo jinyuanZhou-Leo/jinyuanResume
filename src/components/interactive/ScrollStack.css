@@ -1,5 +1,7 @@
 .scroll-stack {
-  overflow: visible;
+  position: relative;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .scroll-stack-inner {
@@ -86,5 +88,44 @@
   .scroll-stack-card {
     transform: none !important;
     filter: none !important;
+  }
+}
+
+.scroll-stack-controls {
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.scroll-stack-controls[hidden] {
+  display: none;
+}
+.scroll-stack-controls button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--reading-line, var(--line));
+  border-radius: 50%;
+  background: var(--reading-paper, var(--paper));
+  color: var(--reading-ink, var(--ink));
+  font-size: 22px;
+  cursor: pointer;
+}
+.scroll-stack-controls button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.scroll-stack-controls button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-stack-inner {
+    padding-bottom: calc(100svh + 96px);
+  }
+}
+@media print {
+  .scroll-stack-controls {
+    display: none;
   }
 }
