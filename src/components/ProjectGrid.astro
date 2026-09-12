@@ -4,7 +4,34 @@
 import { projects, type Locale } from '../data/resume';
 import BrandIcon from './BrandIcon.astro';
 const { locale } = Astro.props as { locale: Locale };
-const rows = [projects.slice(0, 3), projects.slice(3)];
+
+// Dynamically generate 4 rows with repeated items for an infinite continuous stream.
+// Staggers each row offset so adjacent rows display different projects.
+function buildInfiniteRows<T>(
+  items: readonly T[],
+  rowCount = 4,
+  minCycles = 4,
+): T[][] {
+  if (!items || items.length === 0)
+    return Array.from({ length: rowCount }, () => []);
+
+  const rows: T[][] = [];
+  const cycleCount = Math.max(minCycles, 3);
+  const totalPerStream = items.length * cycleCount;
+
+  for (let r = 0; r < rowCount; r++) {
+    const row: T[] = [];
+    const offset = (r * 2) % items.length;
+    for (let i = 0; i < totalPerStream; i++) {
+      row.push(items[(offset + i) % items.length]);
+    }
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+const rows = buildInfiniteRows(projects, 4, 4);
 ---
 
 <div

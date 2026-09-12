@@ -7,13 +7,18 @@ const t = content[locale].projects;
 ---
 
 <section class="section work-section" aria-labelledby="work-title">
-  <ProjectGrid locale={locale} />
-  <div class="section-heading">
-    <div>
-      <p class="eyebrow">01 / {t.label}</p>
-      <h2 id="work-title">{t.title}</h2>
-    </div>
-    <p class="section-intro">{t.intro}</p>
+  <div class="work-overview-layer">
+    <ProjectGrid locale={locale} />
   </div>
-  <SelectedWorkStack locale={locale} client:load />
+  <div class="work-intro-spacer" aria-hidden="true"></div>
+  <div class="work-showcase">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">01 / {t.label}</p>
+        <h2 id="work-title">{t.title}</h2>
+      </div>
+      <p class="section-intro">{t.intro}</p>
+    </div>
+    <SelectedWorkStack locale={locale} client:load />
+  </div>
 </section>

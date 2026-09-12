@@ -209,35 +209,111 @@ export function mountMotion() {
       disposers.push(() => github.style.removeProperty('--chapter-progress'));
     }
 
-    const overview = document.querySelector<HTMLElement>('.project-overview');
-    if (overview) {
-      document
-        .querySelectorAll<HTMLElement>('[data-grid-row]')
-        .forEach((row, index) => {
-          const direction = index % 2 === 0 ? 1 : -1;
-          const motion = animate(
-            row,
-            {
-              x: [
-                direction * (desktop.matches ? 480 : 260),
-                direction * (desktop.matches ? -480 : -260),
-              ],
-            },
-            { ease: 'linear', autoplay: false },
+    const work = document.querySelector<HTMLElement>('#work');
+    const overviewLayer = document.querySelector<HTMLElement>(
+      '.work-overview-layer',
+    );
+    const showcase = document.querySelector<HTMLElement>('.work-showcase');
+    const rows = [...document.querySelectorAll<HTMLElement>('[data-grid-row]')];
+
+    if (work && overviewLayer && showcase && rows.length > 0) {
+      if (desktop.matches) {
+        let workTop = 0;
+        let navHeight = 92;
+        let introDistance = Math.round(window.innerHeight * 0.85);
+
+        const measureWork = () => {
+          let top = 0;
+          let el: HTMLElement | null = work;
+          while (el) {
+            top += el.offsetTop;
+            el = el.offsetParent as HTMLElement | null;
+          }
+          workTop = top;
+          const headerEl = document.querySelector<HTMLElement>('.site-header');
+          navHeight = headerEl?.offsetHeight ?? 92;
+          introDistance = Math.round(window.innerHeight * 0.85);
+        };
+
+        measureWork();
+        const workObserver = new ResizeObserver(measureWork);
+        workObserver.observe(work);
+        disposers.push(() => workObserver.disconnect());
+
+        const renderGridAndShowcase = (scrollY: number) => {
+          const start = workTop - navHeight;
+          const scrollDelta = scrollY - start;
+          const progress = Math.max(
+            0,
+            Math.min(1, scrollDelta / introDistance),
           );
-          disposers.push(() => motion.cancel());
-          disposers.push(
-            scroll(
-              (progress: number) => {
-                motion.time = progress * motion.duration;
-              },
-              {
-                target: overview,
-                offset: ['start 80%', 'end 25%'],
-              },
-            ),
-          );
+
+          // 1. Four rows infinite horizontal stream with seamless modulo wrapping
+          rows.forEach((row, index) => {
+            const direction = index % 2 === 0 ? -1 : 1;
+            // Each row contains 4 repeated cycles of projects
+            const cycleWidth = (row.scrollWidth || 2000) / 4;
+            const rawDrift = direction * scrollDelta * 0.55;
+            const wrappedX =
+              (((rawDrift % cycleWidth) + cycleWidth) % cycleWidth) -
+              cycleWidth;
+            row.style.transform = `translate3d(${Math.round(wrappedX * 10) / 10}px, 0, 0)`;
+          });
+
+          // 2. Overview layer opacity: starts at full opacity (1.0), then in the latter section
+          // fades to 0.18 to serve as the ambient background behind ScrollStack (never disappears)
+          if (progress < 0.15) {
+            overviewLayer.style.opacity = '1';
+          } else if (progress < 0.9) {
+            const fade = 1 - (progress - 0.15) / 0.75;
+            const opacity = 0.18 + fade * (1.0 - 0.18);
+            overviewLayer.style.opacity = String(
+              Math.round(opacity * 100) / 100,
+            );
+          } else {
+            overviewLayer.style.opacity = '0.18';
+          }
+          overviewLayer.style.visibility = 'visible';
+          overviewLayer.style.pointerEvents = 'none';
+
+          // 3. Showcase (Heading + ScrollStack Card 0) in-place appearance
+          if (progress < 0.25) {
+            showcase.style.opacity = '0';
+            showcase.style.transform = 'translate3d(0, 30px, 0) scale(0.98)';
+            showcase.style.pointerEvents = 'none';
+          } else if (progress < 0.9) {
+            const sp = (progress - 0.25) / 0.65;
+            const easeSp = sp * sp * (3 - 2 * sp);
+            showcase.style.opacity = String(easeSp);
+            const translateY = Math.round((1 - easeSp) * 30 * 10) / 10;
+            const scale = Math.round((0.98 + easeSp * 0.02) * 1000) / 1000;
+            showcase.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+            showcase.style.pointerEvents = sp > 0.6 ? 'auto' : 'none';
+          } else {
+            showcase.style.opacity = '1';
+            showcase.style.transform = '';
+            showcase.style.pointerEvents = 'auto';
+          }
+        };
+
+        renderGridAndShowcase(window.scrollY);
+
+        disposers.push(
+          scroll((_p: number, info: { y: { current: number } }) => {
+            renderGridAndShowcase(info.y.current);
+          }),
+        );
+
+        disposers.push(() => {
+          rows.forEach((row) => (row.style.transform = ''));
+          overviewLayer.style.opacity = '';
+          overviewLayer.style.visibility = '';
+          overviewLayer.style.pointerEvents = '';
+          showcase.style.opacity = '';
+          showcase.style.transform = '';
+          showcase.style.pointerEvents = '';
         });
+      }
     }
 
     // Release the outgoing text before the canvas crosses its mid-tone, then reveal contact.

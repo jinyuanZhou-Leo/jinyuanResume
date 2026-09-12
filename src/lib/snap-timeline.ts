@@ -38,10 +38,10 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
       ? getElementTop(stack)
       : getElementTop(work);
 
-  // 严格在 5 个卡片横向移动之后、到达“想法，正在运行。”标题时才启动吸附
-  const workThreshold = Math.max(0, headingTop - containerHeight * 0.35);
+  // 严格在卡片飞出屏幕、文案与第一张卡片就位之后启动吸附
+  const workThreshold = Math.max(0, headingTop - navHeight - 40);
 
-  // 1.1 标题“想法，正在运行。”居中定格
+  // 1.1 飞出完成，标题“想法，正在运行。”与第一张卡片 (Card 0) 居中定格
   keyframes.push(Math.round(headingTop - navHeight));
 
   // 1.2 SelectedWorkStack cards - each card pinning state is its own keyframe
@@ -59,7 +59,7 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
       const cardTop = getElementTop(card);
       // The exact scroll position where this card reaches its resting stacked spot
       const pinTrigger = cardTop - stackPositionPx - itemStackDistance * index;
-      if (pinTrigger > headingTop - navHeight) {
+      if (pinTrigger > headingTop - navHeight + 30) {
         keyframes.push(Math.round(pinTrigger));
       }
     });
@@ -151,9 +151,9 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
     keyframes.push(Math.round(contactTop - navHeight));
   }
 
-  // Deduplicate and filter keyframes (strictly >= headingTop - navHeight)
+  // Deduplicate and filter keyframes (strictly >= workThreshold - 10)
   const sorted = keyframes
-    .filter((pos) => pos >= headingTop - navHeight - 10 && pos <= maxScroll)
+    .filter((pos) => pos >= workThreshold - 10 && pos <= maxScroll)
     .sort((a, b) => a - b);
 
   const cleanKeyframes: number[] = [];
