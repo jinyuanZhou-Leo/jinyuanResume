@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { lazy, Suspense, useEffect, useState } from 'react';
 const PixelBlast = lazy(() => import('./PixelBlast.jsx'));
+import TextType from './TextType';
 import { content, profile, type Locale } from '../../data/resume';
 import {
   fetchRepositories,
@@ -45,7 +46,18 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
       <div className="github-heading">
         <div>
           <span className="eyebrow">OPEN SOURCE / GITHUB</span>
-          <h2 id="github-title">{t.title}</h2>
+          <TextType
+            as="h2"
+            id="github-title"
+            text={t.title}
+            typingSpeed={82}
+            initialDelay={280}
+            pauseDuration={2600}
+            loop={false}
+            startOnVisible
+            cursorCharacter="|"
+            cursorClassName="text-type-cursor"
+          />
           <p>{t.subtitle}</p>
         </div>
         <a

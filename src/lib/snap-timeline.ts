@@ -83,7 +83,7 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
     const morphEnd = morphStart + containerHeight * 0.45;
     keyframes.push(Math.ceil(morphEnd));
     // Keep the completed switcher as its own scroll stop for a little longer.
-    keyframes.push(Math.ceil(morphEnd + containerHeight * 0.5));
+    keyframes.push(Math.floor(morphEnd + containerHeight * 0.5));
   }
 
   // --- SECTION 2: #experience (实习中的学习与实践) ---
@@ -91,18 +91,11 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
   if (exp) {
     const expTop = getElementTop(exp);
     if (isDesktop) {
-      // On desktop, reading-sequence.css pins #experience stage across 180svh.
-      // chapters.ts coordinates heading (0.18), summary (0.25), points (0.38, 0.52, 0.66), tags (0.80).
-      const expScrollable = Math.max(0, exp.offsetHeight - containerHeight);
-      const phases = [
-        0.24, // Phase 1: Headline & company role locked in
-        0.42, // Phase 2: Point 1 (Unitree SDK & Motion control) revealed
-        0.56, // Phase 3: Point 2 (React 19 + FastAPI + RAG) revealed
-        0.7, // Phase 4: Point 3 (ROS 2 & Embodied AI) revealed
-        0.84, // Phase 5: Complete layout with tags fully resolved
-      ];
-      phases.forEach((p) => {
-        keyframes.push(Math.round(expTop + expScrollable * p));
+      // Match the common layout timeline in chapters.ts, including its readable hold.
+      const start = expTop - containerHeight * 0.8;
+      const distance = exp.offsetHeight - containerHeight * 0.2;
+      [0.18, 0.86].forEach((phase) => {
+        keyframes.push(Math.round(start + distance * phase));
       });
     } else {
       keyframes.push(Math.round(expTop - navHeight));

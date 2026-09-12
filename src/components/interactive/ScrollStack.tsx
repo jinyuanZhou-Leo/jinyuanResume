@@ -135,7 +135,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         ),
       ) || 0;
     const cardHeight = cardsRef.current[0]?.offsetHeight ?? 0;
-    const browseScale = 1;
+    const browseScale = 0.82;
     const trackGap = window.innerWidth <= 760 ? 12 : 24;
 
     const heading = scrollerRef.current
@@ -181,6 +181,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     // Give the finished horizontal track a longer, readable pause before it
     // releases into the next section.
     const pinEnd = morphEnd + containerHeight * 0.5;
+    // Heading and cards share the exact release clock; neither keeps pinning alone.
+    if (heading) {
+      heading.style.position = isDesktop ? 'relative' : '';
+      heading.style.top = isDesktop ? '0px' : '';
+      heading.style.transform = isDesktop
+        ? `translate3d(0, ${Math.max(0, Math.min(scrollTop, pinEnd) + groupTop - getElementOffset(heading))}px, 0)`
+        : '';
+    }
     const progress = calculateProgress(scrollTop, morphStart, morphEnd);
     const morph = progress * progress * (3 - 2 * progress);
     const ready = progress === 1;
@@ -208,13 +216,16 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     const trackPositionPx =
       stackPositionPx + (browsePositionPx - stackPositionPx) * morph;
     if (controlsRef.current && scrollerRef.current) {
-      controlsRef.current.style.top =
-        String(
-          Math.min(scrollTop, pinEnd) +
-            trackPositionPx +
-            (cardHeight * browseScale) / 2 -
-            getElementOffset(scrollerRef.current),
-        ) + 'px';
+      const controlY =
+        Math.min(scrollTop, pinEnd) +
+        trackPositionPx +
+        (cardHeight * browseScale) / 2 -
+        getElementOffset(scrollerRef.current);
+      // Move the controls without invalidating layout on every scroll frame.
+      const transform = `translate3d(0, ${Math.round(controlY * 100) / 100}px, 0) translateY(-50%)`;
+      if (controlsRef.current.style.transform !== transform) {
+        controlsRef.current.style.transform = transform;
+      }
     }
 
     cardsRef.current.forEach((card, i) => {
@@ -269,7 +280,12 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         scale:
           Math.round((scale + (browseScale - scale) * morph) * 1000) / 1000,
         rotation: Math.round(rotation * (1 - morph) * 100) / 100,
-        blur: Math.round(blur * (1 - morph) * 100) / 100,
+        blur:
+          Math.round(
+            (blur * (1 - morph) +
+              Math.min(3, Math.abs(i - positionRef.current) * 2) * morph) *
+              100,
+          ) / 100,
       };
       const previous = lastTransformsRef.current.get(i);
       const changed =
@@ -342,6 +358,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         card.style.filter = '';
         card.inert = false;
       });
+      const heading = root
+        ?.closest('.work-showcase')
+        ?.querySelector<HTMLElement>('.section-heading');
+      if (heading) {
+        heading.style.position = '';
+        heading.style.top = '';
+        heading.style.transform = '';
+      }
       lastTransformsRef.current.clear();
       browseRef.current = false;
       setBrowsing(false);

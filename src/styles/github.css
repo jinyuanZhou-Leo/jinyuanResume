@@ -30,6 +30,10 @@
   margin-top: 15px;
   font-size: clamp(32px, 3.55vw, 52px);
 }
+.github-section .text-type-cursor {
+  margin-left: 0.12em;
+  font-weight: 400;
+}
 .github-heading p {
   font-size: 12px;
   color: var(--muted);
