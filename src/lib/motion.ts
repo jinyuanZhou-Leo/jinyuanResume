@@ -2,10 +2,12 @@ import { animate, scroll, stagger, interpolate } from 'motion';
 import Lenis from 'lenis';
 import { mountAboutJourney } from './about-journey';
 import { mountChapters } from './chapters';
+import { mountSnapTimeline } from './snap-timeline';
 import 'lenis/dist/lenis.css';
 
 export function mountMotion() {
-  const header = document.querySelector<HTMLElement>('.site-header')!;
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (!header) return () => {};
   const measureHeader = () => {
     document.documentElement.style.setProperty(
       '--viewport-width',
@@ -41,6 +43,7 @@ export function mountMotion() {
       anchors: true,
     });
     disposers.push(() => smoothScroll.destroy());
+    disposers.push(mountSnapTimeline(smoothScroll));
 
     const intro = animate(
       '.hero-content > *',
@@ -54,22 +57,28 @@ export function mountMotion() {
     // Observe untransformed layout dimensions, including asynchronously loaded repositories.
     const resize = new ResizeObserver(() => {
       scenes.forEach((scene) => {
-        const stage = scene.querySelector<HTMLElement>('.scene-stage')!;
-        scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
+        const stage = scene.querySelector<HTMLElement>('.scene-stage');
+        if (stage) {
+          scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
+        }
       });
       smoothScroll.resize();
     });
     scenes.forEach((scene, index) => {
       scene.style.setProperty('--scene-order', String(index));
-      const stage = scene.querySelector<HTMLElement>('.scene-stage')!;
-      scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
-      resize.observe(stage);
+      const stage = scene.querySelector<HTMLElement>('.scene-stage');
+      if (stage) {
+        scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
+        resize.observe(stage);
+      }
     });
     disposers.push(() => resize.disconnect());
 
     // Each project reveals over its own scroll interval, regardless of section length.
     document
-      .querySelectorAll<HTMLElement>('.featured-project, .project-row')
+      .querySelectorAll<HTMLElement>(
+        '.featured-project:not(.scroll-stack-card), .project-row:not(.scroll-stack-card)',
+      )
       .forEach((project) => {
         const reveal = animate(
           project,
@@ -187,45 +196,49 @@ export function mountMotion() {
       disposers.push(mountChapters());
       disposers.push(mountAboutJourney());
     }
-    const github = document.querySelector<HTMLElement>('#github')!;
-    disposers.push(
-      scroll(
-        (progress: number) => {
-          github.style.setProperty('--chapter-progress', String(progress));
-        },
-        { target: github, offset: ['start start', 'end end'] },
-      ),
-    );
-    disposers.push(() => github.style.removeProperty('--chapter-progress'));
-
-    const overview = document.querySelector<HTMLElement>('.project-overview')!;
-    document
-      .querySelectorAll<HTMLElement>('[data-grid-row]')
-      .forEach((row, index) => {
-        const direction = index % 2 === 0 ? 1 : -1;
-        const motion = animate(
-          row,
-          {
-            x: [
-              direction * (desktop.matches ? 480 : 260),
-              direction * (desktop.matches ? -480 : -260),
-            ],
+    const github = document.querySelector<HTMLElement>('#github');
+    if (github) {
+      disposers.push(
+        scroll(
+          (progress: number) => {
+            github.style.setProperty('--chapter-progress', String(progress));
           },
-          { ease: 'linear', autoplay: false },
-        );
-        disposers.push(() => motion.cancel());
-        disposers.push(
-          scroll(
-            (progress: number) => {
-              motion.time = progress * motion.duration;
-            },
+          { target: github, offset: ['start start', 'end end'] },
+        ),
+      );
+      disposers.push(() => github.style.removeProperty('--chapter-progress'));
+    }
+
+    const overview = document.querySelector<HTMLElement>('.project-overview');
+    if (overview) {
+      document
+        .querySelectorAll<HTMLElement>('[data-grid-row]')
+        .forEach((row, index) => {
+          const direction = index % 2 === 0 ? 1 : -1;
+          const motion = animate(
+            row,
             {
-              target: overview,
-              offset: ['start 80%', 'end 25%'],
+              x: [
+                direction * (desktop.matches ? 480 : 260),
+                direction * (desktop.matches ? -480 : -260),
+              ],
             },
-          ),
-        );
-      });
+            { ease: 'linear', autoplay: false },
+          );
+          disposers.push(() => motion.cancel());
+          disposers.push(
+            scroll(
+              (progress: number) => {
+                motion.time = progress * motion.duration;
+              },
+              {
+                target: overview,
+                offset: ['start 80%', 'end 25%'],
+              },
+            ),
+          );
+        });
+    }
 
     // Release the outgoing text before the canvas crosses its mid-tone, then reveal contact.
     const release = animate(

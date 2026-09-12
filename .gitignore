@@ -25,4 +25,5 @@ pnpm-debug.log*
 
 # Local browser verification artifacts
 .playwright-mcp/
+.playwright-cli/
 output/playwright/

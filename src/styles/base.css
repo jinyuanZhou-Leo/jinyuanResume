@@ -1,27 +1,48 @@
 :root {
-  /* Semantic tokens keep a future theme independent of component structure. */
-  --paper: #f8f8f5;
-  --surface: #eeeeea;
-  --ink: #232520;
-  --muted: #62645c;
-  --line: #d9dbd3;
-  --accent: #526337;
-  --accent-light: #c4cea7;
-  --dark: #252821;
+  /* 喜茶调色板 HEYTEA Palette */
+  --tea-paper: #faf8f5;
+  --tea-surface: #f2efe9;
+  --tea-green: #4f5e38;
+  --tea-green-light: #c4cea7;
+  --tea-ink: #21231d;
+
+  /* 精工不锈钢冷光材质 Token */
+  --steel-border: rgba(33, 35, 29, 0.08);
+  --steel-highlight: rgba(255, 255, 255, 0.75);
+  --steel-surface: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(242, 239, 233, 0.4) 100%
+  );
+
+  /* 字体族声明 */
   --font-body: 'Manrope Variable', 'Noto Sans SC', sans-serif;
   --font-display: 'Manrope Variable', 'Noto Sans SC', sans-serif;
+
+  /* 基础语义映射 */
+  --paper: var(--tea-paper);
+  --surface: var(--tea-surface);
+  --ink: var(--tea-ink);
+  --muted: #62645c;
+  --line: #d9dbd3;
+  --accent: var(--tea-green);
+  --accent-light: var(--tea-green-light);
+  --dark: var(--tea-ink);
   --gutter: clamp(24px, 6.2vw, 104px);
   --max-width: 1440px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --header-height: 92px;
 }
+
 * {
   box-sizing: border-box;
 }
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 110px;
 }
+
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -30,34 +51,42 @@ body {
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
 }
+
 ::selection {
   background: var(--accent-light);
   color: var(--ink);
 }
+
 a {
   color: inherit;
   text-decoration: none;
 }
+
 button {
   color: inherit;
   font: inherit;
   cursor: pointer;
 }
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;
 }
+
 button {
   border: 0;
 }
+
 button:disabled {
   cursor: wait;
 }
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 6px;
 }
+
 h1,
 h2,
 h3,
@@ -65,46 +94,61 @@ h4,
 p {
   margin: 0;
 }
+
 h1,
 h2,
 h3,
 h4 {
   font-weight: 600;
 }
+
 h1,
 h2,
 h3 {
   text-wrap: balance;
 }
+
+:lang(zh) h1,
+:lang(zh) h2,
+:lang(zh) h3 {
+  letter-spacing: -0.01em;
+}
+
 p {
   text-wrap: pretty;
 }
+
 ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+
 svg {
   flex-shrink: 0;
   vertical-align: middle;
 }
+
 .section {
   max-width: var(--max-width);
   padding: 110px var(--gutter);
   margin-inline: auto;
 }
+
 .eyebrow {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   line-height: 1.5;
 }
+
 h2 {
   font-size: clamp(32px, 3.55vw, 52px);
   letter-spacing: -0.035em;
   line-height: 1.32;
   white-space: pre-line;
 }
+
 .skip-link {
   position: fixed;
   top: 10px;
@@ -115,6 +159,7 @@ h2 {
   z-index: 30;
   transform: translateY(-150%);
 }
+
 .skip-link:focus {
   transform: translateY(0);
 }
@@ -122,10 +167,12 @@ h2 {
 .scroll-scene {
   position: relative;
 }
+
 .scene-content {
   transform-origin: center center;
   display: flow-root;
 }
+
 html.lenis.lenis-smooth {
   scroll-behavior: auto;
 }

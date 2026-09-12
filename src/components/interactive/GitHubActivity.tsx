@@ -62,18 +62,18 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
           t.loading
         ) : error ? (
           t.error
-        ) : (
+        ) : data?.fetchedAt ? (
           <>
             <span className="status-dot" />
             {t.live} ·{' '}
-            <time dateTime={data!.fetchedAt}>
+            <time dateTime={data.fetchedAt}>
               {new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-CA', {
                 hour: '2-digit',
                 minute: '2-digit',
-              }).format(new Date(data!.fetchedAt))}
+              }).format(new Date(data.fetchedAt))}
             </time>
           </>
-        )}
+        ) : null}
       </div>
       {error && (
         <button

@@ -20,7 +20,7 @@
 .brand-mark {
   position: relative;
   font-size: 47px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.08em;
   line-height: 1;
 }
@@ -33,7 +33,7 @@
 .wordmark-name {
   font-size: 10px;
   letter-spacing: 0.08em;
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1.25;
   margin-left: 5px;
 }
@@ -45,21 +45,26 @@
 .desktop-nav a {
   position: relative;
   padding-block: 12px;
+  transition: color 0.3s var(--ease);
+}
+.desktop-nav a:hover {
+  color: var(--accent);
 }
 .desktop-nav a::after {
   content: '';
   position: absolute;
-  height: 1px;
-  background: var(--ink);
+  height: 1.5px;
+  background: var(--accent);
   bottom: 6px;
   left: 0;
   right: 0;
   transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s var(--ease);
+  transform-origin: right;
+  transition: transform 0.38s var(--ease);
 }
 .desktop-nav a:hover::after {
   transform: scaleX(1);
+  transform-origin: left;
 }
 .header-actions {
   display: flex;
@@ -78,7 +83,7 @@
 }
 .language-switch a[aria-current] {
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 700;
 }
 .language-switch > span {
   color: #a4a69c;
@@ -89,4 +94,11 @@
   align-items: center;
   border-bottom: 1px solid var(--ink);
   padding-block: 9px;
+  transition:
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.header-download:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }

@@ -1,8 +1,10 @@
-import { animate, scroll, interpolate, cubicBezier } from 'motion';
+import { scroll, interpolate, cubicBezier } from 'motion';
 
-/** Scroll selects a reading beat; Motion completes the transition independently. */
+/** All layers share one scroll clock, so reversing direction retraces the same journey. */
 export function mountAboutJourney() {
-  const root = document.querySelector<HTMLElement>('#about')!;
+  const root = document.querySelector<HTMLElement>('#about');
+  if (!root) return () => {};
+
   const ease = cubicBezier(0.22, 1, 0.36, 1);
   const tracks: Array<(p: number) => void> = [];
   const styled = new Set<HTMLElement>();
@@ -83,11 +85,11 @@ export function mountAboutJourney() {
   }
   track(
     '.journey-line',
-    [0, 0.1, 0.35, 0.64, 0.7, 1],
+    [0, 0.1, 0.35, 0.58, 0.68, 1],
     [0.25, 1, 1, 1, 0.36, 0.36],
     (el, v) => el.style.setProperty('--line-scale', String(v)),
   );
-  track('.journey-line', [0, 0.64, 0.7, 1], [0, 0, 90, 90], (el, v) =>
+  track('.journey-line', [0, 0.58, 0.69, 1], [0, 0, 90, 90], (el, v) =>
     el.style.setProperty('--line-angle', `${v}deg`),
   );
   const toolkitGapPhase = interpolate(
@@ -146,45 +148,18 @@ export function mountAboutJourney() {
   });
   const dots = [...root.querySelectorAll<HTMLElement>('.learning-dots i')];
   dots.forEach((el) => styled.add(el));
-  // These are complete reading states, never a partially rotated line or faded title.
-  const beats = [0.12, 0.36, 0.63, 0.72, 0.78, 0.84, 0.9, 0.96];
-  const thresholds = [0.2, 0.44, 0.68, 0.75, 0.81, 0.87, 0.93];
-  let activeBeat = -1;
-  let renderedProgress = beats[0];
-  let transition: ReturnType<typeof animate> | undefined;
-  const render = (p: number) => {
-    renderedProgress = p;
-    root.dataset.journeyProgress = p.toFixed(4);
-    tracks.forEach((update) => update(p));
-    dots.forEach((el, i) => {
-      el.style.opacity = String(0.2 + 0.8 * Math.sin(p * 40 - i) ** 2);
-    });
-  };
   const stop = scroll(
     (p: number) => {
-      // A small dead band prevents trackpad jitter from toggling adjacent beats.
-      let next = activeBeat < 0 ? 0 : activeBeat;
-      while (next < thresholds.length && p > thresholds[next] + 0.008) next++;
-      while (next > 0 && p < thresholds[next - 1] - 0.008) next--;
-      if (next === activeBeat) return;
-      transition?.stop();
-      const initial = activeBeat < 0;
-      activeBeat = next;
-      if (initial) {
-        render(beats[next]);
-        return;
-      }
-      transition = animate(renderedProgress, beats[next], {
-        duration: next < 4 ? 1.1 : 0.65,
-        ease: 'easeInOut',
-        onUpdate: render,
+      root.dataset.journeyProgress = p.toFixed(4);
+      tracks.forEach((update) => update(p));
+      dots.forEach((el, i) => {
+        el.style.opacity = String(0.2 + 0.8 * Math.sin(p * 40 - i) ** 2);
       });
     },
     { target: root, offset: ['start start', 'end end'] },
   );
   return () => {
     stop();
-    transition?.stop();
     gapObserver?.disconnect();
     styled.forEach((el) => {
       // Preserve icon coordinates authored by Astro while removing animation-owned properties.

@@ -2,8 +2,9 @@ import { animate, scroll } from 'motion';
 
 /** One reversible scroll timeline coordinates each chapter's headline and evidence. */
 export function mountChapters() {
+  const experience = document.querySelector<HTMLElement>('#experience');
+  if (!experience) return () => {};
   const disposers: (() => void)[] = [];
-  const experience = document.querySelector<HTMLElement>('#experience')!;
   const heading = animate(
     '.experience-layout > div:first-child',
     {

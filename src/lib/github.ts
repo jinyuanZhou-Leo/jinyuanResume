@@ -35,6 +35,7 @@ export async function fetchRepositories(url: string) {
     signal: AbortSignal.timeout(10000),
     headers: {
       Accept: 'application/vnd.github+json',
+      // GitHub official REST API supported version (2026-03-10 release, coexisting with 2022-11-28)
       'X-GitHub-Api-Version': '2026-03-10',
     },
   });
