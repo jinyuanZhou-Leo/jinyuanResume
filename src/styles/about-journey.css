@@ -127,15 +127,16 @@
   font-size: 13px;
   color: var(--muted);
 }
+.journey-intro {
+  margin-bottom: 40px;
+}
 .journey-bio {
   max-width: 65ch;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.8;
   color: var(--muted);
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
-  .cinematic-scroll #about::after {
-    height: 600svh;
-  }
   .cinematic-scroll .about-journey {
     min-height: calc(100svh - var(--nav-height));
     display: flex;
@@ -224,7 +225,7 @@
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
   .cinematic-scroll #about::after {
-    height: 680svh;
+    height: 850svh;
   }
   .cinematic-scroll #about > .scene-stage {
     top: var(--nav-height);
@@ -234,14 +235,35 @@
     min-height: 0;
     padding-block: 0;
   }
-  .cinematic-scroll .journey-heading {
+  .cinematic-scroll .journey-intro {
     position: absolute;
-    top: 10%;
-    left: var(--gutter);
-    max-width: 52%;
+    top: 14%;
+    inset-inline: var(--gutter);
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: end;
+    gap: clamp(36px, 5vw, 84px);
+    z-index: 2;
+  }
+  .cinematic-scroll .journey-heading {
+    position: static;
+    max-width: none;
   }
   .cinematic-scroll .journey-heading h2 {
-    font-size: clamp(32px, 3.7vw, 56px);
+    font-size: clamp(34px, 4vw, 56px);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+  .cinematic-scroll .journey-bio-container {
+    padding-left: clamp(20px, 2.5vw, 36px);
+    border-left: 2px solid var(--reading-line, var(--line));
+  }
+  .cinematic-scroll .journey-bio {
+    position: static;
+    max-width: none;
+    font-size: clamp(14px, 1.05vw, 16px);
+    line-height: 1.85;
+    color: var(--reading-muted, var(--muted));
   }
   .cinematic-scroll .journey-stage {
     position: absolute;
@@ -273,13 +295,6 @@
   }
   .cinematic-scroll .journey-school .school-gpa strong {
     font-size: 24px;
-  }
-  .cinematic-scroll .journey-bio {
-    position: absolute;
-    right: var(--gutter);
-    bottom: 10%;
-    max-width: 38%;
-    line-height: 1.9;
   }
   .cinematic-scroll .journey-toolkit {
     min-height: 0;

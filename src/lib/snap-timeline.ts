@@ -102,16 +102,18 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
   if (about) {
     const aboutTop = getElementTop(about);
     if (isDesktop) {
-      // On desktop, about-journey.ts coordinates multiple scenes over 260svh:
-      // 0.08: Heading & Bio statement fully crisp
-      // 0.22: High school (NFSL) in focal view
-      // 0.36: University of Toronto in focal view
-      // 0.60: Interactive Toolkit & orbiting icons fully deployed
-      // 0.74: Soft skills item 1 in sharp focus
-      // 0.84: Soft skills item 2 in sharp focus
-      // 0.94: Soft skills item 3 in sharp focus
+      // On desktop, about-journey.ts coordinates multiple scenes over 850svh:
+      // 0.08: Intro heading & bio statement in elegant paired focus
+      // 0.20: High school (NFSL) in focal view
+      // 0.33: University of Toronto in focal view
+      // 0.49: Interactive Toolkit & orbiting icons fully deployed
+      // 0.63: People Item 0 (项目管理) in sharp focus
+      // 0.73: People Item 1 (沟通) in sharp focus
+      // 0.83: People Item 2 (团队协作) in sharp focus
+      // 0.92: People Item 3 (批判性思维) in sharp focus
+      // 0.98: People Item 4 (研究) in sharp focus
       const aboutScrollable = Math.max(0, about.offsetHeight - containerHeight);
-      const phases = [0.08, 0.22, 0.36, 0.6, 0.74, 0.84, 0.94];
+      const phases = [0.08, 0.2, 0.33, 0.49, 0.63, 0.73, 0.83, 0.92, 0.98];
       phases.forEach((p) => {
         keyframes.push(Math.round(aboutTop + aboutScrollable * p));
       });
