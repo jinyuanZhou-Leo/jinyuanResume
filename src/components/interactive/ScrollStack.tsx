@@ -127,17 +127,46 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     isUpdatingRef.current = true;
 
     const { scrollTop, containerHeight } = getScrollData();
+    const isDesktop = window.innerWidth >= 761;
+    const navHeight =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--nav-height',
+        ),
+      ) || 0;
+    const cardHeight = cardsRef.current[0]?.offsetHeight ?? 0;
+    const browseScale = 1;
+    const trackGap = window.innerWidth <= 760 ? 12 : 24;
+
+    const heading = scrollerRef.current
+      ?.closest('.work-showcase')
+      ?.querySelector<HTMLElement>('.section-heading');
+    const headingHeight = heading?.offsetHeight ?? 0;
+    const headingGap = heading
+      ? parseFloat(getComputedStyle(heading).marginBottom) || 0
+      : 0;
+
+    const maxStackOffset = (cardsRef.current.length - 1) * itemStackDistance;
+    const totalContentHeight =
+      headingHeight + headingGap + cardHeight + maxStackOffset * 0.5;
+    const groupTop =
+      navHeight +
+      Math.max(12, (containerHeight - navHeight - totalContentHeight) / 2);
+    if (heading && isDesktop) {
+      heading.style.top = `${groupTop}px`;
+    }
+
+    const browsePositionPx = groupTop + headingHeight + headingGap;
+
     const requestedStackPositionPx = parsePercentage(
       stackPosition,
       containerHeight,
     );
-    // Keep an equal-height card inside the viewport while it is pinned. This
-    // is especially important on narrow screens where cards are intentionally tall.
-    const cardHeight = cardsRef.current[0]?.offsetHeight ?? 0;
-    const stackPositionPx = Math.min(
-      requestedStackPositionPx,
-      Math.max(0, containerHeight - cardHeight - 80),
-    );
+    const stackPositionPx =
+      isDesktop && heading
+        ? browsePositionPx
+        : Math.max(navHeight + 16, requestedStackPositionPx);
+
     const scaleEndPositionPx = parsePercentage(
       scaleEndPosition,
       containerHeight,
@@ -175,30 +204,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       (1 - Math.exp(-elapsed / 85));
     if (Math.abs(positionRef.current - selectedRef.current) < 0.001)
       positionRef.current = selectedRef.current;
-    // Keep the browsing cards at their original size. Center them in the
-    // content viewport below the fixed header, rather than the full viewport.
-    const browseScale = 1;
-    const trackGap = window.innerWidth <= 760 ? 12 : 24;
-    const navHeight =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          '--nav-height',
-        ),
-      ) || 0;
-    const heading = scrollerRef.current
-      ?.closest('.work-showcase')
-      ?.querySelector<HTMLElement>('.section-heading');
-    const headingHeight = heading?.offsetHeight ?? 0;
-    const headingGap = heading
-      ? parseFloat(getComputedStyle(heading).marginBottom) || 0
-      : 0;
-    const groupHeight = headingHeight + headingGap + cardHeight * browseScale;
-    const groupTop =
-      navHeight + Math.max(0, (containerHeight - navHeight - groupHeight) / 2);
-    if (heading && window.innerWidth >= 761) {
-      heading.style.top = `${groupTop}px`;
-    }
-    const browsePositionPx = groupTop + headingHeight + headingGap;
+
     const trackPositionPx =
       stackPositionPx + (browsePositionPx - stackPositionPx) * morph;
     if (controlsRef.current && scrollerRef.current) {

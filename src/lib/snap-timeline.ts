@@ -48,12 +48,22 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
   const cards = [...work.querySelectorAll<HTMLElement>('.scroll-stack-card')];
   if (cards.length > 0) {
     const cardHeight = cards[0]?.offsetHeight ?? 0;
-    const requestedStackPositionPx = 0.2 * containerHeight;
-    const stackPositionPx = Math.min(
-      requestedStackPositionPx,
-      Math.max(0, containerHeight - cardHeight - 80),
-    );
+    const headingHeight = heading?.offsetHeight ?? 0;
+    const headingGap = heading
+      ? parseFloat(getComputedStyle(heading).marginBottom) || 0
+      : 0;
     const itemStackDistance = 26;
+    const maxStackOffset = (cards.length - 1) * itemStackDistance;
+    const totalContentHeight =
+      headingHeight + headingGap + cardHeight + maxStackOffset * 0.5;
+    const groupTop =
+      navHeight +
+      Math.max(12, (containerHeight - navHeight - totalContentHeight) / 2);
+    const browsePositionPx = groupTop + headingHeight + headingGap;
+    const stackPositionPx =
+      isDesktop && heading
+        ? browsePositionPx
+        : Math.max(navHeight + 16, 0.2 * containerHeight);
 
     cards.forEach((card, index) => {
       const cardTop = getElementTop(card);
