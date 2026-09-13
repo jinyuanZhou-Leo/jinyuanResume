@@ -33,8 +33,9 @@ export function mountAboutJourney() {
       el.style.transform = `translate${axis}(${v}%)`;
     });
 
-  fade('.journey-intro', [0, 0.11, 0.18, 1], [1, 1, 0, 0]);
-  track('.journey-intro', [0, 0.11, 0.18, 1], [0, 0, 1, 1], (el, v) => {
+  // Share the University of Toronto card's fade-out window.
+  fade('.journey-intro', [0, 0.37, 0.44, 1], [1, 1, 0, 0]);
+  track('.journey-intro', [0, 0.37, 0.44, 1], [0, 0, 1, 1], (el, v) => {
     el.style.filter = `blur(${v * 6}px)`;
     el.style.transform = `scale(${1 - v * 0.035})`;
   });

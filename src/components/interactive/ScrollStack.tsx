@@ -135,7 +135,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         ),
       ) || 0;
     const cardHeight = cardsRef.current[0]?.offsetHeight ?? 0;
-    const browseScale = 0.82;
+    const browseScale = 0.86;
     const trackGap = window.innerWidth <= 760 ? 12 : 24;
 
     const heading = scrollerRef.current

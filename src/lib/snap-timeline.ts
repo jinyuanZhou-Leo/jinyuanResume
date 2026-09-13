@@ -91,10 +91,10 @@ function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
   if (exp) {
     const expTop = getElementTop(exp);
     if (isDesktop) {
-      // Match the common layout timeline in chapters.ts, including its readable hold.
+      // Match the column entrance timeline in chapters.ts, including its readable hold.
       const start = expTop - containerHeight * 0.8;
       const distance = exp.offsetHeight - containerHeight * 0.2;
-      [0.18, 0.86].forEach((phase) => {
+      [0.56, 0.86].forEach((phase) => {
         keyframes.push(Math.round(start + distance * phase));
       });
     } else {
@@ -249,8 +249,9 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     if (target !== null && Math.abs(target - currentScroll) > 4) {
       isProgrammaticSnap = true;
       smoothScroll.scrollTo(target, {
-        duration: 0.65,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 1.05,
+        // Ease in and out so the snap does not lurch into its target.
+        easing: (t: number) => t * t * (3 - 2 * t),
         userData: { initiator: 'directional-snap' },
         onComplete: () => {
           isProgrammaticSnap = false;
@@ -289,8 +290,8 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     }
 
     cancelDebounce();
-    // Schedule snap after user input halts (220ms debounce)
-    debounceTimer = window.setTimeout(performDirectionalSnap, 220);
+    // Queue the snap without an intentional idle delay.
+    debounceTimer = window.setTimeout(performDirectionalSnap, 75);
   };
 
   smoothScroll.on('scroll', handleScroll);
