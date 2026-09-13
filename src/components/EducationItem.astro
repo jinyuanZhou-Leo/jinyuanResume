@@ -1,0 +1,22 @@
+---
+import type { Education, Locale } from '../data/types';
+import { educationDate } from '../lib/content';
+interface Props {
+  school: Education;
+  locale: Locale;
+}
+const { school, locale } = Astro.props;
+---
+
+<article class="journey-school" data-school-id={school.id} data-reading-stop>
+  <span class="journey-node" aria-hidden="true" />
+  <p class="project-date">{educationDate(school, locale)}</p>
+  <h3>{school.name[locale]}</h3>
+  <p>{school.degree[locale]}</p>
+  {school.gpa && (
+    <p class="school-gpa">
+      GPA <strong>{school.gpa}</strong>
+    </p>
+  )}
+  {school.note && <p>{school.note[locale]}</p>}
+</article>

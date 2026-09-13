@@ -7,7 +7,6 @@
 }
 .section-heading h2,
 .experience-layout h2,
-.about-intro h2,
 .contact-top h2 {
   margin-top: 22px;
 }
@@ -17,11 +16,6 @@
   font-size: 13px;
   line-height: 1.9;
   padding-bottom: 5px;
-}
-.featured-projects {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(64px, 10svh, 120px);
 }
 .project-visual {
   height: 340px;
@@ -207,9 +201,6 @@
   font-size: 10px;
   padding: 3px 0;
   color: #52574b;
-}
-.project-list {
-  margin-top: 65px;
 }
 .project-row {
   padding: 32px 0;

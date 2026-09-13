@@ -1,182 +1,36 @@
 import Lenis from 'lenis';
 
-function getElementTop(element: HTMLElement | null): number {
-  let top = 0;
-  let current: HTMLElement | null = element;
-  while (current) {
-    top += current.offsetTop;
-    current = current.offsetParent as HTMLElement | null;
-  }
-  return top;
-}
+import {
+  getElementTop,
+  getChapterStops,
+  SCROLL_STOPS_CHANGED,
+} from './scroll-stops';
 
-/**
- * Collect fine-grained animation keyframes strictly starting from #work downwards.
- * Each section is decomposed into its distinct animation choreographies.
- */
 function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
-  const containerHeight = window.innerHeight;
-  const header = document.querySelector<HTMLElement>('.site-header');
-  const navHeight = header?.offsetHeight ?? 88;
-  const isDesktop = window.innerWidth >= 761;
+  const nav =
+    document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
+  const work = document.querySelector<HTMLElement>('#work');
+  if (!work) return { workThreshold: Infinity, keyframes: [] };
+  const heading = work.querySelector<HTMLElement>('.section-heading') ?? work;
+  const workThreshold = Math.max(0, getElementTop(heading) - nav - 40);
   const maxScroll = Math.max(
     0,
-    document.documentElement.scrollHeight - containerHeight,
+    document.documentElement.scrollHeight - window.innerHeight,
   );
-
-  const keyframes: number[] = [];
-
-  // --- SECTION 1: #work (从“想法，正在运行。”标题与卡片堆叠开始，排除上方 5 个卡片横向平移的 project-overview) ---
-  const work = document.querySelector<HTMLElement>('#work');
-  if (!work) return { workThreshold: 0, keyframes: [] };
-
-  const heading = work.querySelector<HTMLElement>('.section-heading');
-  const stack = work.querySelector<HTMLElement>('.selected-work-stack');
-  const headingTop = heading
-    ? getElementTop(heading)
-    : stack
-      ? getElementTop(stack)
-      : getElementTop(work);
-
-  // 严格在卡片飞出屏幕、文案与第一张卡片就位之后启动吸附
-  const workThreshold = Math.max(0, headingTop - navHeight - 40);
-
-  // 1.1 飞出完成，标题“想法，正在运行。”与第一张卡片 (Card 0) 居中定格
-  keyframes.push(Math.round(headingTop - navHeight));
-
-  // 1.2 SelectedWorkStack cards - each card pinning state is its own keyframe
-  const cards = [...work.querySelectorAll<HTMLElement>('.scroll-stack-card')];
-  if (cards.length > 0) {
-    const cardHeight = cards[0]?.offsetHeight ?? 0;
-    const headingHeight = heading?.offsetHeight ?? 0;
-    const headingGap = heading
-      ? parseFloat(getComputedStyle(heading).marginBottom) || 0
-      : 0;
-    const itemStackDistance = 26;
-    const maxStackOffset = (cards.length - 1) * itemStackDistance;
-    const totalContentHeight =
-      headingHeight + headingGap + cardHeight + maxStackOffset * 0.5;
-    const groupTop =
-      navHeight +
-      Math.max(12, (containerHeight - navHeight - totalContentHeight) / 2);
-    const browsePositionPx = groupTop + headingHeight + headingGap;
-    const stackPositionPx =
-      isDesktop && heading
-        ? browsePositionPx
-        : Math.max(navHeight + 16, 0.2 * containerHeight);
-
-    cards.forEach((card, index) => {
-      const cardTop = getElementTop(card);
-      // The exact scroll position where this card reaches its resting stacked spot
-      const pinTrigger = cardTop - stackPositionPx - itemStackDistance * index;
-      if (pinTrigger > headingTop - navHeight + 30) {
-        keyframes.push(Math.round(pinTrigger));
-      }
-    });
-
-    // Stop on the fully unfolded track so snapping cannot skip its controls.
-    const lastTop = getElementTop(cards[cards.length - 1]);
-    const morphStart = Math.max(
-      lastTop - containerHeight * 0.1,
-      lastTop - stackPositionPx,
-    );
-    const morphEnd = morphStart + containerHeight * 0.45;
-    keyframes.push(Math.ceil(morphEnd));
-    // Keep the completed switcher as its own scroll stop for a little longer.
-    keyframes.push(Math.floor(morphEnd + containerHeight * 0.5));
-  }
-
-  // --- SECTION 2: #experience (实习中的学习与实践) ---
-  const exp = document.querySelector<HTMLElement>('#experience');
-  if (exp) {
-    const expTop = getElementTop(exp);
-    if (isDesktop) {
-      // Match the column entrance timeline in chapters.ts, including its readable hold.
-      const start = expTop - containerHeight * 0.8;
-      const distance = exp.offsetHeight - containerHeight * 0.2;
-      [0.56, 0.86].forEach((phase) => {
-        keyframes.push(Math.round(start + distance * phase));
-      });
-    } else {
-      keyframes.push(Math.round(expTop - navHeight));
-    }
-  }
-
-  // --- SECTION 3: #about (逻辑之外，生活之内) ---
-  const about = document.querySelector<HTMLElement>('#about');
-  if (about) {
-    const aboutTop = getElementTop(about);
-    if (isDesktop) {
-      // On desktop, about-journey.ts coordinates multiple scenes over 850svh:
-      // 0.08: Intro heading & bio statement in elegant paired focus
-      // 0.20: High school (NFSL) in focal view
-      // 0.33: University of Toronto in focal view
-      // 0.49: Interactive Toolkit & orbiting icons fully deployed
-      // 0.63: People Item 0 (项目管理) in sharp focus
-      // 0.73: People Item 1 (沟通) in sharp focus
-      // 0.83: People Item 2 (团队协作) in sharp focus
-      // 0.92: People Item 3 (批判性思维) in sharp focus
-      // 0.98: People Item 4 (研究) in sharp focus
-      const aboutScrollable = Math.max(0, about.offsetHeight - containerHeight);
-      const phases = [0.08, 0.2, 0.33, 0.49, 0.63, 0.73, 0.83, 0.92, 0.98];
-      phases.forEach((p) => {
-        keyframes.push(Math.round(aboutTop + aboutScrollable * p));
-      });
-    } else {
-      keyframes.push(Math.round(aboutTop - navHeight));
-    }
-  }
-
-  // --- SECTION 4: #github (代码留在世界上的痕迹) ---
-  const github = document.querySelector<HTMLElement>('#github');
-  if (github) {
-    const githubTop = getElementTop(github);
-    // Hold the completed opacity/scale handoff before continuing through GitHub.
-    keyframes.push(Math.round(githubTop - navHeight));
-    if (isDesktop) {
-      // reading-sequence.css pins #github over 460svh:
-      // ~0.26: Heading revealed
-      // ~0.52: Complete grid & live contribution heat state fully open
-      // ~0.76: Fully legible before transition towards contact
-      const githubScrollable = Math.max(
-        0,
-        github.offsetHeight - containerHeight,
-      );
-      const phases = [0.26, 0.52, 0.76];
-      phases.forEach((p) => {
-        keyframes.push(Math.round(githubTop + githubScrollable * p));
-      });
-    } else {
-      keyframes.push(Math.round(githubTop - navHeight));
-    }
-  }
-
-  // --- SECTION 5: #contact (下一个好想法，从一句你好开始) ---
-  const contact = document.querySelector<HTMLElement>('#contact');
-  if (contact) {
-    const contactTop = getElementTop(contact);
-    keyframes.push(Math.round(contactTop - navHeight));
-  }
-
-  // Deduplicate and filter keyframes (strictly >= workThreshold - 10)
-  const sorted = keyframes
-    .filter((pos) => pos >= workThreshold - 10 && pos <= maxScroll)
-    .sort((a, b) => a - b);
-
-  const cleanKeyframes: number[] = [];
-  for (const pos of sorted) {
-    if (
-      cleanKeyframes.length === 0 ||
-      pos - cleanKeyframes[cleanKeyframes.length - 1] > 40
-    ) {
-      cleanKeyframes.push(pos);
-    }
-  }
-
-  return {
-    workThreshold,
-    keyframes: cleanKeyframes,
-  };
+  const stops = [
+    ...document.querySelectorAll<HTMLElement>(
+      '.scroll-scene:not([data-scene-first])',
+    ),
+  ].flatMap((scene) => [...getChapterStops(scene, nav)]);
+  const keyframes = [
+    ...new Set(
+      stops
+        .filter(Number.isFinite)
+        .map(Math.round)
+        .filter((p) => p >= workThreshold - 10 && p <= maxScroll),
+    ),
+  ].sort((a, b) => a - b);
+  return { workThreshold, keyframes };
 }
 
 /**
@@ -290,7 +144,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     }
 
     cancelDebounce();
-    // Queue the snap without an intentional idle delay.
+    // Let physical input settle before advancing to the next reading stop.
     debounceTimer = window.setTimeout(performDirectionalSnap, 75);
   };
 
@@ -305,6 +159,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
   };
 
   window.addEventListener('resize', debouncedRefresh);
+  window.addEventListener(SCROLL_STOPS_CHANGED, debouncedRefresh);
 
   const observer = new ResizeObserver(debouncedRefresh);
   const main = document.querySelector('main');
@@ -317,6 +172,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     window.removeEventListener('touchmove', onUserPhysicalInteraction);
     smoothScroll.off('scroll', handleScroll);
     window.removeEventListener('resize', debouncedRefresh);
+    window.removeEventListener(SCROLL_STOPS_CHANGED, debouncedRefresh);
     observer.disconnect();
   };
 }

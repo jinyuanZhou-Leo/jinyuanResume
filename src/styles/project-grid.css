@@ -1,4 +1,4 @@
-/* React Bits Grid Motion composition, reduced to the five actual projects. */
+/* React Bits Grid Motion composition, generated from the project records. */
 .project-overview {
   position: relative;
   width: var(--viewport-width, 100vw);
@@ -19,7 +19,8 @@
   gap: clamp(16px, 1.8vw, 28px);
 }
 .project-grid-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   justify-content: center;
   gap: clamp(16px, 1.8vw, 28px);
   will-change: transform;
@@ -28,25 +29,13 @@
   flex: 0 0 clamp(240px, 22vw, 360px);
   min-height: clamp(180px, 18svh, 240px);
   padding: clamp(20px, 2vw, 32px);
-  background: #e7e9df;
+  background: var(--tile-color, #e7e9df);
   color: var(--ink);
   display: block;
   border-radius: 12px;
   transition:
     background 0.35s,
     transform 0.35s var(--ease);
-}
-.grid-tile-reversi {
-  background: #e8e5dd;
-}
-.grid-tile-semestra {
-  background: #dce2d3;
-}
-.grid-tile-ischedule {
-  background: #e5e6da;
-}
-.grid-tile-research {
-  background: #e8e6df;
 }
 .grid-tile-category,
 .grid-tile-stack {
@@ -80,6 +69,9 @@
   display: none;
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll .project-grid-row {
+    display: flex;
+  }
   .cinematic-scroll .work-section {
     position: relative;
   }

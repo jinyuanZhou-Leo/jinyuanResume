@@ -9,7 +9,6 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from 'react';
-import { gsap } from 'gsap';
 
 interface TextTypeProps extends HTMLAttributes<HTMLElement> {
   text: string | string[];
@@ -33,7 +32,7 @@ interface TextTypeProps extends HTMLAttributes<HTMLElement> {
 
 /**
  * A small typing treatment for headings. The text remains available through
- * aria-label, while the visual typing is progressively enhanced on the client.
+ * server-rendered markup, while typing is progressively enhanced on the client.
  */
 export default function TextType({
   text,
@@ -62,7 +61,7 @@ export default function TextType({
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const cursorRef = useRef<HTMLSpanElement>(null);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
 
   const textArray = useMemo(
@@ -80,7 +79,10 @@ export default function TextType({
   }, [typingSpeed, variableSpeed]);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setMounted(true);
+    const mediaQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce), print',
+    );
     const updateMotionPreference = () =>
       setPrefersReducedMotion(mediaQuery.matches);
 
@@ -110,22 +112,6 @@ export default function TextType({
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [prefersReducedMotion, startOnVisible, textArray]);
-
-  useEffect(() => {
-    if (!showCursor || prefersReducedMotion || !cursorRef.current) return;
-
-    const tween = gsap.to(cursorRef.current, {
-      opacity: 0,
-      duration: cursorBlinkDuration,
-      repeat: -1,
-      yoyo: true,
-      ease: 'power2.inOut',
-    });
-
-    return () => {
-      tween.kill();
-    };
-  }, [cursorBlinkDuration, prefersReducedMotion, showCursor]);
 
   useEffect(() => {
     if (prefersReducedMotion || !isVisible) return;
@@ -196,16 +182,16 @@ export default function TextType({
     {
       ...props,
       ref: containerRef,
-      className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
+      className: `text-type ${className}`,
       'aria-label': props['aria-label'] ?? fullText,
     },
-    <span className="inline" style={{ color: currentColor }}>
-      {prefersReducedMotion ? textArray[0] : displayedText}
+    <span className="text-type-content" style={{ color: currentColor }}>
+      {!mounted || prefersReducedMotion ? fullText : displayedText}
     </span>,
-    showCursor && !prefersReducedMotion && (
+    showCursor && mounted && !prefersReducedMotion && (
       <span
-        ref={cursorRef}
-        className={`ml-1 inline-block ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
+        className={`text-type-cursor ${shouldHideCursor ? 'text-type-cursor-hidden' : ''} ${cursorClassName}`}
+        style={{ animationDuration: `${cursorBlinkDuration}s` }}
         aria-hidden="true"
       >
         {cursorCharacter}

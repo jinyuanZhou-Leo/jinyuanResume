@@ -44,9 +44,15 @@
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
   .cinematic-scroll #about[data-pixel-handoff] {
-    min-height: calc(var(--handoff-scene-height, var(--scene-height)) + 850svh);
+    min-height: calc(
+      var(--handoff-scene-height, var(--scene-height)) +
+        var(--journey-distance, 0px)
+    );
   }
   .cinematic-scroll #github[data-pixel-handoff] {
-    min-height: calc(var(--handoff-scene-height, var(--scene-height)) + 460svh);
+    min-height: calc(
+      var(--handoff-scene-height, var(--scene-height)) +
+        var(--github-distance, 0px)
+    );
   }
 }

@@ -360,7 +360,6 @@ const PixelBlast = ({
       {
         target: chapter,
         offset: ['start start', 'end end'],
-        trackContentSize: true,
       },
     );
   }, []);

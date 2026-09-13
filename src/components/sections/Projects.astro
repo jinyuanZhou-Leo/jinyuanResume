@@ -1,6 +1,6 @@
 ---
 import ProjectGrid from '../ProjectGrid.astro';
-import { content, type Locale } from '../../data/resume';
+import { content, projects, type Locale } from '../../data/resume';
 import SelectedWorkStack from '../interactive/SelectedWorkStack';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].projects;
@@ -19,6 +19,6 @@ const t = content[locale].projects;
       </div>
       <p class="section-intro">{t.intro}</p>
     </div>
-    <SelectedWorkStack locale={locale} client:load />
+    <SelectedWorkStack projects={projects} locale={locale} client:load />
   </div>
 </section>

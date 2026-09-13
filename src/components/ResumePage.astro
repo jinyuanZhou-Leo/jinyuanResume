@@ -28,7 +28,7 @@ const { locale } = Astro.props as { locale: Locale };
         </div>
       </div>
     </div>
-    <div class="scroll-scene" id="experience">
+    <div class="scroll-scene" id="experience" data-palette="muted">
       <div class="scene-stage">
         <div class="scene-content">
           <Experience locale={locale} />
@@ -54,7 +54,7 @@ const { locale } = Astro.props as { locale: Locale };
       </div>
     </div>
   </main>
-  <div class="scroll-scene" id="contact" data-scene-last>
+  <div class="scroll-scene" id="contact" data-palette="dark" data-scene-last>
     <div class="scene-stage">
       <div class="scene-content">
         <Contact locale={locale} />

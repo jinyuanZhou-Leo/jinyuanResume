@@ -6,10 +6,6 @@
   grid-template-columns: 0.9fr 1fr;
   gap: 80px;
 }
-.experience-sign span {
-  padding: 0 15px;
-  font-weight: 400;
-}
 .experience-date {
   font-size: 11px;
   display: flex;
@@ -55,4 +51,29 @@
 .experience-detail li > p {
   font-size: 13px;
   line-height: 1.9;
+}
+
+.experience-entries {
+  min-width: 0;
+  display: grid;
+  gap: 64px;
+}
+@media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .cinematic-scroll .experience-entries {
+    gap: 0;
+    align-items: center;
+  }
+  .cinematic-scroll .experience-entries > article {
+    grid-area: 1 / 1;
+  }
+  .cinematic-scroll #experience::after {
+    height: var(--experience-distance, 180svh);
+  }
+}
+@media print {
+  .experience-entries > article,
+  .experience-layout {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

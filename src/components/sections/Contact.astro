@@ -85,7 +85,7 @@ const emails = [
           <BrandIcon name="LinkedIn" size={22} />
           <span class="contact-item-content">
             <span class="contact-label">LinkedIn</span>
-            <span>Jinyuan Zhou</span>
+            <span>{profile.name}</span>
           </span>
           <Icon size={16} />
         </a>
@@ -93,7 +93,7 @@ const emails = [
     </section>
     <div class="footer-line">
       <span>
-        © {new Date().getFullYear()} Jinyuan Zhou{' '}
+        © {new Date().getFullYear()} {profile.name}{' '}
         <span class="footer-motto">/ {t.footer}</span>
       </span>
       <a href="#top" data-astro-reload>

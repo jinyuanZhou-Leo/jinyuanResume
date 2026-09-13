@@ -8,7 +8,7 @@ The upstream MIT + Commons Clause license is preserved in [licenses/react-bits.t
 Reference: [Grid Motion](https://reactbits.dev/backgrounds/grid-motion).
 Upstream source: `src/ts-default/Backgrounds/GridMotion/GridMotion.tsx` and `.css`.
 
-`src/components/ProjectGrid.astro` adapts the tilted, opposing-row composition into a static Astro component. It displays all five actual projects, linking to the detailed entries below. Motion drives row positions from scroll progress instead of adding GSAP's pointer-driven ticker. This reuses the site's existing scroll lifecycle and retains keyboard-accessible project links. Reduced-motion and print modes show an unrotated, wrapping grid.
+`src/components/ProjectGrid.astro` adapts the tilted, opposing-row composition into a static Astro component generated from the `projects` array. It links each source tile to the matching detailed project entry. The desktop-only `mountProjectOverview` lifecycle adds inert, aria-hidden visual copies after measuring the single semantic row, then restores that row during cleanup. Motion drives row positions from scroll progress without a pointer-driven ticker. Reduced-motion and print modes keep the semantic project list in a wrapping layout.
 
 ## GitHub background
 
@@ -17,6 +17,6 @@ The upstream shader implementation is retained in `src/components/interactive/Pi
 
 ## Scroll chapters
 
-Desktop project rows now travel 960px across their scroll interval; the enlarged overview precedes its headline. Experience uses a dedicated scroll timeline with compact 18px item padding. About uses three mutually exclusive panels (education, technology, other abilities), with explicit 0/1 timeline endpoints to prevent inactive content from reappearing. Open Source has a 220svh reading runway: the first phase shows Pixel Blast, then its headline and repositories enter. The shader receives the same chapter progress and varies time, pixel size, scale and density. These chapter timelines are defined in `src/lib/chapters.ts` and `src/styles/reading-sequence.css`. Mobile and reduced-motion layouts preserve linear reading order.
+The page-level `mountMotion` lifecycle coordinates the project overview, chapter animations, background handoff and Lenis cleanup. `chapters.ts`, `about-journey.ts` and `ScrollStack.tsx` derive their timelines from the rendered records and register measured stops through `registerScrollStops` in `src/lib/scroll-stops.ts`. Semantic records use `data-reading-stop` as the shared fallback marker; the snap controller consumes chapter registrations when available and otherwise resolves those markers, instead of maintaining a second item-count or phase list. This keeps added experiences, schools and abilities readable without changing animation code. Mobile and reduced-motion layouts preserve linear reading order.
 
-The overview now has a 280svh desktop scroll runway with feathered top/bottom edges. Pixel Blast retains its stronger olive field through 40% of the chapter, then interpolates its shader color toward gray from 45–92% while reducing opacity from 0.48 to 0.14 after the repository reveal.
+The GitHub section supplies one chapter progress value to its Pixel Blast wrapper. CSS controls the wrapper's opacity and centered scale while the shader continues its own paused/offscreen-aware rendering lifecycle. The background remains decorative and never carries résumé text.

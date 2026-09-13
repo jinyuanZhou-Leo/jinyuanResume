@@ -1,5 +1,5 @@
 ---
-import { content, type Locale } from '../../data/resume';
+import { content, profile, type Locale } from '../../data/resume';
 import Icon from '../Icon.astro';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].hero;
@@ -22,9 +22,13 @@ const t = content[locale].hero;
       </span>
     </p>
     <h1 id="hero-title">
-      Jinyuan
-      <br />
-      Zhou<span class="name-period">.</span>
+      {profile.name.split(' ').map((part, i) => (
+        <>
+          {i > 0 && <br />}
+          {part}
+        </>
+      ))}
+      <span class="name-period">.</span>
     </h1>
     <h2>
       {t.line}

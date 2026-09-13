@@ -59,7 +59,7 @@
 }
 .journey-toolkit {
   position: relative;
-  min-height: 440px;
+  min-height: var(--toolkit-height, 440px);
 }
 .journey-icons {
   position: absolute;
@@ -225,7 +225,7 @@
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
   .cinematic-scroll #about::after {
-    height: 850svh;
+    height: var(--journey-distance, 850svh);
   }
   .cinematic-scroll #about > .scene-stage {
     top: var(--nav-height);
@@ -273,8 +273,8 @@
     min-height: 0;
   }
   .cinematic-scroll .journey-education {
-    width: 200%;
-    grid-template-columns: 1fr 1fr;
+    width: calc(var(--school-count, 1) * 100%);
+    grid-template-columns: repeat(var(--school-count, 1), minmax(0, 1fr));
     gap: 0;
     padding-top: calc((100svh - var(--nav-height)) * 0.5);
   }

@@ -34,9 +34,7 @@
   .header-actions {
     gap: 22px;
   }
-  .experience-layout,
-  .about-intro,
-  .about-details {
+  .experience-layout {
     gap: 40px;
   }
   .project-visual {
@@ -158,10 +156,6 @@
     margin-top: 20px;
     max-width: 320px;
   }
-  .featured-projects {
-    grid-template-columns: 1fr;
-    gap: 45px;
-  }
   .project-visual {
     height: 320px;
   }
@@ -179,9 +173,6 @@
   .project-heading h3 {
     font-size: 25px;
   }
-  .project-list {
-    margin-top: 45px;
-  }
   .project-row {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -195,17 +186,9 @@
   .project-row h3 {
     font-size: 21px;
   }
-  .experience-layout,
-  .about-intro,
-  .about-details {
+  .experience-layout {
     grid-template-columns: 1fr;
     gap: 40px;
-  }
-  .about-intro > p {
-    font-size: 14px;
-  }
-  .about-details {
-    margin-top: 45px;
   }
   .github-section {
     padding-top: 0;
@@ -315,13 +298,8 @@
   h2 {
     font-size: 25px;
   }
-  .featured-projects,
-  .about-details {
-    gap: 25px;
-  }
   .project-row,
-  .experience-layout,
-  .about-intro {
+  .experience-layout {
     gap: 20px;
   }
   article {

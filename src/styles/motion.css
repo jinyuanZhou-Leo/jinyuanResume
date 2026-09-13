@@ -71,11 +71,7 @@ html {
       .project-description,
       .project-date,
       .location,
-      .about-intro > p,
-      .school > p,
-      .school-note,
       .school-gpa,
-      .soft-skills p,
       .tags li,
       .github-heading p,
       .github-status,
@@ -90,13 +86,12 @@ html {
     ) {
     color: var(--reading-muted, var(--muted));
   }
-  .cinematic-scroll :is(.skill-list .brand-icon, .school-gpa strong) {
+  .cinematic-scroll .school-gpa strong {
     color: inherit;
   }
   .cinematic-scroll
     :is(
       .project-row,
-      .detail-title,
       .repo-item,
       .contact-bottom,
       .footer-line,

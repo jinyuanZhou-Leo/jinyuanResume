@@ -1,0 +1,39 @@
+---
+import BrandIcon from './BrandIcon.astro';
+import { formatPeriod } from '../lib/content';
+import type { Experience, Locale } from '../data/types';
+interface Props {
+  experience: Experience;
+  locale: Locale;
+}
+const { experience, locale } = Astro.props;
+---
+
+<article
+  class="experience-detail"
+  data-experience-id={experience.id}
+  data-reading-stop
+>
+  <p class="experience-date">
+    <span class="status-dot" />
+    {formatPeriod(experience.start, experience.end, locale)}
+  </p>
+  <h3>{experience.role[locale]}</h3>
+  <p class="company">{experience.company[locale]}</p>
+  <p class="location">{experience.location[locale]}</p>
+  <ul>
+    {experience.points.map((point) => (
+      <li>
+        <p>{point[locale]}</p>
+      </li>
+    ))}
+  </ul>
+  <ul class="tags">
+    {experience.tags.map((tag) => (
+      <li>
+        <BrandIcon name={tag} size={13} />
+        {tag}
+      </li>
+    ))}
+  </ul>
+</article>

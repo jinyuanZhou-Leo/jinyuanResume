@@ -1,53 +1,20 @@
 ---
-import BrandIcon from '../BrandIcon.astro';
-import { content, type Locale } from '../../data/resume';
+import ExperienceItem from '../ExperienceItem.astro';
+import { content, experiences, type Locale } from '../../data/resume';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].experience;
 ---
 
 <section class="experience-section" aria-labelledby="experience-title">
   <div class="section experience-layout">
-    <div>
+    <div class="experience-heading">
       <p class="eyebrow">02 / {t.label}</p>
       <h2 id="experience-title">{t.title}</h2>
     </div>
-    <article class="experience-detail">
-      <p class="experience-date">
-        <span class="status-dot" />
-        {t.date}
-      </p>
-      <h3>{t.role}</h3>
-      <p class="company">{t.company}</p>
-      <p class="location">{t.location}</p>
-      <ul>
-        {t.points.map((point) => (
-          <li>
-            <p>{point}</p>
-          </li>
-        ))}
-      </ul>
-      <ul class="tags">
-        <li>
-          <BrandIcon name="React 19" size={13} />
-          React 19
-        </li>
-        <li>
-          <BrandIcon name="FastAPI" size={13} />
-          FastAPI
-        </li>
-        <li>
-          <BrandIcon name="Qdrant / RAG" size={13} />
-          Qdrant / RAG
-        </li>
-        <li>
-          <BrandIcon name="MQTT" size={13} />
-          MQTT
-        </li>
-        <li>
-          <BrandIcon name="ROS 2" size={13} />
-          ROS 2
-        </li>
-      </ul>
-    </article>
+    <div class="experience-entries">
+      {experiences.map((experience) => (
+        <ExperienceItem experience={experience} locale={locale} />
+      ))}
+    </div>
   </div>
 </section>

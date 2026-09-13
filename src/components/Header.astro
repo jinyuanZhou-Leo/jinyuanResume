@@ -4,31 +4,37 @@ import { content, profile } from '../data/resume';
 import Icon from './Icon.astro';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale];
-const sections = ['work', 'experience', 'about', 'contact'];
+const sections = Object.entries(t.nav);
 ---
 
 <header class="site-header">
   <a
     class="wordmark"
     href={locale === 'zh' ? '/' : '/en/'}
-    aria-label="Jinyuan Zhou — Home"
+    aria-label={`${profile.name} — Home`}
   >
     <span class="brand-mark">
       jz<span aria-hidden="true">✳</span>
     </span>
     <span class="wordmark-name">
-      JINYUAN
-      <br />
-      ZHOU
+      {profile.name
+        .toUpperCase()
+        .split(' ')
+        .map((part, i) => (
+          <>
+            {i > 0 && <br />}
+            {part}
+          </>
+        ))}
     </span>
   </a>
   <nav
     aria-label={locale === 'zh' ? '主导航' : 'Main navigation'}
     class="desktop-nav"
   >
-    {sections.map((id, i) => (
+    {sections.map(([id, label]) => (
       <a href={`#${id}`} data-astro-reload>
-        {t.nav[i]}
+        {label}
       </a>
     ))}
   </nav>

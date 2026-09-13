@@ -4,9 +4,10 @@ const PixelBlast = lazy(() => import('./PixelBlast.jsx'));
 import TextType from './TextType';
 import { content, profile, type Locale } from '../../data/resume';
 import {
+  createRepositorySelectionKey,
   fetchRepositories,
-  repositoryUrl,
   REPOSITORY_TTL,
+  selectedRepositoryRefs,
 } from '../../lib/github';
 
 export default function GitHubActivity({ locale }: { locale: Locale }) {
@@ -15,8 +16,11 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
   // Keep the résumé/data island responsive while the optional WebGL bundle loads.
   useEffect(() => setShowBackdrop(true), []);
   // SWR owns cache, deduplication and refresh. Do not poll in hidden tabs or retry rate limits.
+  const repositoryKey = selectedRepositoryRefs.length
+    ? createRepositorySelectionKey(selectedRepositoryRefs)
+    : null;
   const { data, error, isLoading, isValidating, mutate } = useSWR(
-    repositoryUrl,
+    repositoryKey,
     fetchRepositories,
     {
       refreshInterval: 0,
@@ -50,6 +54,7 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
             as="h2"
             id="github-title"
             text={t.title}
+            data-reading-stop
             typingSpeed={82}
             initialDelay={280}
             pauseDuration={2600}
@@ -96,14 +101,14 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
           {t.retry} ↻
         </button>
       )}
-      {data &&
-        (data.repos.length ? (
+      {(data || !selectedRepositoryRefs.length) &&
+        (data?.repos.length ? (
           <div className="repo-grid">
             {data.repos.map((repo) => (
               <a
                 className="repo-item"
                 href={repo.html_url}
-                key={repo.name}
+                key={repo.html_url}
                 target="_blank"
                 rel="noreferrer"
               >

@@ -7,32 +7,7 @@
   font-size: 13px;
   line-height: 1.9;
 }
-.about-intro > p {
-  margin-top: 30px;
-}
 @media screen and (min-width: 761px) {
-  .about-section {
-    display: grid;
-    grid-template-columns: 0.9fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-  .about-intro {
-    display: block;
-  }
-  .about-details {
-    display: block;
-    margin-top: 0;
-  }
-  .about-details > * {
-    padding-block: 50px;
-  }
-  .about-details > .soft-skills {
-    margin-top: 0;
-  }
-  .about-details .detail-title {
-    font-size: 20px;
-  }
   .experience-layout {
     align-items: center;
   }
@@ -43,48 +18,22 @@
     display: block;
     height: 180svh;
   }
-  .cinematic-scroll #about::after {
-    height: 260svh;
+  .cinematic-scroll #github {
+    --github-distance: 460svh;
   }
   .cinematic-scroll #github::after {
     /* Leave room for reading, then a gradual handoff to the closing chapter. */
-    height: 460svh;
+    height: var(--github-distance);
   }
   .cinematic-scroll :is(#experience, #about, #github) > .scene-stage {
     position: sticky;
     top: min(var(--nav-height, 92px), calc(100svh - var(--scene-height)));
   }
-  .cinematic-scroll .about-section {
-    min-height: calc(100svh - var(--nav-height, 92px));
-  }
-  .cinematic-scroll .about-details {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    perspective: 1000px;
-  }
-  .cinematic-scroll .about-details > * {
-    grid-area: 1 / 1;
-    align-self: center;
-    min-height: 0;
-    padding-block: 0;
-  }
-  .cinematic-scroll .about-intro,
   .cinematic-scroll .experience-layout > div:first-child {
     position: static;
   }
 }
-@media (max-width: 760px) {
-  .about-details {
-    display: flex;
-    flex-direction: column;
-    gap: 64px;
-  }
-  .about-details > .soft-skills {
-    margin-top: 0;
-  }
-}
 @media (prefers-reduced-motion: reduce), print {
-  .about-intro,
   .experience-layout > div,
   .experience-detail > p,
   .experience-detail > h3,
@@ -102,12 +51,12 @@
     justify-content: center;
   }
   .cinematic-scroll #github .github-heading {
-    --copy-reveal: clamp(0, calc((var(--chapter-progress, 0) - 0.12) * 5), 1);
+    --copy-reveal: var(--heading-progress, 1);
   }
   .cinematic-scroll
     #github
     :is(.github-status, .repo-grid, .github-section > button) {
-    --copy-reveal: clamp(0, calc((var(--chapter-progress, 0) - 0.28) * 5), 1);
+    --copy-reveal: var(--repositories-progress, 1);
   }
   .cinematic-scroll
     #github
@@ -123,7 +72,6 @@
   }
 }
 @media screen and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
-  .cinematic-scroll .about-details,
   .cinematic-scroll .experience-detail {
     overflow: clip;
     min-width: 0;

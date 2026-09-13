@@ -1,66 +1,33 @@
 ---
-// Adapted from React Bits Grid Motion: opposing tilted rows, driven by scroll instead of mouse.
-// Source and license: docs/licenses/react-bits.txt, docs/react-bits.md.
-import { projects, type Locale } from '../data/resume';
+import { content, projects, type Locale } from '../data/resume';
 import BrandIcon from './BrandIcon.astro';
 const { locale } = Astro.props as { locale: Locale };
-
-// Dynamically generate 4 rows with repeated items for an infinite continuous stream.
-// Staggers each row offset so adjacent rows display different projects.
-function buildInfiniteRows<T>(
-  items: readonly T[],
-  rowCount = 4,
-  minCycles = 4,
-): T[][] {
-  if (!items || items.length === 0)
-    return Array.from({ length: rowCount }, () => []);
-
-  const rows: T[][] = [];
-  const cycleCount = Math.max(minCycles, 3);
-  const totalPerStream = items.length * cycleCount;
-
-  for (let r = 0; r < rowCount; r++) {
-    const row: T[] = [];
-    const offset = (r * 2) % items.length;
-    for (let i = 0; i < totalPerStream; i++) {
-      row.push(items[(offset + i) % items.length]);
-    }
-    rows.push(row);
-  }
-
-  return rows;
-}
-
-const rows = buildInfiniteRows(projects, 4, 4);
 ---
 
-<div
-  class="project-overview"
-  aria-label={locale === 'zh' ? '全部项目概览' : 'All projects'}
->
+<!-- Only real projects are rendered. Desktop motion creates inert copies at runtime. -->
+<div class="project-overview" aria-label={content[locale].projects.overview}>
   <div class="project-grid-stage">
     <div class="project-grid-tilt">
-      {rows.map((row, rowIndex) => (
-        <div class="project-grid-row" data-grid-row={rowIndex}>
-          {row.map((project) => (
-            <a
-              class:list={['project-grid-tile', `grid-tile-${project.id}`]}
-              href={`#${project.id}`}
-              data-astro-reload
-            >
-              <span class="grid-tile-category">{project.category[locale]}</span>
-              <div class="grid-tile-mark" aria-hidden="true">
-                <BrandIcon name={project.tags[0]} size={56} />
-              </div>
-              <div class="grid-tile-caption">
-                <h3>{project.name}</h3>
-                <span aria-hidden="true">↗</span>
-              </div>
-              <span class="grid-tile-stack">{project.tags.join(' / ')}</span>
-            </a>
-          ))}
-        </div>
-      ))}
+      <div class="project-grid-row" data-grid-row>
+        {projects.map((project) => (
+          <a
+            class="project-grid-tile"
+            style={project.tone ? `--tile-color:${project.tone}` : undefined}
+            href={`#${project.id}`}
+            data-astro-reload
+          >
+            <span class="grid-tile-category">{project.category[locale]}</span>
+            <div class="grid-tile-mark" aria-hidden="true">
+              <BrandIcon name={project.tags[0] ?? ''} size={56} />
+            </div>
+            <div class="grid-tile-caption">
+              <h3>{project.name}</h3>
+              <span aria-hidden="true">↗</span>
+            </div>
+            <span class="grid-tile-stack">{project.tags.join(' / ')}</span>
+          </a>
+        ))}
+      </div>
     </div>
   </div>
 </div>

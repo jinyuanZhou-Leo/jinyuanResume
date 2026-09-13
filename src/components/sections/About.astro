@@ -1,9 +1,17 @@
 ---
 import BrandIcon from '../BrandIcon.astro';
-import { content, skills, type Locale } from '../../data/resume';
+import EducationItem from '../EducationItem.astro';
+import { skillLayout } from '../../lib/chapter-timeline';
+import {
+  content,
+  skills,
+  education,
+  abilities,
+  type Locale,
+} from '../../data/resume';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].about;
-const abilities = t.professional.split(locale === 'zh' ? '、' : ', ');
+const toolkit = skillLayout(skills.length);
 ---
 
 <section class="section about-journey" aria-labelledby="about-title">
@@ -18,27 +26,24 @@ const abilities = t.professional.split(locale === 'zh' ? '、' : ', ');
   </div>
   <div class="journey-stage">
     <div class="journey-line" aria-hidden="true"></div>
-    <div class="journey-education">
-      {[...t.schools].reverse().map((school) => (
-        <article class="journey-school">
-          <span class="journey-node" aria-hidden="true" />
-          <p class="project-date">{school.date}</p>
-          <h3>{school.name}</h3>
-          <p>{school.degree}</p>
-          {school.gpa && (
-            <p class="school-gpa">
-              GPA <strong>{school.gpa}</strong>
-            </p>
-          )}
-        </article>
+    <div
+      class="journey-education"
+      style={`--school-count:${Math.max(1, education.length)}`}
+    >
+      {education.map((school) => (
+        <EducationItem school={school} locale={locale} />
       ))}
     </div>
-    <div class="journey-toolkit">
+    <div
+      class="journey-toolkit"
+      data-reading-stop
+      style={`--toolkit-height:${toolkit.height}px`}
+    >
       <div class="journey-icons">
         {skills.map((skill, i) => (
           <div
             class="journey-icon"
-            style={`--icon-x:${[14, 32, 50, 68, 86, 23, 41, 59, 77][i]}%;--icon-y:${[32, 32, 32, 32, 32, 70, 70, 70, 70][i]}%`}
+            style={`--icon-x:${toolkit.positions[i].x}%;--icon-y:${toolkit.positions[i].y}%`}
           >
             <BrandIcon name={skill} size={30} />
             <span>{skill}</span>
@@ -48,7 +53,7 @@ const abilities = t.professional.split(locale === 'zh' ? '、' : ', ');
       <div class="journey-toolkit-title">
         <h3>{t.skills}</h3>
         <p>
-          {locale === 'zh' ? '持续学习中' : 'Always learning'}
+          {t.learning}
           <span class="learning-dots" aria-label="…">
             <i />
             <i />
@@ -61,9 +66,13 @@ const abilities = t.professional.split(locale === 'zh' ? '、' : ', ');
       <h3>{t.people}</h3>
       <div class="journey-abilities">
         {abilities.map((ability, i) => (
-          <p class="journey-ability">
-            <span>0{i + 1}</span>
-            {ability}
+          <p
+            class="journey-ability"
+            data-ability-id={ability.id}
+            data-reading-stop
+          >
+            <span>{String(i + 1).padStart(2, '0')}</span>
+            {ability.label[locale]}
           </p>
         ))}
       </div>
