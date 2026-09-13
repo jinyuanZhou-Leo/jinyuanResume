@@ -17,6 +17,7 @@ export const profile = {
   phoneHref: '+16476170499',
   github: 'jinyuanZhou-Leo',
   linkedin: 'https://www.linkedin.com/in/jinyuan-zhou/',
+  blog: 'https://blog.jyleo.cc',
   resume: '/documents/Jinyuan_Zhou_CV_2026.pdf',
 };
 
@@ -32,6 +33,7 @@ export const content: Record<Locale, SiteCopy> = {
       contact: '联系',
     },
     skip: '跳转至主要内容',
+    blog: '个人博客',
     download: '下载简历',
     hero: {
       intro: '你好，我是',
@@ -106,6 +108,7 @@ export const content: Record<Locale, SiteCopy> = {
       contact: 'Contact',
     },
     skip: 'Skip to main content',
+    blog: 'Blog',
     download: 'Download CV',
     hero: {
       intro: 'Hey, I’m',

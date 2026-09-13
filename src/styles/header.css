@@ -66,6 +66,27 @@
   transform: scaleX(1);
   transform-origin: left;
 }
+.header-blog {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  color: var(--paper);
+  background: var(--ink);
+  transition:
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+.header-blog:hover {
+  color: var(--paper);
+  background: var(--accent);
+}
+.header-blog svg {
+  transition: transform 0.35s var(--ease);
+}
+.header-blog:hover svg {
+  transform: translate(2px, -2px);
+}
 .header-actions {
   display: flex;
   align-items: center;

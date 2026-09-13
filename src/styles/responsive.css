@@ -85,6 +85,14 @@
     font-size: 11px;
     margin-top: 8px;
   }
+  .header-blog {
+    gap: 4px;
+    padding: 8px;
+  }
+  .header-blog svg {
+    width: 12px;
+    height: 12px;
+  }
   html {
     scroll-padding-top: 135px;
   }

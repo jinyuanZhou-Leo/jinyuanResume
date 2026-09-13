@@ -55,6 +55,7 @@ export interface SiteCopy {
   description: string;
   nav: Record<'work' | 'experience' | 'about' | 'contact', string>;
   skip: string;
+  blog: string;
   download: string;
   hero: Record<
     | 'intro'
