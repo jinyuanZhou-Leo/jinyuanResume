@@ -35,10 +35,11 @@ export function mountProjectOverview() {
       const t = Math.max(0, Math.min(1, value));
       return t * t * (3 - 2 * t);
     };
-    const fade = ease((progress - 0.05) / 0.3);
+    // Let the pinned overview travel before handing the stage to the stack.
+    const fade = ease((progress - 0.6) / 0.25);
     layer.style.opacity = String(1 - fade);
     layer.style.visibility = fade === 1 ? 'hidden' : 'visible';
-    const enter = ease((progress - 0.35) / 0.55);
+    const enter = ease((progress - 0.78) / 0.22);
     showcase.style.opacity = String(enter);
     showcase.style.transform =
       enter === 1

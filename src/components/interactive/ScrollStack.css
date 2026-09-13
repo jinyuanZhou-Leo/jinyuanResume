@@ -6,20 +6,10 @@
 
 .scroll-stack-inner {
   min-height: 100%;
-  /* Clip the previews locally; mask only the track so controls stay crisp. */
-  overflow-x: clip;
+  /* Neighbor cards may extend beyond the content container to the viewport edge. */
+  overflow: visible;
   padding-top: clamp(20px, 4vh, 56px);
   padding-bottom: clamp(220px, 34vh, 520px);
-}
-
-.scroll-stack:has(> .scroll-stack-controls:not([hidden])) .scroll-stack-inner {
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 7%,
-    #000 93%,
-    transparent
-  );
 }
 
 .scroll-stack-card {
@@ -101,7 +91,7 @@
 
 .scroll-stack-controls {
   position: absolute;
-  inset-inline: calc(7% - 24px);
+  inset-inline: var(--browse-inset, calc(7% - 24px));
   z-index: 2;
   top: 0;
   transform: translateY(-50%);
@@ -159,7 +149,7 @@
 
 @media (max-width: 760px) {
   .scroll-stack-controls {
-    inset-inline: calc(10% - 24px);
+    inset-inline: var(--browse-inset, calc(10% - 24px));
   }
 }
 
@@ -167,5 +157,38 @@
   .scroll-stack-controls:not([hidden]) button {
     opacity: var(--control-opacity, 0.92);
     pointer-events: auto;
+  }
+}
+
+/* Separate masked backdrop layers create a spatial blur ramp. The parent must
+   not have opacity/filter/mask: those would isolate the sampled backdrop. */
+.scroll-stack-blur {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--viewport-width, 100vw);
+  pointer-events: none;
+  z-index: 1;
+}
+.scroll-stack-blur-edge {
+  position: absolute;
+  inset-block: 0;
+  width: max(0px, calc((100% - var(--focus-width)) / 2));
+}
+.scroll-stack-blur-edge.left {
+  left: 0;
+  --blur-direction: to right;
+}
+.scroll-stack-blur-edge.right {
+  right: 0;
+  --blur-direction: to left;
+}
+.scroll-stack-blur-edge > span {
+  position: absolute;
+  inset: 0;
+}
+@media (prefers-reduced-motion: reduce), print {
+  .scroll-stack-blur {
+    display: none;
   }
 }

@@ -54,6 +54,7 @@ export default function ScrollStack({
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
+  const blurRef = useRef<HTMLDivElement>(null);
   const selectRef = useRef<(direction: number) => void>(() => {});
   const [activeIndex, setActiveIndex] = useState(0);
   const [browsing, setBrowsing] = useState(false);
@@ -90,6 +91,7 @@ export default function ScrollStack({
           headingTop: number;
           scaleEnd: number;
           desktop: boolean;
+          browseScale: number;
         }
       | undefined;
     const transforms = new Map<HTMLElement, string>();
@@ -113,6 +115,7 @@ export default function ScrollStack({
         heading.style.top = '';
       }
       transforms.clear();
+      if (blurRef.current) blurRef.current.hidden = true;
       ready = false;
       setBrowsing(false);
     };
@@ -128,6 +131,11 @@ export default function ScrollStack({
       if (height) root.style.setProperty('--stack-card-height', `${height}px`);
       const tops = cards.map(getElementTop);
       const widths = cards.map((card) => card.offsetWidth);
+      const browseScale = desktop ? 0.86 : 0.8;
+      controlsRef.current?.style.setProperty(
+        '--browse-inset',
+        `${(root.clientWidth - (widths[0] ?? 0) * browseScale) / 2 - 24}px`,
+      );
       const headingTop = heading ? getElementTop(heading) : getElementTop(root);
       const scaleEnd = parsePosition(scaleEndPosition);
       const layout = buildStackLayout({
@@ -154,6 +162,7 @@ export default function ScrollStack({
         headingTop,
         scaleEnd,
         desktop,
+        browseScale,
       };
       stops = layout.stops;
       needsMeasure = false;
@@ -173,6 +182,7 @@ export default function ScrollStack({
         headingTop,
         scaleEnd,
         desktop,
+        browseScale,
       } = geometry;
       const y = window.scrollY;
       const progress = progressBetween(y, g.morphStart, g.morphEnd);
@@ -191,10 +201,27 @@ export default function ScrollStack({
       lastTime = time;
       position += (selected - position) * (1 - Math.exp(-elapsed / 85));
       if (Math.abs(position - selected) < 0.001) position = selected;
-      const scale = desktop ? 0.86 : 0.8;
+      const scale = browseScale;
       const gap = desktop ? 24 : 12;
       const trackY =
         g.stackPosition + (g.browsePosition - g.stackPosition) * morph;
+      const blur = blurRef.current;
+      if (blur) {
+        blur.hidden = morph === 0;
+        setTransform(
+          blur,
+          `translate3d(-50%,${Math.min(y, g.pinEnd) + trackY - rootTop}px,0)`,
+        );
+        const properties = {
+          '--blur-strength': morph.toFixed(4),
+          '--focus-width': `${widths[0] * scale + gap}px`,
+          height: `${height * scale}px`,
+        };
+        for (const [property, value] of Object.entries(properties)) {
+          if (blur.style.getPropertyValue(property) !== value)
+            blur.style.setProperty(property, value);
+        }
+      }
       if (heading)
         setTransform(
           heading,
@@ -227,10 +254,6 @@ export default function ScrollStack({
           card,
           `translate3d(${((i - position) * (widths[i] * scale + gap) * morph).toFixed(2)}px,${translation.toFixed(2)}px,0) scale(${(stackScale + (scale - stackScale) * morph).toFixed(4)})`,
         );
-        const filter = morph
-          ? `blur(${(Math.min(3, Math.abs(i - position) * 2) * morph).toFixed(2)}px)`
-          : '';
-        if (card.style.filter !== filter) card.style.filter = filter;
         card.inert = ready && i !== selected;
       });
       // Selection interpolation needs a few more frames; a settled stack is idle.
@@ -305,6 +328,26 @@ export default function ScrollStack({
   return (
     <div className={`scroll-stack ${className}`} ref={rootRef}>
       <div className="scroll-stack-inner">{children}</div>
+      <div
+        className="scroll-stack-blur"
+        ref={blurRef}
+        hidden
+        aria-hidden="true"
+      >
+        {['left', 'right'].map((side) => (
+          <div className={`scroll-stack-blur-edge ${side}`} key={side}>
+            {Array.from({ length: 6 }, (_, level) => (
+              <span
+                key={level}
+                style={{
+                  backdropFilter: `blur(calc(${0.5 * 2 ** level}px * var(--blur-strength, 0)))`,
+                  maskImage: `linear-gradient(var(--blur-direction), #000 ${84 - level * 14}%, transparent ${100 - level * 14}%)`,
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
       <div
         ref={controlsRef}
         className="scroll-stack-controls"

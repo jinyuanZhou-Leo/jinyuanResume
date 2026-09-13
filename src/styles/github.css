@@ -27,6 +27,7 @@
   gap: 20px;
 }
 .github-section .github-heading h2 {
+  display: block;
   margin-top: 15px;
   font-size: clamp(32px, 3.55vw, 52px);
 }

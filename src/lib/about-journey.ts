@@ -112,7 +112,8 @@ export function mountAboutJourney() {
         line.style.setProperty('--line-gap', `${gap * visibility}%`);
         line.style.setProperty(
           '--line-angle',
-          `${b ? ease(progressBetween(p, b.start, b.enter)) * 90 : 0}deg`,
+          // Keep the line horizontal throughout the toolkit's readable hold.
+          `${b ? ease(progressBetween(p, b.leave, b.end)) * 90 : 0}deg`,
         );
         line.style.setProperty(
           '--line-scale',
