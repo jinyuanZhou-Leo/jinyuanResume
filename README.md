@@ -1,6 +1,6 @@
 # Jinyuan Zhou · Personal résumé
 
-面向招聘方的中英双语个人简历。内容来源为 `Jinyuan_Zhou_CV_2026.pdf`，展示工程项目、实习、教育、技能及社交联系方式。
+面向招聘方的中英双语个人简历。内容来源为 `Jinyuan_Zhou_CV_2026_V2.pdf`，展示工程项目、实习、教育、技能及社交联系方式。
 
 ## 开发
 
@@ -80,8 +80,8 @@ interface Project {
 | 配色、字体等语义变量               | `src/styles/base.css`                                                                              |
 | 项目滚动总览                       | `src/components/ProjectGrid.astro`、`src/styles/project-grid.css`                                  |
 | 各模块样式、响应式与打印           | `src/styles/`                                                                                      |
-| 原始下载简历                       | `public/documents/Jinyuan_Zhou_CV_2026.pdf`                                                        |
-| 首屏 Gallery 图片                  | `public/images/gallery/`，源照片位于 `public/` 和 `public/images/IMG_7518.jpeg`                  |
+| 原始下载简历                       | `public/documents/Jinyuan_Zhou_CV_2026_V2.pdf`                                                     |
+| 首屏 Gallery 图片                  | `public/images/gallery/`，源照片位于 `public/` 和 `public/images/IMG_7518.jpeg`                    |
 
 更新简历时，同步修改 `zh` / `en` 内容并替换下载 PDF。需要交互的项目堆叠和 GitHub 模块分别作为 React island 加载；其余履历内容由 Astro 静态渲染。界面图标由 Lucide、技术栈 Logo 由 Simple Icons、平台 Logo 由 Font Awesome Brands 渲染为静态 SVG，路由与语言切换使用 Astro ClientRouter，动画使用 Motion，滚轮平滑使用 Lenis。邮箱复制调用浏览器 Clipboard API。
 

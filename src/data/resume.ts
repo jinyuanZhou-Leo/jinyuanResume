@@ -18,7 +18,7 @@ export const profile = {
   github: 'jinyuanZhou-Leo',
   linkedin: 'https://www.linkedin.com/in/jinyuan-zhou/',
   blog: 'https://blog.jyleo.cc',
-  resume: '/documents/Jinyuan_Zhou_CV_2026.pdf',
+  resume: '/documents/Jinyuan_Zhou_CV_2026_V2.pdf',
 };
 
 export const content: Record<Locale, SiteCopy> = {
@@ -185,8 +185,8 @@ export const projects: readonly Project[] = [
       en: 'SYSTEMS',
     },
     date: {
-      zh: '个人项目',
-      en: 'Personal project',
+      zh: '2026.05 — 至今 · 个人项目 · 开发者',
+      en: 'MAY 2026 — PRESENT · Personal project · Developer',
     },
     tags: ['Rust'],
     title: {
@@ -194,8 +194,8 @@ export const projects: readonly Project[] = [
       en: 'A shell. Built from first principles.',
     },
     description: {
-      zh: '使用 Rust 从零构建 shell，实现 REPL 交互循环、基础内置命令与外部命令执行。',
-      en: 'Built a shell from scratch in Rust, with a REPL, basic built-in commands and external command execution.',
+      zh: '用 Rust 构建交互式 Unix shell，设计词法分析—语法分析—AST—执行器架构，支持引号、转义、波浪号展开、内置命令与外部程序。实现管道、文件描述符重定向、命令串联、&&/|| 短路求值及 PATH 查找，并为 shell 解析和进程行为编写单元与集成测试。',
+      en: 'Built an interactive Unix shell in Rust around a lexer–parser–AST–executor architecture. Implemented quoting, escaping, tilde expansion, built-ins, external programs, pipelines, file-descriptor redirection, command sequencing, &&/|| short-circuit evaluation, relative and absolute path resolution, PATH lookup, and unit/integration tests for parsing and process behavior.',
     },
     repository: {
       owner: 'jinyuanZhou-Leo',
@@ -228,8 +228,8 @@ export const projects: readonly Project[] = [
       en: 'Every move. A few steps ahead.',
     },
     description: {
-      zh: '在 APS105 课程 440 名学生的提交中排名第 2。构建可自主评估棋盘并选择最优落子的 AI，结合极小极大搜索、迭代加深、走法排序和 Alpha–beta 剪枝，在固定时限内探索更深的博弈树。',
-      en: 'Ranked 2nd among submissions from 440 students in APS105. Built an AI to evaluate board positions and select optimal moves, using minimax, iterative deepening, move ordering and alpha–beta pruning for deeper search within a fixed time limit.',
+      zh: '在 APS105 计算机基础课程的黑白棋比赛中，440 名学生中排名第 2。构建评估棋盘局面并选择最优落子的算法，结合极小极大搜索、迭代加深、走法排序和 Alpha–beta 剪枝，在固定时限内探索更深的博弈树。',
+      en: 'Ranked 2nd out of 440 students in the APS105 Computer Fundamentals Reversi competition. Built an algorithm to evaluate board positions and select optimal moves, using minimax, iterative deepening, move ordering and alpha–beta pruning to search deeper within a fixed time limit.',
     },
     openSource: false,
     visual: {
@@ -256,17 +256,17 @@ export const projects: readonly Project[] = [
       en: 'FULL-STACK',
     },
     date: {
-      zh: '2025.11 — 2026.04 · 个人项目 · 开发者',
-      en: 'NOV 2025 — APR 2026 · Personal project · Developer',
+      zh: '2025.11 — 2026.08 · 个人项目 · 开发者',
+      en: 'NOV 2025 — AUG 2026 · Personal project · Developer',
     },
-    tags: ['React', 'Tailwind CSS', 'FastAPI', 'SQLite'],
+    tags: ['React 19', 'TypeScript', 'FastAPI', 'SQLAlchemy', 'SQLite'],
     title: {
       zh: '让学业管理，井井有条。',
       en: 'A little more order to student life.',
     },
     description: {
-      zh: '构建集成 Canvas LMS 的学业管理平台，使用 React 与 Tailwind CSS 追踪课程和作业；FastAPI 与 SQLite 提供数据持久化及 Canvas API 集成。通过多智能体编排与提示工程，优化 AI 应用开发工作流。',
-      en: 'Built a Canvas LMS-integrated academic platform with React and Tailwind CSS for courses and assignments. FastAPI and SQLite handle persistence and Canvas API integration. Applied multi-agent orchestration and prompt engineering to streamline AI application development workflows.',
+      zh: '构思并设计覆盖课程、作业、GPA 和学术资源的全栈学业管理平台。制定产品需求，指导 AI 编码代理使用 React 19、TypeScript、FastAPI、SQLAlchemy 与 SQLite 实现，并迭代设计可扩展插件系统、Google OAuth 和多语言支持。',
+      en: 'Conceived and designed a full-stack platform for tracking courses, assignments, GPA and academic resources. Defined product requirements and directed AI coding agents to implement it with React 19, TypeScript, FastAPI, SQLAlchemy and SQLite, iteratively guiding the plugin system, Google OAuth and multilingual support.',
     },
     repository: {
       owner: 'jinyuanZhou-Leo',
@@ -304,14 +304,14 @@ export const projects: readonly Project[] = [
   },
   {
     id: 'research',
-    name: 'LLM CoT Analyzer',
+    name: 'LLMCoTAnalyzer',
     category: {
       zh: '研究探索',
       en: 'RESEARCH',
     },
     date: {
-      zh: 'AP Statistics 12 研究项目',
-      en: 'AP Statistics 12 Research Project',
+      zh: '2025.04 — 2025.05 · AP Statistics 12 研究项目',
+      en: 'APR 2025 — MAY 2025 · AP Statistics 12 Research Project',
     },
     tags: ['Python'],
     title: {
@@ -319,8 +319,8 @@ export const projects: readonly Project[] = [
       en: 'How do models double-check themselves?',
     },
     description: {
-      zh: '设计并开展实验，分析大语言模型规模对思维链中重复自我验证行为的影响。',
-      en: 'Designed and conducted experiments to analyze how LLM size affects repetitive self-verification behaviors in chain of thought.',
+      zh: '设计并开展实验，研究大语言模型参数量与思维链中重复自我验证行为的关系。搭建多线程 Python 实验流程，通过兼容 OpenAI 的 API 查询多个模型、采集推理轨迹并自动处理重复试验结果；设计并集成使用 Transformer 嵌入与逻辑回归的语义分类流程，识别自我验证语句。',
+      en: 'Designed experiments on the relationship between LLM parameter count and repetitive self-verification in chain-of-thought reasoning. Built a multithreaded Python pipeline to query models through OpenAI-compatible APIs, collect reasoning traces and automatically process results across repeated trials. Designed and integrated a semantic classification workflow using Transformer embeddings and logistic regression to identify self-verification statements.',
     },
     repository: {
       owner: 'jinyuanZhou-Leo',
@@ -335,7 +335,7 @@ export const experiences: readonly Experience[] = [
   {
     id: 'howso-2026',
     company: {
-      zh: '华苏科技 · Howso Technology',
+      zh: 'Howso Technology（华苏科技）',
       en: 'Howso Technology (Huasu Technology)',
     },
     role: {
@@ -351,18 +351,18 @@ export const experiences: readonly Experience[] = [
     points: [
       {
         zh: '基于 MQTT 与 Unitree Python SDK，为宇树 G1 / GO2 实现运动控制和音频功能。',
-        en: 'Implemented movement control and audio functions for Unitree G1 / GO2 using MQTT and the Unitree Python SDK.',
+        en: 'Implemented motion control and audio functionality for Unitree G1 / GO2 using MQTT and the Unitree Python SDK.',
       },
       {
-        zh: '开发 React 19 + FastAPI 投标分析平台，使用 Qdrant 驱动的 RAG 自动生成响应矩阵。',
-        en: 'Developed a React 19 + FastAPI bid analysis platform with Qdrant-powered RAG for automated response matrix generation.',
+        zh: '设计并集成 React 19 + FastAPI 投标分析平台，使用 Qdrant 驱动的 RAG 自动生成响应矩阵，并指导 AI 编码代理完成实现。',
+        en: 'Designed and integrated a React 19 + FastAPI bid analysis platform with Qdrant-powered RAG for automated response matrix generation, using AI coding agents for implementation.',
       },
       {
-        zh: '通过 MQTT 通信协议与 ROS 2 机器人框架的实际应用，探索物联网与具身智能技术。',
-        en: 'Explored IoT and embodied AI through hands-on work with MQTT communication protocols and ROS 2 robotics frameworks.',
+        zh: '通过在宇树 G1 / GO2 平台上反复进行基于 MQTT 的测试，调试并验证机器人控制流程。',
+        en: 'Debugged and validated robot control workflows through repeated MQTT-based testing on Unitree G1 / GO2 platforms.',
       },
     ],
-    tags: ['React 19', 'FastAPI', 'Qdrant / RAG', 'MQTT', 'ROS 2'],
+    tags: ['React 19', 'FastAPI', 'Qdrant / RAG', 'MQTT'],
   },
 ];
 
@@ -396,20 +396,21 @@ export const education: readonly Education[] = [
     },
     end: '2030',
     expected: true,
-    gpa: '3.84',
+    gpa: '3.84 / 4.00',
   },
 ];
 
 export const skills: readonly string[] = [
-  'Python',
   'Rust',
-  'C',
+  'Python',
+  'C/C++',
   'HTML',
   'CSS',
   'JavaScript',
-  'Git',
-  'PyTorch',
   'FastAPI',
+  'PyTorch',
+  'Git',
+  'SQLAlchemy',
 ];
 
 export const abilities: readonly Ability[] = [

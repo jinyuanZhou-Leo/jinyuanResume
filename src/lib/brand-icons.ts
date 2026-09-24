@@ -1,6 +1,7 @@
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import {
   siC,
+  siCplusplus,
   siCss,
   siFastapi,
   siGit,
@@ -11,10 +12,10 @@ import {
   siPython,
   siQdrant,
   siReact,
-  siRos,
   siRust,
+  siSqlalchemy,
   siSqlite,
-  siTailwindcss,
+  siTypescript,
 } from 'simple-icons';
 import type { SimpleIcon } from 'simple-icons';
 
@@ -27,19 +28,20 @@ const technologies: Record<string, SimpleIcon> = {
   Python: siPython,
   Rust: siRust,
   C: siC,
+  'C/C++': siCplusplus,
   HTML: siHtml5,
   CSS: siCss,
   JavaScript: siJavascript,
   Git: siGit,
   PyTorch: siPytorch,
   FastAPI: siFastapi,
+  SQLAlchemy: siSqlalchemy,
   React: siReact,
   'React 19': siReact,
-  'Tailwind CSS': siTailwindcss,
+  TypeScript: siTypescript,
   SQLite: siSqlite,
   'Qdrant / RAG': siQdrant,
   MQTT: siMqtt,
-  'ROS 2': siRos,
 };
 
 const platforms = {
