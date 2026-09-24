@@ -1,19 +1,12 @@
 ---
 import { content, profile, type Locale } from '../../data/resume';
+import HeroGallery from '../HeroGallery.astro';
 import Icon from '../Icon.astro';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].hero;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <img
-    class="hero-image"
-    src="/images/hero.webp"
-    alt=""
-    width="1536"
-    height="1024"
-    fetchpriority="high"
-  />
   <div class="hero-content">
     <p class="hero-intro">
       {t.intro}
@@ -41,6 +34,7 @@ const t = content[locale].hero;
       <Icon name="down" size={18} />
     </a>
   </div>
+  <HeroGallery />
   <div class="hero-bottom">
     <span>
       <Icon name="pin" size={14} />

@@ -1,10 +1,10 @@
 # Art direction and sources
 
-Visual thesis: a quiet tea-lab still life, with brushed steel, clear type and space to think. The résumé remains the main content; the tea motif adds personality without claiming affiliation with HEYTEA.
+Visual thesis: a personal photo gallery, clear type and space to think. The résumé remains the main content.
 
 Content sequence: introduction → selected engineering projects → internship → education and skills → public repository activity → social links and contact.
 
-Interaction thesis: a staggered hero entrance, subtle scroll-linked image scale, and restrained hover/route transitions. Project articles reveal with scroll progress. The footer has a decorative metal paper crane photograph, without copy or interaction.
+Interaction thesis: a staggered hero entrance, independent Ken Burns motion in five photo tiles, one randomly selected tile changing at a time, and restrained hover/route transitions. Project articles reveal with scroll progress. The footer has a decorative metal paper crane photograph, without copy or interaction.
 
 ## References checked
 
@@ -22,7 +22,11 @@ Interaction thesis: a staggered hero entrance, subtle scroll-linked image scale,
 
 HEYTEA's stylesheet declares GenSekiGothic2, FZFWZhuZiHei and HeyteaMono families. This implementation uses locally hosted open-source Manrope and Noto Sans SC; it does not redistribute the site's custom font files.
 
-## Generated image
+## Hero gallery
+
+The 17 original photos added in commit `16866ac` remain in `public/` and `public/images/IMG_7518.jpeg`. Display assets in `public/images/gallery/` are resized WebP copies with EXIF display orientation applied; their aspect ratios are unchanged. The Gallery fills each tile by cropping the edges without stretching or CSS rotation; each photograph has a distinct pan direction.
+
+## Generated footer image and earlier hero
 
 Footer asset: `public/images/contact-crane.webp`. Generated using the built-in image tool, encoded with Sharp. Prompt:
 
@@ -31,7 +35,7 @@ A minimal premium studio still life for the footer of a HEYTEA-inspired personal
 Brand logos are sourced from Simple Icons and Font Awesome Free Brands and rendered as static SVGs. Non-brand concepts retain text labels.
 
 Tool: built-in image generation (not CLI).
-Final asset: `public/images/hero.webp` (1536 × 1024), encoded as WebP with Sharp. Image is decorative; the photograph is not a portrait or a claim about the owner's possessions.
+Earlier, now unused hero asset: `public/images/hero.webp` (1536 × 1024), encoded as WebP with Sharp.
 
 Prompt:
 

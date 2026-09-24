@@ -45,6 +45,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
   let workThreshold = 0;
   let lastDirection = 1; // 1 = down, -1 = up
   let isProgrammaticSnap = false;
+  let hasPhysicalScrollIntent = false;
   let debounceTimer: number | null = null;
 
   const refreshKeyframes = () => {
@@ -114,11 +115,31 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     }
   };
 
-  // Immediate interrupt if the user physically initiates another scroll
+  // Anchor navigation and scroll restoration must reach their targets before
+  // directional snapping responds to the user's next scroll gesture.
   const onUserPhysicalInteraction = () => {
+    hasPhysicalScrollIntent = true;
     if (isProgrammaticSnap) {
       isProgrammaticSnap = false;
     }
+  };
+  const onScrollKey = (event: KeyboardEvent) => {
+    if (
+      [
+        'ArrowUp',
+        'ArrowDown',
+        'PageUp',
+        'PageDown',
+        'Home',
+        'End',
+        ' ',
+      ].includes(event.key)
+    )
+      onUserPhysicalInteraction();
+  };
+  const onHashChange = () => {
+    hasPhysicalScrollIntent = false;
+    cancelDebounce();
   };
 
   window.addEventListener('wheel', onUserPhysicalInteraction, {
@@ -127,6 +148,8 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
   window.addEventListener('touchmove', onUserPhysicalInteraction, {
     passive: true,
   });
+  window.addEventListener('keydown', onScrollKey);
+  window.addEventListener('hashchange', onHashChange);
 
   const handleScroll = (e: {
     scroll: number;
@@ -137,6 +160,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     if (e.userData?.initiator === 'directional-snap') {
       return;
     }
+    if (!hasPhysicalScrollIntent) return;
 
     // Capture user scroll direction accurately
     if (Math.abs(e.velocity) > 0.03) {
@@ -170,6 +194,8 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     if (resizeTimer !== null) window.clearTimeout(resizeTimer);
     window.removeEventListener('wheel', onUserPhysicalInteraction);
     window.removeEventListener('touchmove', onUserPhysicalInteraction);
+    window.removeEventListener('keydown', onScrollKey);
+    window.removeEventListener('hashchange', onHashChange);
     smoothScroll.off('scroll', handleScroll);
     window.removeEventListener('resize', debouncedRefresh);
     window.removeEventListener(SCROLL_STOPS_CHANGED, debouncedRefresh);

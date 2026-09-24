@@ -14,7 +14,7 @@ pnpm exec astro dev logs
 pnpm exec astro dev stop
 ```
 
-以启动命令返回的 URL 为准。默认中文 `/`，英文 `/en/`。两种语言均生成静态 HTML，无需服务器端运行时。
+以启动命令返回的 URL 为准。默认英文 `/`，中文 `/zh/`。两种语言均生成静态 HTML，无需服务器端运行时。
 
 ```sh
 pnpm check
@@ -81,7 +81,7 @@ interface Project {
 | 项目滚动总览                       | `src/components/ProjectGrid.astro`、`src/styles/project-grid.css`                                  |
 | 各模块样式、响应式与打印           | `src/styles/`                                                                                      |
 | 原始下载简历                       | `public/documents/Jinyuan_Zhou_CV_2026.pdf`                                                        |
-| 原创主视觉                         | `public/images/hero.webp`                                                                          |
+| 首屏 Gallery 图片                  | `public/images/gallery/`，源照片位于 `public/` 和 `public/images/IMG_7518.jpeg`                  |
 
 更新简历时，同步修改 `zh` / `en` 内容并替换下载 PDF。需要交互的项目堆叠和 GitHub 模块分别作为 React island 加载；其余履历内容由 Astro 静态渲染。界面图标由 Lucide、技术栈 Logo 由 Simple Icons、平台 Logo 由 Font Awesome Brands 渲染为静态 SVG，路由与语言切换使用 Astro ClientRouter，动画使用 Motion，滚轮平滑使用 Lenis。邮箱复制调用浏览器 Clipboard API。
 
@@ -93,9 +93,9 @@ SWR 负责内存缓存及请求去重，成功响应另存为 30 分钟有效的
 
 ## 视觉与动画
 
-参考喜茶的实物摄影、黑白留白与清晰排版，使用原创茶杯／键盘／棋子主视觉和页脚银色纸鹤静物，保持材质统一。字体通过 Fontsource 本地提供 Manrope 与 Noto Sans SC，不依赖第三方字体 CDN；字体 token 可集中替换。未复制喜茶品牌标识或其专用字体文件。
+首页使用最新提交的 17 张个人照片组成 Gallery，照片按原始长宽比填满格子，超出的边缘会被裁切；页脚使用银色纸鹤静物。字体通过 Fontsource 本地提供 Manrope 与 Noto Sans SC，不依赖第三方字体 CDN；字体 token 可集中替换。未复制喜茶品牌标识或其专用字体文件。
 
-首屏摄影主视觉停驻并随滚动拉近，后续章节在同一阅读背景中自然延展。Motion 负责章节颜色、正文和辅助内容的滚动插值，Lenis 负责平滑滚轮与锚点导航，触屏保留原生滚动。`mountMotion` 是页面级生命周期入口，统一注册各章节的动画和清理函数；经历条目、教育条目、能力条目和 GitHub 标题用 `data-reading-stop` 标记语义阅读节点，各章节通过 `registerScrollStops` 发布基于实际内容测量的停靠点，吸附逻辑统一消费这些注册结果，并在没有专属测量器时回退到标记节点。内容数量变化不需要同步修改另一组下标或阶段表。ResizeObserver 同步文字换行、动态模块尺寸和仓库加载结果；反向滚动可逆，系统减少动画偏好会恢复线性内容布局。
+首屏 Gallery 的五格照片分别沿不同方向做 Ken Burns 缩放与平移，每次只随机更换一格，新旧照片交叉淡入淡出，换图时保持横图或竖图方向不变；滚动时整个 Gallery 随首屏淡出。后续章节在同一阅读背景中自然延展。Motion 负责章节颜色、正文和辅助内容的滚动插值，Lenis 负责平滑滚轮与锚点导航，触屏保留原生滚动。`mountMotion` 是页面级生命周期入口，统一注册各章节的动画和清理函数；经历条目、教育条目、能力条目和 GitHub 标题用 `data-reading-stop` 标记语义阅读节点，各章节通过 `registerScrollStops` 发布基于实际内容测量的停靠点，吸附逻辑统一消费这些注册结果，并在没有专属测量器时回退到标记节点。内容数量变化不需要同步修改另一组下标或阶段表。ResizeObserver 同步文字换行、动态模块尺寸和仓库加载结果；反向滚动可逆，系统减少动画偏好会恢复线性内容布局。
 
 项目总览由 `projects` 数组生成，并使用 React Bits Grid Motion 的倾斜、相向移动行作为背景引导；详细卡片由 `ProjectCard` 根据项目数据渲染，视觉类型和源码链接与项目顺序无关。`ScrollStack` 仅负责交互堆叠和前后切换。关于区按 `education`、`skills` 和 `abilities` 数组渲染教育、技术栈与能力。GitHub 使用延迟加载的 React Bits Pixel Blast 背景；在后台或不可见时暂停绘制，减少动画时释放 WebGL。来源与适配说明见 [docs/react-bits.md](docs/react-bits.md)，上游许可保留在 [docs/licenses/react-bits.txt](docs/licenses/react-bits.txt)。
 
@@ -103,4 +103,4 @@ SWR 负责内存缓存及请求去重，成功响应另存为 30 分钟有效的
 
 ## 发布
 
-`pnpm build` 输出 `dist/`，可部署到任意静态主机，包括 Debian 12 上的 Nginx。保留目录路由，确保 `/en/` 返回 `en/index.html`。站点尚未绑定正式域名，因此未硬编码 canonical URL。下载 PDF 包含原简历中的邮箱和电话，与网页联系方式一致。
+`pnpm build` 输出 `dist/`，可部署到任意静态主机，包括 Debian 12 上的 Nginx。保留目录路由，确保 `/zh/` 返回 `zh/index.html`。下载 PDF 包含原简历中的邮箱和电话，与网页联系方式一致。

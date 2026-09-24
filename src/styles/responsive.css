@@ -22,9 +22,6 @@
   .hero h1 {
     font-size: 95px;
   }
-  .hero-image {
-    object-position: 57% center;
-  }
   .hero-caption {
     margin-left: 0;
   }
@@ -98,16 +95,39 @@
   }
   .hero {
     height: auto;
-    min-height: 810px;
+    min-height: 0;
     max-height: none;
+    padding-bottom: 52px;
   }
-  .hero-image {
-    height: 57%;
-    top: auto;
-    bottom: 0;
-    object-position: 68% 67%;
-    object-fit: cover;
-    mask-image: linear-gradient(to bottom, transparent, black 18%);
+  .hero-image.hero-gallery,
+  .cinematic-scroll .hero-image.hero-gallery {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    height: auto;
+    inset: auto;
+    z-index: 0;
+    gap: 6px;
+  }
+  .hero-gallery::after {
+    display: none;
+  }
+  .hero-gallery-column {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .hero-gallery-tile {
+    width: 100%;
+    flex: none;
+  }
+  .hero-gallery-tile[data-orientation='portrait'] {
+    aspect-ratio: 3 / 4;
+  }
+  .hero-gallery-tile[data-orientation='landscape'] {
+    aspect-ratio: 4 / 3;
   }
   .hero::after {
     display: none;
@@ -123,7 +143,7 @@
     min-height: 0;
     display: block;
     padding-top: 30px;
-    padding-bottom: 300px;
+    padding-bottom: 24px;
     max-width: 500px;
   }
   .hero-intro {
@@ -257,6 +277,9 @@
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+  .hero-gallery-photo {
+    transform: none !important;
   }
   ::view-transition-old(root),
   ::view-transition-new(root) {

@@ -86,6 +86,9 @@
     pointer-events: none;
     overflow: visible;
   }
+  .cinematic-scroll .project-grid-tile:not([inert]) {
+    pointer-events: auto;
+  }
   .cinematic-scroll .project-overview {
     min-height: 0;
     margin-bottom: 0;

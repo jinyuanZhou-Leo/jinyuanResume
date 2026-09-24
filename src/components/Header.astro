@@ -10,8 +10,8 @@ const sections = Object.entries(t.nav);
 <header class="site-header">
   <a
     class="wordmark"
-    href={locale === 'zh' ? '/' : '/en/'}
-    aria-label={`${profile.name} — Home`}
+    href={locale === 'zh' ? '/zh/' : '/'}
+    aria-label={`${profile.name} — ${locale === 'zh' ? '首页' : 'Home'}`}
   >
     <span class="brand-mark">
       jz<span aria-hidden="true">✳</span>
@@ -44,7 +44,7 @@ const sections = Object.entries(t.nav);
       aria-label={locale === 'zh' ? '语言' : 'Language'}
     >
       <a
-        href="/"
+        href="/zh/"
         lang="zh-CN"
         hreflang="zh-CN"
         aria-current={locale === 'zh' ? 'page' : undefined}
@@ -53,7 +53,7 @@ const sections = Object.entries(t.nav);
       </a>
       <span>/</span>
       <a
-        href="/en/"
+        href="/"
         lang="en"
         hreflang="en"
         aria-current={locale === 'en' ? 'page' : undefined}

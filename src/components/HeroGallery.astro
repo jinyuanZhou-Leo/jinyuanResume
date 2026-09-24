@@ -1,0 +1,35 @@
+---
+import { galleryMotionStyle, galleryPhotos } from '../data/hero-gallery';
+---
+
+<div class="hero-image hero-gallery" aria-hidden="true">
+  {[
+    [0, 3],
+    [1, 2, 4],
+  ].map((column) => (
+    <div class="hero-gallery-column">
+      {column.map((index) => {
+        const photo = galleryPhotos[index];
+        return (
+          <div
+            class={`hero-gallery-tile hero-gallery-tile-${index + 1}`}
+            data-photo-index={index}
+            data-orientation={photo.orientation}
+          >
+            <img
+              class="hero-gallery-photo is-current"
+              style={galleryMotionStyle(index)}
+              src={photo.src}
+              alt=""
+              width={photo.orientation === 'portrait' ? 1350 : 1800}
+              height={photo.orientation === 'portrait' ? 1800 : 1350}
+              loading="eager"
+              decoding="async"
+              fetchpriority={index === 0 ? 'high' : 'auto'}
+            />
+          </div>
+        );
+      })}
+    </div>
+  ))}
+</div>

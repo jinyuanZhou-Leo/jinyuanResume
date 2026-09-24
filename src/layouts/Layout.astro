@@ -20,8 +20,8 @@ const t = content[locale];
     <meta property="og:title" content={t.title} />
     <meta property="og:description" content={t.description} />
     <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_CA'} />
-    <link rel="alternate" hreflang="zh-CN" href="/" />
-    <link rel="alternate" hreflang="en" href="/en/" />
+    <link rel="alternate" hreflang="zh-CN" href="/zh/" />
+    <link rel="alternate" hreflang="en" href="/" />
     <link rel="alternate" hreflang="x-default" href="/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{t.title}</title>
@@ -36,12 +36,48 @@ const t = content[locale];
 </html>
 <script>
   import { mountMotion } from '../lib/motion';
+  import { mountHeroGallery } from '../lib/hero-gallery';
   let cleanup: (() => void) | undefined;
   document.addEventListener('astro:page-load', () => {
     cleanup?.();
     const controller = new AbortController();
     const { signal } = controller;
     const stopMotion = mountMotion();
+    const stopGallery = mountHeroGallery();
+    const anchor = location.hash
+      ? document.getElementById(location.hash.slice(1))
+      : null;
+    if (anchor) {
+      const precedingIslands = [
+        ...document.querySelectorAll<HTMLElement>(
+          'astro-island[client="load"]',
+        ),
+      ].filter(
+        (island) =>
+          island.compareDocumentPosition(anchor) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      // Hydration can change the height above a hash target after Astro scrolls.
+      void Promise.all(
+        precedingIslands.map(
+          (island) =>
+            new Promise<void>((resolve) => {
+              if (!island.hasAttribute('ssr')) return resolve();
+              island.addEventListener('astro:hydrate', () => resolve(), {
+                once: true,
+              });
+            }),
+        ),
+      ).then(async () => {
+        await document.fonts.ready;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            if (!signal.aborted && location.hash === `#${anchor.id}`)
+              anchor.scrollIntoView({ behavior: 'instant', block: 'start' });
+          }),
+        );
+      });
+    }
     document
       .querySelectorAll<HTMLButtonElement>('.copy-email')
       .forEach((copy) =>
@@ -76,6 +112,7 @@ const t = content[locale];
     cleanup = () => {
       controller.abort();
       stopMotion();
+      stopGallery();
     };
   });
   document.addEventListener('astro:before-swap', () => cleanup?.());
