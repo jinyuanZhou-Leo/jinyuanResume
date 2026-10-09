@@ -20,6 +20,12 @@ export function mountMotion() {
   let smoothScroll: Lenis | undefined;
   const controller = new AbortController();
   const navigate = (target: HTMLElement | number, immediate = false) => {
+    // Returning to the hero must not replay every chapter and wake the GPU
+    // backdrop along a full-page smooth scroll. Lenis also cancels its inertia.
+    if (typeof target !== 'number' && target.id === 'top') {
+      target = 0;
+      immediate = true;
+    }
     const top = typeof target === 'number' ? target : getAnchorTop(target);
     window.dispatchEvent(new Event(ANCHOR_NAVIGATION));
     if (smoothScroll) {
