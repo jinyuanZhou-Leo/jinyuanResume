@@ -39,8 +39,8 @@
 }
 .grid-tile-category,
 .grid-tile-stack {
-  font-size: 10px;
-  color: #62645c;
+  font-size: var(--text-small);
+  color: var(--muted);
 }
 .grid-tile-mark {
   height: clamp(75px, 7.5vw, 115px);
@@ -176,7 +176,7 @@
   }
 }
 
-/* Clip only at the viewport, not at a visible rectangular chapter boundary. */
-body {
+/* The full-width main owns the cinematic viewport; clip preserves sticky scenes. */
+main {
   overflow-x: clip;
 }

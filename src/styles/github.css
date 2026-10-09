@@ -65,7 +65,7 @@
   }
 }
 .github-heading p {
-  font-size: 12px;
+  font-size: var(--text-body);
   color: var(--muted);
   margin-top: 10px;
 }
@@ -76,14 +76,19 @@
   font-size: 12px;
   border-bottom: 1px solid;
   padding: 9px 0;
+  min-height: 44px;
   background: none;
   white-space: nowrap;
+  transition: color 0.3s var(--ease);
+}
+.text-link:hover {
+  color: var(--accent);
 }
 .text-link:hover span {
   transform: translate(2px, -2px);
 }
 .github-status {
-  font-size: 10px;
+  font-size: var(--text-small);
   color: var(--muted);
   margin-top: 30px;
   display: flex;
@@ -117,7 +122,7 @@
   overflow-wrap: anywhere;
 }
 .repo-item > p {
-  font-size: 10px;
+  font-size: var(--text-small);
   margin-top: 8px;
   color: var(--muted);
 }
@@ -128,7 +133,7 @@
   margin-top: 25px;
 }
 .repo-item .repo-date {
-  font-size: 9px;
+  font-size: var(--text-small);
 }
 
 /* Reserve the live module's space so loading repositories cannot move anchor targets. */

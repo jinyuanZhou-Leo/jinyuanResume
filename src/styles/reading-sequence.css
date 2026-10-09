@@ -4,7 +4,7 @@
   padding-block: 18px;
 }
 .experience-detail > ul:not(.tags) li p {
-  font-size: 13px;
+  font-size: var(--text-body);
   line-height: 1.9;
 }
 @media screen and (min-width: 761px) {

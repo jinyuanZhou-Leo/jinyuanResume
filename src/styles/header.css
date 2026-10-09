@@ -4,13 +4,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgb(248 248 245 / 0.72);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(22px) saturate(135%);
   -webkit-backdrop-filter: blur(22px) saturate(135%);
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid rgb(35 37 32 / 0.06);
+  border-bottom: 1px solid var(--steel-border);
 }
 .wordmark {
   display: flex;
@@ -71,6 +71,8 @@
   align-items: center;
   gap: 7px;
   padding: 9px 14px;
+  min-height: 40px;
+  border-radius: var(--control-radius);
   color: var(--paper);
   background: var(--ink);
   transition:
@@ -100,7 +102,13 @@
 }
 .language-switch a {
   padding-block: 10px;
+  min-width: 24px;
+  text-align: center;
   color: var(--muted);
+  transition: color 0.3s var(--ease);
+}
+.language-switch a:hover {
+  color: var(--accent);
 }
 .language-switch a[aria-current] {
   color: var(--ink);

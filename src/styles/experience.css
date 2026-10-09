@@ -7,7 +7,7 @@
   gap: 80px;
 }
 .experience-date {
-  font-size: 11px;
+  font-size: var(--text-small);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -30,7 +30,7 @@
   margin-top: 10px;
 }
 .location {
-  font-size: 11px;
+  font-size: var(--text-small);
   color: var(--muted);
   margin-top: 7px;
 }
@@ -41,7 +41,7 @@
   display: flex;
   gap: 20px;
   padding-block: 18px;
-  border-top: 1px solid #d3d6cc;
+  border-top: 1px solid var(--line);
 }
 .experience-detail li > span {
   font-size: 10px;
@@ -49,7 +49,7 @@
   color: var(--accent);
 }
 .experience-detail li > p {
-  font-size: 13px;
+  font-size: var(--text-body);
   line-height: 1.9;
 }
 

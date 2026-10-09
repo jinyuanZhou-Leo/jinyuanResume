@@ -64,27 +64,39 @@
     padding-top: 11px;
   }
   .wordmark-name {
-    font-size: 8px;
+    font-size: 10px;
   }
   .brand-mark {
     font-size: 37px;
   }
   .header-actions {
-    gap: 18px;
+    gap: 10px;
+  }
+  .language-switch {
+    gap: 6px;
+  }
+  .language-switch a,
+  .header-download,
+  .header-blog,
+  .desktop-nav a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .header-download {
-    font-size: 11px;
+    font-size: 12px;
   }
   .desktop-nav {
     order: 3;
     width: 100%;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: var(--text-small);
     margin-top: 8px;
   }
   .header-blog {
     gap: 4px;
-    padding: 8px;
+    padding: 8px 10px;
   }
   .header-blog svg {
     width: 12px;
@@ -151,15 +163,15 @@
     margin-bottom: 12px;
   }
   .hero h1 {
-    font-size: clamp(70px, 18vw, 105px);
-    line-height: 0.96;
+    font-size: clamp(64px, 17.5vw, 96px);
+    line-height: 1;
   }
   .hero h2 {
     font-size: 23px;
     margin-top: 22px;
   }
   .hero-description {
-    font-size: 12px;
+    font-size: var(--text-body);
     margin-top: 16px;
     max-width: 320px;
   }
@@ -168,7 +180,8 @@
   }
   .hero-bottom {
     padding-block: 18px;
-    font-size: 9px;
+    font-size: var(--text-small);
+    background: none;
   }
   .hero-caption {
     display: none !important;
@@ -229,7 +242,7 @@
     max-width: 230px;
   }
   .github-heading .text-link {
-    font-size: 10px;
+    font-size: var(--text-small);
   }
   .repo-grid {
     grid-template-columns: 1fr 1fr;
@@ -268,6 +281,19 @@
     padding-top: 60px;
   }
 }
+@media (max-width: 400px) {
+  /* Keep brand, language and actions together without shrinking tap targets. */
+  .site-header {
+    padding-inline: 16px;
+  }
+  .wordmark-name {
+    display: none;
+  }
+  .header-download {
+    font-size: 11px;
+    gap: 6px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -287,6 +313,10 @@
   }
 }
 @media print {
+  /* The closing chapter prints on white rather than its dark screen surface. */
+  .contact-section :is(p, a, span, svg, h3) {
+    color: black !important;
+  }
   .site-header,
   .hero-image,
   .hero-bottom,

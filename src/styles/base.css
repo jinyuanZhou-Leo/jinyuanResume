@@ -31,6 +31,11 @@
   --gutter: clamp(24px, 6.2vw, 104px);
   --max-width: 1440px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-body: 14px;
+  --text-small: 12px;
+  --control-height: 48px;
+  --control-radius: 4px;
+  --focus-ring: var(--accent);
   --header-height: 92px;
 }
 
@@ -77,13 +82,13 @@ button {
 }
 
 button:disabled {
-  cursor: wait;
+  cursor: default;
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 6px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
 }
 
 h1,
