@@ -176,6 +176,13 @@
   }
 }
 
+@media print {
+  .work-overview-layer,
+  .work-intro-spacer {
+    display: none;
+  }
+}
+
 /* The full-width main owns the cinematic viewport; clip preserves sticky scenes. */
 main {
   overflow-x: clip;

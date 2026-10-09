@@ -42,10 +42,10 @@ const t = content[locale];
     cleanup?.();
     const controller = new AbortController();
     const { signal } = controller;
-    const stopMotion = mountMotion();
+    const motion = mountMotion();
     const stopGallery = mountHeroGallery();
     const anchor = location.hash
-      ? document.getElementById(location.hash.slice(1))
+      ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
       : null;
     if (anchor) {
       const precedingIslands = [
@@ -73,7 +73,7 @@ const t = content[locale];
         requestAnimationFrame(() =>
           requestAnimationFrame(() => {
             if (!signal.aborted && location.hash === `#${anchor.id}`)
-              anchor.scrollIntoView({ behavior: 'instant', block: 'start' });
+              motion.navigate(anchor, true);
           }),
         );
       });
@@ -111,7 +111,7 @@ const t = content[locale];
       });
     cleanup = () => {
       controller.abort();
-      stopMotion();
+      motion.dispose();
       stopGallery();
     };
   });

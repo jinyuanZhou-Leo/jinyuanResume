@@ -11,6 +11,8 @@ import {
   getElementTop,
   registerScrollStops,
   notifyScrollStops,
+  registerAnchorTarget,
+  navigateTo,
 } from '../../lib/scroll-stops';
 import './ScrollStack.css';
 
@@ -81,6 +83,7 @@ export default function ScrollStack({
       lastTime = 0,
       ready = false;
     let stops: number[] = [];
+    let anchorSelection: number | undefined;
     let geometry:
       | {
           layout: ReturnType<typeof buildStackLayout>;
@@ -115,6 +118,8 @@ export default function ScrollStack({
         heading.style.top = '';
       }
       transforms.clear();
+      root.style.removeProperty('--stack-card-height');
+      root.style.removeProperty('--stack-reading-distance');
       if (blurRef.current) blurRef.current.hidden = true;
       ready = false;
       setBrowsing(false);
@@ -148,11 +153,16 @@ export default function ScrollStack({
           ? parseFloat(getComputedStyle(heading).marginBottom) || 0
           : 0,
         cardHeight: height,
+        browseScale,
         cardTops: tops,
         stackPosition: parsePosition(stackPosition),
         scaleEnd,
         stackDistance: itemStackDistance,
       });
+      root.style.setProperty(
+        '--stack-reading-distance',
+        `${layout.browseOverflow}px`,
+      );
       geometry = {
         layout,
         tops,
@@ -188,11 +198,21 @@ export default function ScrollStack({
       const progress = progressBetween(y, g.morphStart, g.morphEnd);
       const morph = progress * progress * (3 - 2 * progress);
       const nextReady = progress === 1;
+      if (nextReady && anchorSelection !== undefined) {
+        selected = anchorSelection;
+        position = selected;
+        anchorSelection = undefined;
+        setActiveIndex(selected);
+      }
       if (nextReady !== ready) {
         ready = nextReady;
         setBrowsing(ready);
       }
-      if (!progress && selected !== cards.length - 1) {
+      if (
+        !progress &&
+        anchorSelection === undefined &&
+        selected !== cards.length - 1
+      ) {
         selected = cards.length - 1;
         position = selected;
         setActiveIndex(selected);
@@ -204,7 +224,9 @@ export default function ScrollStack({
       const scale = browseScale;
       const gap = desktop ? 24 : 12;
       const trackY =
-        g.stackPosition + (g.browsePosition - g.stackPosition) * morph;
+        g.stackPosition +
+        (g.browsePosition - g.stackPosition) * morph -
+        Math.max(0, Math.min(y - g.morphEnd, g.browseOverflow));
       const blur = blurRef.current;
       if (blur) {
         blur.hidden = morph === 0;
@@ -232,7 +254,7 @@ export default function ScrollStack({
       if (controlsRef.current)
         setTransform(
           controlsRef.current,
-          `translate3d(0,${Math.min(y, g.pinEnd) + trackY + (height * scale) / 2 - rootTop}px,0) translateY(-50%)`,
+          `translate3d(0,${Math.min(y, g.pinEnd) + Math.max(g.browsePosition + 24, Math.min(window.innerHeight - 24, trackY + (height * scale) / 2)) - rootTop}px,0) translateY(-50%)`,
         );
       cards.forEach((card, i) => {
         const growth = cards.length < 2 ? 1 : i / (cards.length - 1);
@@ -284,13 +306,36 @@ export default function ScrollStack({
       selected = Math.max(0, Math.min(cards.length - 1, selected + direction));
       setActiveIndex(selected);
       lastTime = 0;
+      if (needsMeasure) measure();
+      if (geometry) navigateTo(Math.ceil(geometry.layout.morphEnd));
       schedule();
     };
+    const unregisterAnchors = cards.map((card, index) =>
+      registerAnchorTarget(card, () => {
+        if (media.matches)
+          return Math.max(
+            0,
+            getElementTop(card) - (header?.offsetHeight ?? 0) - 18,
+          );
+        if (needsMeasure) measure();
+        selected = index;
+        anchorSelection = index;
+        position = index;
+        setActiveIndex(index);
+        schedule();
+        return Math.ceil(geometry?.layout.morphEnd ?? getElementTop(card));
+      }),
+    );
     const observer = new ResizeObserver(resize);
     observer.observe(root);
     if (header) observer.observe(header);
     if (heading) observer.observe(heading);
-    cards.forEach((card) => observer.observe(card));
+    cards.forEach((card) => {
+      observer.observe(card);
+      // Equal card heights hide text reflow from the outer box's observer.
+      // Observe the content itself so font-size changes update reading distance.
+      [...card.children].forEach((content) => observer.observe(content));
+    });
     const main = document.querySelector('main');
     if (main) observer.observe(main);
     const unregister = scene
@@ -308,6 +353,7 @@ export default function ScrollStack({
       cancelAnimationFrame(frame);
       observer.disconnect();
       unregister();
+      unregisterAnchors.forEach((unregister) => unregister());
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', resize);
       media.removeEventListener('change', preference);

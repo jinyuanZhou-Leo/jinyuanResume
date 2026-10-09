@@ -5,13 +5,91 @@ import { mountChapters } from './chapters';
 import { mountPixelHandoff } from './pixel-handoff';
 import { mountSnapTimeline } from './snap-timeline';
 import { mountProjectOverview } from './project-overview';
-import { registerScrollStops, getElementTop } from './scroll-stops';
+import {
+  registerScrollStops,
+  getElementTop,
+  getAnchorTop,
+  ANCHOR_NAVIGATION,
+  NAVIGATE_TO,
+} from './scroll-stops';
 import { progressBetween } from './stack-layout';
 import 'lenis/dist/lenis.css';
 
 export function mountMotion() {
   const header = document.querySelector<HTMLElement>('.site-header');
-  if (!header) return () => {};
+  let smoothScroll: Lenis | undefined;
+  const controller = new AbortController();
+  const navigate = (target: HTMLElement | number, immediate = false) => {
+    const top = typeof target === 'number' ? target : getAnchorTop(target);
+    window.dispatchEvent(new Event(ANCHOR_NAVIGATION));
+    if (smoothScroll) {
+      smoothScroll.resize();
+      smoothScroll.scrollTo(top, { immediate, force: true });
+    } else window.scrollTo({ top, behavior: immediate ? 'instant' : 'smooth' });
+  };
+  // Transformed project cards publish a stable timeline target and selection.
+  // Native hash scrolling and Lenis must not independently infer their positions.
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const link =
+        event.target instanceof Element
+          ? event.target.closest<HTMLAnchorElement>('a[href]')
+          : null;
+      if (
+        !link ||
+        link.classList.contains('skip-link') ||
+        link.hasAttribute('download') ||
+        (link.target && link.target !== '_self')
+      )
+        return;
+      const url = new URL(link.href);
+      if (
+        url.origin !== location.origin ||
+        url.pathname !== location.pathname ||
+        url.search !== location.search ||
+        !url.hash
+      )
+        return;
+      const element = document.getElementById(
+        decodeURIComponent(url.hash.slice(1)),
+      );
+      if (!element) return;
+      event.preventDefault();
+      if (url.hash !== location.hash)
+        history.pushState(history.state, '', url.hash);
+      navigate(element);
+    },
+    { signal: controller.signal, capture: true },
+  );
+  const restoreHash = () => {
+    const element = document.getElementById(
+      decodeURIComponent(location.hash.slice(1)),
+    );
+    if (element) navigate(element, true);
+  };
+  window.addEventListener('hashchange', restoreHash, {
+    signal: controller.signal,
+  });
+  window.addEventListener('popstate', restoreHash, {
+    signal: controller.signal,
+  });
+  document.addEventListener(
+    NAVIGATE_TO,
+    (event) => {
+      navigate((event as CustomEvent<HTMLElement | number>).detail);
+    },
+    { signal: controller.signal },
+  );
   const measureHeader = () => {
     document.documentElement.style.setProperty(
       '--viewport-width',
@@ -19,12 +97,12 @@ export function mountMotion() {
     );
     document.documentElement.style.setProperty(
       '--nav-height',
-      `${header.offsetHeight}px`,
+      `${header?.offsetHeight ?? 0}px`,
     );
   };
   measureHeader();
   const headerResize = new ResizeObserver(measureHeader);
-  headerResize.observe(header);
+  if (header) headerResize.observe(header);
   const desktop = window.matchMedia('(min-width: 761px)');
   const preference = window.matchMedia(
     '(prefers-reduced-motion: reduce), print',
@@ -41,15 +119,19 @@ export function mountMotion() {
     stop();
     if (preference.matches) return;
     document.documentElement.classList.add('cinematic-scroll');
-    const smoothScroll = new Lenis({
+    const scrolling = new Lenis({
       autoRaf: true,
       lerp: 0.085,
       smoothWheel: true,
       syncTouch: false,
-      anchors: true,
+      anchors: false,
     });
-    disposers.push(() => smoothScroll.destroy());
-    disposers.push(mountSnapTimeline(smoothScroll));
+    smoothScroll = scrolling;
+    disposers.push(() => {
+      scrolling.destroy();
+      smoothScroll = undefined;
+    });
+    disposers.push(mountSnapTimeline(scrolling));
 
     const intro = animate(
       '.hero-content > *',
@@ -68,7 +150,7 @@ export function mountMotion() {
           scene.style.setProperty('--scene-height', `${stage.offsetHeight}px`);
         }
       });
-      smoothScroll.resize();
+      scrolling.resize();
     });
     scenes.forEach((scene) => {
       const stage = scene.querySelector<HTMLElement>('.scene-stage');
@@ -282,10 +364,12 @@ export function mountMotion() {
   start();
   preference.addEventListener('change', start);
   desktop.addEventListener('change', start);
-  return () => {
+  const dispose = () => {
+    controller.abort();
     stop();
     preference.removeEventListener('change', start);
     desktop.removeEventListener('change', start);
     headerResize.disconnect();
   };
+  return { navigate, dispose };
 }

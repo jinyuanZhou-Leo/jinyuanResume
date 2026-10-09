@@ -4,6 +4,7 @@ import {
   getElementTop,
   getChapterStops,
   SCROLL_STOPS_CHANGED,
+  ANCHOR_NAVIGATION,
 } from './scroll-stops';
 
 function calculateKeyframes(): { workThreshold: number; keyframes: number[] } {
@@ -139,6 +140,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
   };
   const onHashChange = () => {
     hasPhysicalScrollIntent = false;
+    isProgrammaticSnap = false;
     cancelDebounce();
   };
 
@@ -150,6 +152,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
   });
   window.addEventListener('keydown', onScrollKey);
   window.addEventListener('hashchange', onHashChange);
+  window.addEventListener(ANCHOR_NAVIGATION, onHashChange);
 
   const handleScroll = (e: {
     scroll: number;
@@ -196,6 +199,7 @@ export function mountSnapTimeline(smoothScroll: Lenis): () => void {
     window.removeEventListener('touchmove', onUserPhysicalInteraction);
     window.removeEventListener('keydown', onScrollKey);
     window.removeEventListener('hashchange', onHashChange);
+    window.removeEventListener(ANCHOR_NAVIGATION, onHashChange);
     smoothScroll.off('scroll', handleScroll);
     window.removeEventListener('resize', debouncedRefresh);
     window.removeEventListener(SCROLL_STOPS_CHANGED, debouncedRefresh);

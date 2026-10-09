@@ -143,10 +143,23 @@
 }
 @media screen and (prefers-reduced-motion: no-preference) {
   .scroll-stack-inner {
-    padding-bottom: calc(100svh + 96px);
+    padding-bottom: calc(100svh + 96px + var(--stack-reading-distance, 0px));
   }
 }
 @media print {
+  /* Printed projects use the whole page and only their natural text height. */
+  .scroll-stack-card:is(.featured-project, .stack-project-row) {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 16px 0;
+    margin-bottom: 20px !important;
+    border: 0;
+    break-inside: avoid;
+  }
+  .scroll-stack-inner {
+    padding: 0;
+  }
   .scroll-stack-controls {
     display: none;
   }

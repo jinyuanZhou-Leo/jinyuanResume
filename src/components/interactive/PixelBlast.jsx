@@ -422,12 +422,18 @@ const PixelBlast = ({
       return;
     speedRef.current = speed;
     const canvas = document.createElement('canvas');
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias,
+        alpha: true,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      // A decorative GPU resource must never take down the repository content.
+      return;
+    }
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
