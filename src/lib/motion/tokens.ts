@@ -6,7 +6,10 @@
 export const ease = {
   /** Scrubbed progress that should track the scrollbar exactly. */
   none: 'none',
-  /** Things arriving: text lines, cards, counters. Matches --ease-out. */
+  /**
+   * Things arriving: text lines, cards, counters. The GSAP counterpart of
+   * --ease-out (a steeper expo curve suits longer, larger moves).
+   */
   enter: 'expo.out',
   /** Softer arrival for secondary elements. */
   soft: 'power3.out',

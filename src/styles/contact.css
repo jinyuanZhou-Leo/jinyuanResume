@@ -41,21 +41,15 @@
   mask-image: radial-gradient(ellipse at center, black 38%, transparent 72%);
 }
 .contact-bottom {
-  --rule: 1;
   position: relative;
   margin-top: 65px;
   padding: 30px 0 40px;
-}
-.contact-bottom::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--color-inverse-line);
-  transform: scaleX(var(--rule));
-  transform-origin: 0 50%;
+  /* The top rule draws from --rule (0–1), read on the element itself. */
+  background: linear-gradient(
+      var(--color-inverse-line),
+      var(--color-inverse-line)
+    )
+    0 0 / calc(var(--rule) * 100%) 1px no-repeat;
 }
 .contact-marquee {
   overflow: clip;

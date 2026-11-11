@@ -178,10 +178,8 @@ export function mountMotion(): MotionController {
       let pending = 0;
       const refresh = () => {
         cancelAnimationFrame(pending);
-        pending = requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-          smooth.resize();
-        });
+        // Lenis tracks its own size (autoResize); triggers need a refresh.
+        pending = requestAnimationFrame(() => ScrollTrigger.refresh());
       };
       const layout = new ResizeObserver(refresh);
       document

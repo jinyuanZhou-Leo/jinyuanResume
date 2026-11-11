@@ -66,19 +66,13 @@
     box-shadow: var(--shadow-sheet);
     overflow: clip;
   }
-  /* The page underneath: scaled about the visible part of the chapter. */
+  /* The page underneath settles back about its visible part and dims. Both
+   * read --recede on the chapter itself, so the registered, non-inherited
+   * property never invalidates the chapter's subtree. */
   .motion .chapter.is-receding {
-    transform: scale(calc(1 - var(--recede, 0) * 0.06));
+    transform: scale(calc(1 - var(--recede) * 0.06));
     transform-origin: 50% calc(100% - 50svh);
-  }
-  .motion .chapter::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: var(--color-ink);
-    opacity: calc(var(--recede, 0) * 0.45);
-    pointer-events: none;
+    filter: brightness(calc(1 - var(--recede) * 0.4));
   }
   .motion .chapter.is-covered {
     visibility: hidden;

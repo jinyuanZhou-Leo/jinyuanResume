@@ -8,12 +8,13 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  /* The #github chapter supplies --chapter-progress while it crosses the viewport. */
+  /* PixelBlast sets --chapter-progress on this element from the GitHub
+   * chapter's scroll progress (src/lib/motion/signals.ts). */
   opacity: calc(
-    0.5 - clamp(0, (var(--chapter-progress, 0.5) - 0.55) / 0.4, 1) * 0.32
+    0.5 - clamp(0, (var(--chapter-progress) - 0.55) / 0.4, 1) * 0.32
   );
   pointer-events: none;
-  transform: scale(calc(1.12 - var(--chapter-progress, 0.5) * 0.12));
+  transform: scale(calc(1.12 - var(--chapter-progress) * 0.12));
   transform-origin: center;
   will-change: opacity, transform;
 }

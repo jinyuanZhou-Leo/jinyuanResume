@@ -126,8 +126,8 @@ export function mountHeroScroll(desktop: boolean): Cleanup {
   const cover = ScrollTrigger.create({
     trigger: sheet,
     start: 'top top',
-    end: 'max',
-    toggleClass: { targets: chapter, className: 'is-covered' },
+    onEnter: () => chapter.classList.add('is-covered'),
+    onLeaveBack: () => chapter.classList.remove('is-covered'),
   });
   return () => {
     cover.kill();

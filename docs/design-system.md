@@ -43,23 +43,23 @@ There is one accent. Green marks state and progress, never decoration.
 
 Manrope with Noto Sans SC as the Chinese fallback, at three weights: 400, 600 and 700.
 
-| Token              | Size     | Use                                      |
-| ------------------ | -------- | ---------------------------------------- |
-| `--type-display`   | 76–116px | Name in the hero                         |
-| `--type-marquee`   | 44–120px | Footer ticker                            |
-| `--type-h2-lg`     | 32–56px  | Toolkit, contact                         |
-| `--type-h2`        | 32–52px  | Chapter titles                           |
-| `--type-subhead`   | 23–34px  | Hero line                                |
-| `--type-h3-lg`     | 24–38px  | School names                             |
-| `--type-h3`        | 24–32px  | Project names                            |
-| `--type-lede`      | 17–22px  | About paragraph                          |
-| `--type-h4`        | 16–24px  | Drift tile captions                      |
-| `--type-lead`      | 16px     | Hero greeting, repo names                |
-| `--type-body`      | 14px     | Body copy                                |
-| `--type-ui`        | 13px     | Buttons, navigation                      |
-| `--type-small`     | 12px     | Metadata                                 |
-| `--type-caption`   | 11px     | Eyebrows (upper case, `--tracking-caps`) |
-| `--type-micro`     | 10px     | Indices, artwork labels                  |
+| Token            | Size     | Use                                      |
+| ---------------- | -------- | ---------------------------------------- |
+| `--type-display` | 76–116px | Name in the hero                         |
+| `--type-marquee` | 44–120px | Footer ticker                            |
+| `--type-h2-lg`   | 32–56px  | Toolkit, contact                         |
+| `--type-h2`      | 32–52px  | Chapter titles                           |
+| `--type-subhead` | 23–34px  | Hero line                                |
+| `--type-h3-lg`   | 24–38px  | School names                             |
+| `--type-h3`      | 24–32px  | Project names                            |
+| `--type-lede`    | 17–22px  | About paragraph                          |
+| `--type-h4`      | 16–24px  | Drift tile captions                      |
+| `--type-lead`    | 16px     | Hero greeting, repo names                |
+| `--type-body`    | 14px     | Body copy                                |
+| `--type-ui`      | 13px     | Buttons, navigation                      |
+| `--type-small`   | 12px     | Metadata                                 |
+| `--type-caption` | 11px     | Eyebrows (upper case, `--tracking-caps`) |
+| `--type-micro`   | 10px     | Indices, artwork labels                  |
 
 Headings use negative tracking (`--tracking-heading`/`--tracking-title`). Titles carry no full stop. The green period after the name in the hero is the one exception: it is the brand mark.
 

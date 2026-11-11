@@ -67,22 +67,13 @@
   margin-top: 28px;
 }
 .experience-points > li {
-  --rule: 1;
   position: relative;
   display: flex;
   gap: 20px;
   padding-block: 18px;
-}
-.experience-points > li::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--tone-line, var(--line));
-  transform: scaleX(var(--rule));
-  transform-origin: 0 50%;
+  /* The top rule draws from --rule (0–1), read on the item itself. */
+  background: linear-gradient(var(--tone-line), var(--tone-line)) 0 0 /
+    calc(var(--rule) * 100%) 1px no-repeat;
 }
 .point-index {
   font-size: var(--type-micro);

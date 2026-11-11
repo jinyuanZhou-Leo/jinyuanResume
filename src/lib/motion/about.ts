@@ -163,31 +163,30 @@ function mountToolkit(desktop: boolean): Cleanup {
   const title = q('.toolkit-title > *');
   const cleanups: Cleanup[] = [];
 
+  // Built per run as one timeline, so cleanup can stop a sweep mid-flight
+  // (callbacks run outside the matchMedia context that reverts the rest).
+  let sweeping: gsap.core.Timeline | undefined;
   const sweep = () => {
+    sweeping?.progress(1).kill();
     const columns = Math.max(
       1,
       getComputedStyle(q('.toolkit-grid')[0]).gridTemplateColumns.split(' ')
         .length,
     );
+    const timeline = gsap.timeline();
     items.forEach((item, i) => {
-      const step = (i % columns) + Math.floor(i / columns);
-      gsap.delayedCall(step * 0.09, () => {
-        item.classList.add('is-lit');
-        gsap.delayedCall(0.55, () => item.classList.remove('is-lit'));
-      });
-      gsap.fromTo(
-        item.querySelector('.toolkit-icon'),
-        { y: 0 },
-        {
-          y: -8,
-          duration: 0.32,
-          ease: 'power2.out',
-          yoyo: true,
-          repeat: 1,
-          delay: step * 0.09,
-        },
-      );
+      const at = ((i % columns) + Math.floor(i / columns)) * 0.09;
+      timeline
+        .call(() => item.classList.add('is-lit'), undefined, at)
+        .call(() => item.classList.remove('is-lit'), undefined, at + 0.55)
+        .fromTo(
+          item.querySelector('.toolkit-icon'),
+          { y: 0 },
+          { y: -8, duration: 0.32, ease: 'power2.out', yoyo: true, repeat: 1 },
+          at,
+        );
     });
+    sweeping = timeline;
   };
 
   if (desktop) {
@@ -284,6 +283,7 @@ function mountToolkit(desktop: boolean): Cleanup {
     });
 
   return () => {
+    sweeping?.kill();
     cleanups.forEach((cleanup) => cleanup());
     items.forEach((item) => item.classList.remove('is-lit'));
   };

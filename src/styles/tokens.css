@@ -8,6 +8,32 @@
  * The GSAP side mirrors the motion tokens in src/lib/motion/tokens.ts.
  * See docs/design-system.md for usage rules.
  */
+/*
+ * Animated custom properties. Registered as typed, non-inherited numbers so a
+ * per-frame change only restyles the element that owns it, never its subtree.
+ * Each is read only on the element it is set on.
+ */
+@property --enter {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@property --recede {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --rule {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@property --chapter-progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0.5;
+}
+
 :root {
   /* ——— 1. Primitives ——— */
 

@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type Lenis from 'lenis';
 import { clamp, wrap } from './math';
+import { githubProgress } from './signals';
 import type { Cleanup } from './types';
 import { ease, stagger } from './tokens';
 
@@ -24,15 +25,12 @@ export function mountClosing(lenis: Lenis): Cleanup {
       trigger: github,
       start: 'top bottom',
       end: 'bottom top',
-      onUpdate: (self) =>
-        github.style.setProperty(
-          '--chapter-progress',
-          self.progress.toFixed(4),
-        ),
+      // PixelBlast subscribes; it never measures scroll itself.
+      onUpdate: (self) => githubProgress.set(Number(self.progress.toFixed(4))),
     });
     cleanups.push(() => {
       github.classList.remove('is-inview');
-      github.style.removeProperty('--chapter-progress');
+      githubProgress.set(0.5);
     });
   }
 

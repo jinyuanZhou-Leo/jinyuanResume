@@ -3,9 +3,8 @@
 // Adaptations: theme, lazy mounting, visibility/reduced-motion lifecycle, Three Timer.
 import { Effect, EffectComposer, EffectPass, RenderPass } from 'postprocessing';
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
+import { githubProgress } from '../../lib/motion/signals';
 import './PixelBlast.css';
 
 const createTouchTexture = () => {
@@ -340,7 +339,7 @@ const PixelBlast = ({
   const containerRef = useRef(null);
   const visibilityRef = useRef({ visible: true });
   const speedRef = useRef(speed);
-  // ScrollTrigger owns the scroll measurement. The render loop only consumes this ref,
+  // The motion controller owns the scroll measurement. The render loop only consumes this ref,
   // so it never needs to synchronously read layout or computed styles.
   const chapterProgressRef = useRef(0);
 
@@ -351,20 +350,13 @@ const PixelBlast = ({
   const motionAllowedRef = useRef(true);
   useEffect(() => {
     const container = containerRef.current;
-    const chapter = container?.closest('#github');
-    if (!chapter) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    // The chapter's passage through the viewport drives the field's evolution.
-    const trigger = ScrollTrigger.create({
-      trigger: chapter,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: (self) => {
-        chapterProgressRef.current = clamp(self.progress, 0, 1);
-      },
+    if (!container) return;
+    // The motion controller owns the chapter's ScrollTrigger and publishes its
+    // progress; the field evolves with it and the CSS fade reads it here.
+    return githubProgress.subscribe((value) => {
+      chapterProgressRef.current = clamp(value, 0, 1);
+      container.style.setProperty('--chapter-progress', value.toFixed(4));
     });
-    return () => trigger.kill();
   }, []);
   useEffect(() => {
     const container = containerRef.current;
@@ -390,27 +382,47 @@ const PixelBlast = ({
       setReducedMotion(media.matches);
       resume();
     };
+    // Visible means in the viewport and not covered by the next page:
+    // IntersectionObserver ignores occlusion, so the chapter's is-covered
+    // class (set by the page stack) also pauses the render loop.
+    const chapter = container.closest('.chapter');
+    let intersecting = true;
+    const sync = () => {
+      const visible =
+        intersecting && !chapter?.classList.contains('is-covered');
+      visibilityRef.current.visible = visible;
+      if (
+        visible &&
+        motionAllowedRef.current &&
+        threeRef.current &&
+        !threeRef.current.raf
+      ) {
+        threeRef.current.clock.reset();
+        threeRef.current.raf = requestAnimationFrame(animationRef.current);
+      }
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
-        visibilityRef.current.visible = entry.isIntersecting;
-        if (
-          entry.isIntersecting &&
-          motionAllowedRef.current &&
-          threeRef.current &&
-          !threeRef.current.raf
-        ) {
-          threeRef.current.clock.reset();
-          threeRef.current.raf = requestAnimationFrame(animationRef.current);
-        }
+        intersecting = entry.isIntersecting;
+        sync();
       },
       { threshold: 0 },
     );
-    if (autoPauseOffscreen) observer.observe(container);
+    const covered = new MutationObserver(sync);
+    if (autoPauseOffscreen) {
+      observer.observe(container);
+      if (chapter)
+        covered.observe(chapter, {
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+    }
     media.addEventListener('change', updateMotionPreference);
     document.addEventListener('visibilitychange', resume);
     updateMotionPreference();
     return () => {
       observer.disconnect();
+      covered.disconnect();
       media.removeEventListener('change', updateMotionPreference);
       document.removeEventListener('visibilitychange', resume);
     };

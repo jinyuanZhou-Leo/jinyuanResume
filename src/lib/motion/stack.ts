@@ -71,12 +71,13 @@ export function mountStack(): Cleanup {
         },
       },
     );
-    // Fully covered pages stop painting.
+    // Fully covered pages stop painting. One-sided callbacks, because a
+    // trigger ending at 'max' would deactivate at the very bottom of the page.
     ScrollTrigger.create({
       trigger: over,
       start: 'top top',
-      end: 'max',
-      toggleClass: { targets: under, className: 'is-covered' },
+      onEnter: () => under.classList.add('is-covered'),
+      onLeaveBack: () => under.classList.remove('is-covered'),
     });
   });
 
