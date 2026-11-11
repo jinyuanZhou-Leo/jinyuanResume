@@ -3,6 +3,7 @@
 }
 
 html {
+  font-variant-emoji: text;
   scroll-padding-top: 110px;
 }
 
