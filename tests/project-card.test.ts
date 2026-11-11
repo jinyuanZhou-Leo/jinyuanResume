@@ -9,7 +9,9 @@ test('project visuals follow the project when cards are reordered', () => {
   const semestra = renderProjectCard(projects[2], 'en', 0);
   const jsh = renderProjectCard(projects[0], 'en', 1);
 
-  assert.match(semestra, /Semestra/);
+  assert.match(semestra, /Semestra-Next/);
+  assert.match(semestra, /class="screenshot-window"/);
+  assert.match(semestra, /semestra-next-grades-en\.webp/);
   assert.doesNotMatch(semestra, /terminal-window/);
   assert.match(jsh, /class="project-visual terminal-visual"/);
   assert.match(jsh, /class="terminal-window"/);
@@ -22,6 +24,24 @@ test('repo-less Reversi cards do not create null or empty links', () => {
   assert.match(html, /Reversi AI/);
   assert.doesNotMatch(html, /href=/);
   assert.doesNotMatch(html, /\/null/);
+});
+
+test('the projects section lists Semestra-Next instead of the original Semestra', () => {
+  const ids = projects.map((project) => project.id);
+  assert.ok(ids.includes('semestra-next'));
+  assert.ok(!ids.includes('semestra'));
+  const next = projects.find((project) => project.id === 'semestra-next');
+  assert.deepEqual(next?.repository, {
+    owner: 'jinyuanZhou-Leo',
+    name: 'Semestra-Next',
+  });
+});
+
+test('projects without bespoke artwork fall back to their brand mark', () => {
+  const html = renderProjectCard(projects[3], 'en', 3);
+
+  assert.match(html, /class="project-visual monogram-visual"/);
+  assert.match(html, /data-brand="Python"/);
 });
 
 test('generic repo-less projects remain semantic text content', () => {
@@ -56,9 +76,9 @@ test('project copy renders in both supported locales', () => {
   const en = renderProjectCard(projects[0], 'en', 0);
 
   assert.match(zh, /系统开发/);
-  assert.match(zh, /从第一行代码开始。/);
+  assert.match(zh, /纯 Rust 编写的 Unix Shell Demo/);
   assert.match(en, /SYSTEMS/);
-  assert.match(en, /Start with the first line\./);
+  assert.match(en, /Unix Shell Demo written purely in Rust/);
 });
 
 test('React brand icons render the same path and viewBox resolved for Astro', () => {

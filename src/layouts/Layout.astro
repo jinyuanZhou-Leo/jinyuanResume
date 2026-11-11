@@ -25,6 +25,12 @@ const t = content[locale];
     <link rel="alternate" hreflang="x-default" href="/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{t.title}</title>
+    <script is:inline>
+      // Hide the opening composition until its entrance has been staged.
+      // A CSS failsafe reveals it anyway if script never runs.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+        document.documentElement.classList.add('motion-pending');
+    </script>
     <ClientRouter />
   </head>
   <body>
@@ -48,35 +54,16 @@ const t = content[locale];
       ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
       : null;
     if (anchor) {
-      const precedingIslands = [
-        ...document.querySelectorAll<HTMLElement>(
-          'astro-island[client="load"]',
-        ),
-      ].filter(
-        (island) =>
-          island.compareDocumentPosition(anchor) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      );
-      // Hydration can change the height above a hash target after Astro scrolls.
-      void Promise.all(
-        precedingIslands.map(
-          (island) =>
-            new Promise<void>((resolve) => {
-              if (!island.hasAttribute('ssr')) return resolve();
-              island.addEventListener('astro:hydrate', () => resolve(), {
-                once: true,
-              });
-            }),
-        ),
-      ).then(async () => {
-        await document.fonts.ready;
+      // Pins and hydrated islands change the document height above a hash
+      // target, so jump only after fonts and layout have settled.
+      void document.fonts.ready.then(() =>
         requestAnimationFrame(() =>
           requestAnimationFrame(() => {
             if (!signal.aborted && location.hash === `#${anchor.id}`)
               motion.navigate(anchor, true);
           }),
-        );
-      });
+        ),
+      );
     }
     document
       .querySelectorAll<HTMLButtonElement>('.copy-email')
@@ -116,4 +103,8 @@ const t = content[locale];
     };
   });
   document.addEventListener('astro:before-swap', () => cleanup?.());
+  document.addEventListener('astro:after-swap', () => {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+      document.documentElement.classList.add('motion-pending');
+  });
 </script>

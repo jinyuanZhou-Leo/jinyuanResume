@@ -1,4 +1,4 @@
-import type { Locale, Project } from '../../data/types';
+import type { Locale, Project, ProjectVisual } from '../../data/types';
 import { content } from '../../data/resume';
 import { repositoryHref } from '../../lib/content';
 import BrandIcon from './BrandIcon';
@@ -38,6 +38,81 @@ function ProjectTags({
   );
 }
 
+function Artwork({
+  visual,
+  project,
+  locale,
+}: {
+  visual: ProjectVisual | undefined;
+  project: Project;
+  locale: Locale;
+}) {
+  if (!visual)
+    return (
+      <div className="monogram">
+        <BrandIcon name={project.tags[0] ?? ''} size={84} />
+        <span className="monogram-name" aria-hidden="true">
+          {project.name}
+        </span>
+      </div>
+    );
+  if (visual.kind === 'terminal')
+    return (
+      <div className="terminal-window">
+        <div className="terminal-chrome">
+          <span>{visual.command}</span>
+          <span>— &nbsp; □ &nbsp; ×</span>
+        </div>
+        <div className="terminal-code">
+          <p>
+            <span>~</span> {visual.command}
+          </p>
+          <p className="terminal-muted">{visual.caption[locale]}</p>
+          <p>
+            <span>➜</span> echo &quot;Hello, world.&quot;
+          </p>
+          <p>Hello, world.</p>
+          <p>
+            <span>➜</span> <span className="cursor" />
+          </p>
+        </div>
+      </div>
+    );
+  if (visual.kind === 'reversi')
+    return (
+      <div className="board-composition">
+        <div className="reversi-board" aria-hidden="true">
+          {visual.board.map((cell, i) => (
+            <span className="board-cell" key={i}>
+              {cell > 0 && (
+                <i className={`stone ${cell === 1 ? 'black' : 'white'}`} />
+              )}
+            </span>
+          ))}
+        </div>
+        <div className="rank-label">
+          <strong>
+            {visual.rank}
+            <span>/{visual.total}</span>
+          </strong>
+          <span>{visual.caption[locale]}</span>
+        </div>
+      </div>
+    );
+  return (
+    <figure className="screenshot-window">
+      <img
+        src={visual.src[locale]}
+        alt={visual.alt[locale]}
+        width={visual.width}
+        height={visual.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  );
+}
+
 /** Visual identity belongs to the project, independently of ordering or repository access. */
 export default function ProjectCard({
   project,
@@ -52,76 +127,22 @@ export default function ProjectCard({
   const href = project.repository
     ? repositoryHref(project.repository)
     : undefined;
-  const title = href ? (
-    <a href={href} target="_blank" rel="noreferrer">
-      {project.name}
-      <ArrowIcon />
-    </a>
-  ) : (
-    project.name
-  );
-  if (!visual)
-    return (
-      <>
-        <div className="project-row-name">
-          <div>
-            <p className="eyebrow">{project.category[locale]}</p>
-            <h3>{title}</h3>
-            <p className="project-date">{project.date[locale]}</p>
-          </div>
-        </div>
-        <div>
-          <p className="project-description">{project.description[locale]}</p>
-          <ProjectTags project={project} locale={locale} />
-        </div>
-      </>
-    );
   return (
-    <>
-      <div className={`project-visual ${visual.kind}-visual`}>
+    <article className="project-card">
+      <div
+        className={`project-visual ${visual?.kind ?? 'monogram'}-visual`}
+        style={
+          project.tone
+            ? ({ '--visual-tone': project.tone } as Record<string, string>)
+            : undefined
+        }
+      >
         <span className="visual-index">
           {String(index + 1).padStart(2, '0')} / {project.category[locale]}
         </span>
-        {visual.kind === 'terminal' ? (
-          <div className="terminal-window">
-            <div className="terminal-chrome">
-              <span>{visual.command}</span>
-              <span>— &nbsp; □ &nbsp; ×</span>
-            </div>
-            <div className="terminal-code">
-              <p>
-                <span>~</span> {visual.command}
-              </p>
-              <p className="terminal-muted">{visual.caption[locale]}</p>
-              <p>
-                <span>➜</span> echo &quot;Hello, world.&quot;
-              </p>
-              <p>Hello, world.</p>
-              <p>
-                <span>➜</span> <span className="cursor" />
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="board-composition">
-            <div className="reversi-board" aria-hidden="true">
-              {visual.board.map((cell, i) => (
-                <span className="board-cell" key={i}>
-                  {cell > 0 && (
-                    <i className={`stone ${cell === 1 ? 'black' : 'white'}`} />
-                  )}
-                </span>
-              ))}
-            </div>
-            <div className="rank-label">
-              <strong>
-                {visual.rank}
-                <span>/{visual.total}</span>
-              </strong>
-              <span>{visual.caption[locale]}</span>
-            </div>
-          </div>
-        )}
+        <div className="project-artwork">
+          <Artwork visual={visual} project={project} locale={locale} />
+        </div>
       </div>
       <div className="project-details">
         <div className="project-heading">
@@ -133,6 +154,7 @@ export default function ProjectCard({
               target="_blank"
               rel="noreferrer"
               aria-label={`${content[locale].projects.view}: ${project.name}`}
+              data-magnetic
             >
               <ArrowIcon />
             </a>
@@ -143,6 +165,6 @@ export default function ProjectCard({
         <p className="project-date">{project.date[locale]}</p>
         <ProjectTags project={project} locale={locale} />
       </div>
-    </>
+    </article>
   );
 }

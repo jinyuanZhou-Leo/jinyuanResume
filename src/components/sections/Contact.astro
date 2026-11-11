@@ -2,6 +2,7 @@
 import { content, profile, type Locale } from '../../data/resume';
 import Icon from '../Icon.astro';
 import BrandIcon from '../BrandIcon.astro';
+import SplitLines from '../text/SplitLines.astro';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].contact;
 const emails = [
@@ -14,10 +15,18 @@ const emails = [
   <div class="section">
     <div class="contact-top">
       <div>
-        <p class="eyebrow">04 / {t.label}</p>
-        <h2>{t.title}</h2>
-        <p class="contact-description">{t.text}</p>
-        <a class="button button-light" href={`mailto:${profile.personalEmail}`}>
+        <p class="eyebrow" data-reveal="eyebrow">
+          04 / {t.label}
+        </p>
+        <h2 data-reveal="lines">
+          <SplitLines text={t.title} />
+        </h2>
+        <a
+          class="button button-light"
+          href={`mailto:${profile.personalEmail}`}
+          data-reveal="fade"
+          data-magnetic
+        >
           {t.email}
           <Icon name="arrow" size={18} />
         </a>
@@ -91,6 +100,18 @@ const emails = [
         </a>
       </div>
     </section>
+    <div class="contact-marquee" aria-hidden="true">
+      <div class="marquee-track">
+        {[0, 1].map(() => (
+          <span class="marquee-copy">
+            {t.footer}
+            <i>✳</i>
+            {profile.name}
+            <i>✳</i>
+          </span>
+        ))}
+      </div>
+    </div>
     <div class="footer-line">
       <span>
         © {new Date().getFullYear()} {profile.name}{' '}

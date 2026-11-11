@@ -4,7 +4,7 @@ Visual thesis: a personal photo gallery, clear type and space to think. The rés
 
 Content sequence: introduction → selected engineering projects → internship → education and skills → public repository activity → social links and contact.
 
-Interaction thesis: a staggered hero entrance, independent Ken Burns motion in five photo tiles, one randomly selected tile changing at a time, and restrained hover/route transitions. Project articles reveal with scroll progress. The footer has a decorative metal paper crane photograph, without copy or interaction.
+Interaction thesis: paper and ink. The photographs unfold tile by tile and the name rises letter by letter; the résumé then slides over the opening like a sheet of paper. Projects drift past on tilted rows before settling into a pinned horizontal reel, and text arrives line by line as if being written. Spatial motion is reserved for moments that express hierarchy; everything else is a quiet reveal. Ken Burns motion continues in the five photo tiles, one randomly selected tile changing at a time. The footer has a decorative metal paper crane photograph, without copy or interaction.
 
 ## References checked
 
@@ -15,7 +15,8 @@ Interaction thesis: a staggered hero entrance, independent Ken Burns motion in f
 - Astro components: https://docs.astro.build/en/basics/astro-components/
 - Astro i18n: https://docs.astro.build/en/guides/internationalization/
 - Astro framework components: https://docs.astro.build/en/guides/framework-components/
-- Motion: https://motion.dev/docs/inview and https://motion.dev/docs/scroll
+- GSAP ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger/
+- Lenis: https://github.com/darkroomengineering/lenis
 - SWR: https://swr.vercel.app/docs/api
 - Lucide Astro: https://lucide.dev/guide/astro
 - GitHub REST repositories: https://docs.github.com/en/rest/repos/repos

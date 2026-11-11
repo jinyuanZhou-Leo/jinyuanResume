@@ -1,24 +1,51 @@
 ---
 import ProjectGrid from '../ProjectGrid.astro';
+import ProjectCard from '../interactive/ProjectCard';
+import SplitLines from '../text/SplitLines.astro';
 import { content, projects, type Locale } from '../../data/resume';
-import SelectedWorkStack from '../interactive/SelectedWorkStack';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].projects;
+const total = String(projects.length).padStart(2, '0');
 ---
 
-<section class="section work-section" aria-labelledby="work-title">
-  <div class="work-overview-layer">
-    <ProjectGrid locale={locale} />
-  </div>
-  <div class="work-intro-spacer" aria-hidden="true"></div>
-  <div class="work-showcase">
+<section class="work-section" aria-labelledby="work-title">
+  <div class="section work-heading">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">01 / {t.label}</p>
-        <h2 id="work-title">{t.title}</h2>
+        <p class="eyebrow" data-reveal="eyebrow">
+          01 / {t.label}
+        </p>
+        <h2 id="work-title" data-reveal="lines">
+          <SplitLines text={t.title} />
+        </h2>
       </div>
-      <p class="section-intro">{t.intro}</p>
     </div>
-    <SelectedWorkStack projects={projects} locale={locale} client:load />
+  </div>
+  <ProjectGrid locale={locale} />
+  <!-- One semantic list. Desktop motion turns it into a pinned horizontal reel. -->
+  <div class="work-reel">
+    <div class="reel-meta section" aria-hidden="true">
+      <span class="reel-counter">
+        <span class="reel-counter-window">
+          <span class="reel-counter-digits">
+            {projects.map((_, i) => (
+              <span>{String(i + 1).padStart(2, '0')}</span>
+            ))}
+          </span>
+        </span>
+        <span class="reel-counter-total">/ {total}</span>
+      </span>
+      <span class="reel-progress">
+        <span></span>
+      </span>
+      <span class="reel-hint">{t.overview}</span>
+    </div>
+    <ol class="reel-track" aria-label={t.overview}>
+      {projects.map((project, index) => (
+        <li class="reel-card" id={project.id}>
+          <ProjectCard project={project} locale={locale} index={index} />
+        </li>
+      ))}
+    </ol>
   </div>
 </section>

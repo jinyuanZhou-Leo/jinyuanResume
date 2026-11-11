@@ -37,6 +37,9 @@
   .project-visual {
     height: 300px;
   }
+  .toolkit-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
   .terminal-window {
     width: 82%;
   }
@@ -64,7 +67,7 @@
     padding-top: 11px;
   }
   .wordmark-name {
-    font-size: 10px;
+    font-size: var(--type-micro);
   }
   .brand-mark {
     font-size: 37px;
@@ -85,13 +88,13 @@
     justify-content: center;
   }
   .header-download {
-    font-size: 12px;
+    font-size: var(--type-small);
   }
   .desktop-nav {
     order: 3;
     width: 100%;
     justify-content: space-between;
-    font-size: var(--text-small);
+    font-size: var(--type-small);
     margin-top: 8px;
   }
   .header-blog {
@@ -111,8 +114,7 @@
     max-height: none;
     padding-bottom: 52px;
   }
-  .hero-image.hero-gallery,
-  .cinematic-scroll .hero-image.hero-gallery {
+  .hero-image.hero-gallery {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -147,7 +149,11 @@
     position: absolute;
     z-index: -1;
     inset: 0;
-    background: linear-gradient(#e8e5de 0%, #e8e5de 39%, transparent 61%);
+    background: linear-gradient(
+      var(--color-bg-sunken) 0%,
+      var(--color-bg-sunken) 39%,
+      transparent 61%
+    );
     pointer-events: none;
   }
   .hero-content {
@@ -159,7 +165,7 @@
     max-width: 500px;
   }
   .hero-intro {
-    font-size: 13px;
+    font-size: var(--type-ui);
     margin-bottom: 12px;
   }
   .hero h1 {
@@ -171,7 +177,7 @@
     margin-top: 22px;
   }
   .hero-description {
-    font-size: var(--text-body);
+    font-size: var(--type-body);
     margin-top: 16px;
     max-width: 320px;
   }
@@ -180,7 +186,7 @@
   }
   .hero-bottom {
     padding-block: 18px;
-    font-size: var(--text-small);
+    font-size: var(--type-small);
     background: none;
   }
   .hero-caption {
@@ -198,7 +204,74 @@
     max-width: 320px;
   }
   .project-visual {
-    height: 320px;
+    height: 300px;
+  }
+  .project-card {
+    grid-template-columns: 1fr;
+    padding: 14px 14px 22px;
+    gap: 22px;
+  }
+  .project-details {
+    padding-inline: 6px;
+  }
+  .project-artwork {
+    padding-top: 36px;
+  }
+  .reel-track {
+    padding-bottom: 70px;
+  }
+  .drift-tilt {
+    transform: rotate(-3deg);
+    gap: 12px;
+  }
+  .drift-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .drift-tile {
+    min-width: 0;
+    min-height: 180px;
+    padding: 16px;
+  }
+  .drift-tile-mark {
+    min-height: 80px;
+  }
+  .drift-tile-caption {
+    font-size: 15px;
+  }
+  .drift-tile-stack {
+    overflow-wrap: anywhere;
+  }
+  .experience-heading {
+    position: static;
+  }
+  .about-education {
+    padding-left: 28px;
+  }
+  .education-rail {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .education-rail > span {
+    background: linear-gradient(180deg, var(--accent) 80%, transparent);
+    transform-origin: 50% 0;
+  }
+  .education-list {
+    grid-template-columns: 1fr;
+  }
+  .school {
+    padding-top: 0;
+  }
+  .school-node {
+    top: 6px;
+    left: -34px;
+  }
+  .toolkit-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .terminal-window {
     width: 74%;
@@ -214,25 +287,9 @@
   .project-heading h3 {
     font-size: 25px;
   }
-  .project-row {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .project-row-name {
-    gap: 20px;
-  }
-  .project-row > div:last-child {
-    padding-left: 0;
-  }
-  .project-row h3 {
-    font-size: 21px;
-  }
   .experience-layout {
     grid-template-columns: 1fr;
     gap: 40px;
-  }
-  .github-section {
-    padding-top: 0;
   }
   .github-heading {
     align-items: start;
@@ -242,7 +299,7 @@
     max-width: 230px;
   }
   .github-heading .text-link {
-    font-size: var(--text-small);
+    font-size: var(--type-small);
   }
   .repo-grid {
     grid-template-columns: 1fr 1fr;
@@ -256,7 +313,7 @@
     padding: 12px 16px;
   }
   .repo-item h3 {
-    font-size: 13px;
+    font-size: var(--type-ui);
   }
   .contact-top {
     align-items: start;
@@ -290,7 +347,7 @@
     display: none;
   }
   .header-download {
-    font-size: 11px;
+    font-size: var(--type-caption);
     gap: 6px;
   }
 }
@@ -320,7 +377,12 @@
   .site-header,
   .hero-image,
   .hero-bottom,
+  .hero-shade,
   .project-visual,
+  .project-drift,
+  .contact-marquee,
+  .experience-rail,
+  .education-rail,
   .contact-art,
   .github-section,
   .copy-email,
@@ -359,10 +421,6 @@
   h2 {
     font-size: 25px;
   }
-  .project-row,
-  .experience-layout {
-    gap: 20px;
-  }
   article {
     break-inside: avoid;
   }
@@ -372,18 +430,29 @@
 }
 
 @media print {
-  /* Scroll-linked inline animation styles must not fade printed résumé content. */
-  .scene-content,
-  main *,
-  footer * {
+  /* Printing reverts motion, but guard against any inline animation state. */
+  :is(main, footer) *:not(.sr-only) {
     opacity: 1 !important;
+    visibility: visible !important;
     transform: none !important;
+    clip-path: none !important;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scene-content {
-    opacity: 1 !important;
-    transform: none !important;
+  .project-card {
+    display: block;
+    border: 0;
+    padding: 0;
+  }
+  .reel-track {
+    padding: 0;
+    gap: 20px;
+  }
+  .experience-heading {
+    position: static;
+  }
+  .skip-link {
+    display: none;
+  }
+  .hero h1 .split-word {
+    margin-right: 0.25em;
   }
 }

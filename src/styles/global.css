@@ -1,3 +1,4 @@
+@import './tokens.css';
 @import './base.css';
 @import './header.css';
 @import './hero.css';
@@ -7,12 +8,4 @@
 @import './github.css';
 @import './contact.css';
 @import './responsive.css';
-
 @import './motion.css';
-
-@import './project-grid.css';
-@import './reading-sequence.css';
-
-@import './about-journey.css';
-
-@import './pixel-handoff.css';

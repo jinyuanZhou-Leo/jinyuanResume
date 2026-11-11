@@ -12,6 +12,13 @@ export type ProjectVisual =
       rank: number;
       total: number;
       caption: Localized;
+    }
+  | {
+      kind: 'image';
+      src: Localized;
+      alt: Localized;
+      width: number;
+      height: number;
     };
 export interface Project {
   id: string;
@@ -46,10 +53,6 @@ export interface Education {
   gpa?: string;
   note?: Localized;
 }
-export interface Ability {
-  id: string;
-  label: Localized;
-}
 export interface SiteCopy {
   title: string;
   description: string;
@@ -60,7 +63,6 @@ export interface SiteCopy {
   hero: Record<
     | 'intro'
     | 'line'
-    | 'emphasis'
     | 'description'
     | 'cta'
     | 'location'
@@ -71,7 +73,6 @@ export interface SiteCopy {
   projects: Record<
     | 'label'
     | 'title'
-    | 'intro'
     | 'view'
     | 'previous'
     | 'next'
@@ -80,16 +81,7 @@ export interface SiteCopy {
     string
   >;
   experience: Record<'label' | 'title', string>;
-  about: Record<
-    | 'label'
-    | 'title'
-    | 'text'
-    | 'skills'
-    | 'people'
-    | 'languageText'
-    | 'learning',
-    string
-  >;
+  about: Record<'label' | 'title' | 'skills', string>;
   github: Record<
     | 'title'
     | 'subtitle'
@@ -107,7 +99,6 @@ export interface SiteCopy {
   contact: Record<
     | 'label'
     | 'title'
-    | 'text'
     | 'email'
     | 'copy'
     | 'copied'

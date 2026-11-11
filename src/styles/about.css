@@ -1,14 +1,137 @@
-/* Shared metadata styling for education records. */
+.about {
+  display: grid;
+  gap: clamp(90px, 14svh, 160px);
+  /* The full-screen toolkit closes the chapter. */
+  padding-bottom: 0;
+}
+.about-heading h2 {
+  margin-top: 20px;
+}
+
+/* Education: a rail with one node per school. */
+.about-education {
+  position: relative;
+}
+.education-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--tone-line, var(--line));
+}
+.education-rail > span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent) 80%, transparent);
+  transform-origin: 0 50%;
+}
+.education-marker {
+  display: none;
+}
+.education-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(40px, 6vw, 96px);
+}
+.school {
+  position: relative;
+  padding-top: 40px;
+}
+.school-node {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--tone-bg, var(--paper));
+}
+.school h3 {
+  font-size: var(--type-h3-lg);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--leading-heading);
+  margin-block: 12px;
+}
+.school > p {
+  font-size: var(--type-body);
+}
+.school .project-date {
+  margin-top: 0;
+}
 .school-gpa {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  color: var(--muted);
+  margin-top: 14px;
+  color: var(--tone-muted, var(--muted));
   white-space: nowrap;
 }
 .school-gpa strong {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ink);
+  font-size: 22px;
+  font-weight: var(--weight-semibold);
+  color: var(--tone-ink, var(--ink));
   font-variant-numeric: tabular-nums;
+}
+
+/* Toolkit: icons gather around a centred title. */
+/* The toolkit gets a whole screen to itself. */
+.about-toolkit {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(36px, 6svh, 64px);
+  min-height: 100svh;
+}
+.toolkit-title {
+  text-align: center;
+}
+.toolkit-title h3 {
+  font-size: var(--type-h2-lg);
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.2;
+}
+.toolkit-grid {
+  width: 100%;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+.toolkit-item {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 22px 8px 18px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    translate var(--duration-medium) var(--ease-out);
+}
+.toolkit-item:hover {
+  background: var(--color-accent-wash);
+  translate: 0 -6px;
+}
+.toolkit-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--ink);
+}
+.toolkit-glyph {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: var(--weight-bold);
+}
+.toolkit-label {
+  font-size: var(--type-small);
+  text-align: center;
 }
