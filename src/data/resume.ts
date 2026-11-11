@@ -4,7 +4,6 @@ import type {
   Project,
   Experience,
   Education,
-  Ability,
 } from './types.ts';
 export type { Locale } from './types.ts';
 
@@ -18,14 +17,14 @@ export const profile = {
   github: 'jinyuanZhou-Leo',
   linkedin: 'https://www.linkedin.com/in/jinyuan-zhou/',
   blog: 'https://blog.jyleo.cc',
-  resume: '/documents/Jinyuan_Zhou_CV_2026_V2.pdf',
+  resume: '/documents/Jinyuan_Zhou_CV_2026_V2.1.pdf',
 };
 
 export const content: Record<Locale, SiteCopy> = {
   zh: {
-    title: 'Jinyuan Zhou — 计算机工程 · 个人简历',
+    title: 'Jinyuan Zhou · 多伦多大学计算机工程',
     description:
-      '多伦多大学计算机工程学生 Jinyuan Zhou 的个人简历。探索 Rust 系统开发、全栈应用、机器人与 AI 项目。',
+      'Jinyuan Zhou，多伦多大学计算机工程大二学生。这里有我的项目、实习经历和联系方式。',
     nav: {
       work: '项目',
       experience: '经历',
@@ -37,40 +36,34 @@ export const content: Record<Locale, SiteCopy> = {
     download: '下载简历',
     hero: {
       intro: '你好，我是',
-      line: '以好奇心为起点，',
-      emphasis: '把想法写成现实。',
-      description: '多伦多大学 · 计算机工程 · 大二学生',
-      cta: '看看我的作品',
-      location: '加拿大，多伦多',
-      caption: '一点灵感，一行代码。',
-      scroll: '向下探索',
+      line: '多伦多大学 · 计算机工程',
+      description: '大二 · BASc · PEY Co-op',
+      cta: '了解更多',
+      location: '加拿大 · 多伦多',
+      caption: '平时拍的一些照片',
+      scroll: '向下滚动',
     },
     projects: {
       label: 'SELECTED WORK',
-      title: '想法，正在运行。',
-      intro: '课程作业、个人项目，以及动手过程中的学习。',
+      title: '个人项目',
       view: '查看源码',
       previous: '上一个项目',
       next: '下一个项目',
       technologies: '技术',
-      overview: '全部项目概览',
+      overview: '全部项目',
     },
     experience: {
       label: 'EXPERIENCE',
-      title: '实习中的\n学习与实践。',
+      title: '实习经历',
     },
     about: {
-      label: 'A LITTLE ABOUT ME',
-      title: '认真构建，\n保持好奇。',
-      text: '我是 Jinyuan，多伦多大学计算机工程大二学生。喜欢拆开问题、理解原理，再把它们重新组合成有用的东西。从一颗棋子的落点，到一个 shell 的执行过程，我在动手中学习。',
-      skills: '学习与使用',
-      people: '不止于代码',
-      languageText: '中文 · 母语 / 英语 · 专业工作水平',
-      learning: '持续学习中',
+      label: 'ABOUT',
+      title: '多伦多大学\n计算机工程',
+      skills: '常用技术',
     },
     github: {
-      title: '代码还在生长。',
-      subtitle: '来自 GitHub 的最新仓库动态',
+      title: '开源项目',
+      subtitle: '直接读取自 GitHub 的仓库数据',
       loading: '正在读取 GitHub…',
       error: '暂时无法读取 GitHub 数据。',
       retry: '重新加载',
@@ -82,9 +75,8 @@ export const content: Record<Locale, SiteCopy> = {
       empty: '暂无公开仓库',
     },
     contact: {
-      label: 'SAY HELLO',
-      title: '下一个好想法，\n从一句你好开始。',
-      text: '聊聊工程、分享灵感，或一起做些有意思的事情。',
+      label: 'CONTACT',
+      title: '联系我',
       email: '发一封邮件',
       copy: '复制邮箱',
       copied: '邮箱已复制',
@@ -98,9 +90,9 @@ export const content: Record<Locale, SiteCopy> = {
     },
   },
   en: {
-    title: 'Jinyuan Zhou — Computer Engineering · Portfolio',
+    title: 'Jinyuan Zhou · Computer Engineering, University of Toronto',
     description:
-      'Jinyuan Zhou, Computer Engineering student at the University of Toronto. Explore Rust systems, full-stack applications, robotics and AI projects.',
+      'Jinyuan Zhou, second-year Computer Engineering student at the University of Toronto. Projects, internship experience and contact details.',
     nav: {
       work: 'Work',
       experience: 'Experience',
@@ -112,20 +104,16 @@ export const content: Record<Locale, SiteCopy> = {
     download: 'Download CV',
     hero: {
       intro: 'Hey, I’m',
-      line: 'A little curiosity.',
-      emphasis: 'A lot to build.',
-      description:
-        'Second-year Computer Engineering student at the University of Toronto.',
-      cta: 'Explore my work',
+      line: 'Computer Engineering, University of Toronto',
+      description: 'Second year · BASc · PEY Co-op',
+      cta: 'Learn more',
       location: 'Toronto, Canada',
-      caption: 'A little inspiration. A line of code.',
-      scroll: 'SCROLL TO EXPLORE',
+      caption: 'A few photos I’ve taken',
+      scroll: 'SCROLL',
     },
     projects: {
       label: 'SELECTED WORK',
-      title: 'Ideas, in motion.',
-      intro:
-        'Coursework, personal projects, and what I’m learning along the way.',
+      title: 'Personal projects',
       view: 'View source',
       previous: 'Previous project',
       next: 'Next project',
@@ -134,20 +122,16 @@ export const content: Record<Locale, SiteCopy> = {
     },
     experience: {
       label: 'EXPERIENCE',
-      title: 'Learning through\nmy internship.',
+      title: 'Internship',
     },
     about: {
-      label: 'A LITTLE ABOUT ME',
-      title: 'Build thoughtfully.\nStay curious.',
-      text: 'I’m Jinyuan, a second-year Computer Engineering student at the University of Toronto. I like taking problems apart, understanding the principles, and putting them back together as something useful. From a move on a board to a shell executing a command, I learn by building.',
-      skills: 'Learning & building',
-      people: 'Beyond the code',
-      languageText: 'Chinese · Native / English · Professional working',
-      learning: 'Always learning',
+      label: 'ABOUT',
+      title: 'University of Toronto\nComputer Engineering',
+      skills: 'Tools I use',
     },
     github: {
-      title: 'Always a work in progress.',
-      subtitle: 'The latest repository activity from GitHub',
+      title: 'Open source',
+      subtitle: 'Repository data read live from GitHub',
       loading: 'Reading from GitHub…',
       error: 'GitHub data is temporarily unavailable.',
       retry: 'Try again',
@@ -159,14 +143,13 @@ export const content: Record<Locale, SiteCopy> = {
       empty: 'No public repositories yet',
     },
     contact: {
-      label: 'SAY HELLO',
-      title: 'Good things start\nwith a hello.',
-      text: 'Talk engineering, exchange ideas, or build something interesting together.',
+      label: 'CONTACT',
+      title: 'Get in touch',
       email: 'Send an email',
       copy: 'Copy email',
       copied: 'Email copied',
       copyError: 'Could not copy. Please select the email text instead.',
-      social: 'GET IN TOUCH',
+      social: 'DETAILS',
       personal: 'Personal email',
       university: 'University email',
       phone: 'Phone',
@@ -190,8 +173,8 @@ export const projects: readonly Project[] = [
     },
     tags: ['Rust'],
     title: {
-      zh: '从零开始，理解一个 Shell。',
-      en: 'A shell. Built from first principles.',
+      zh: '纯 Rust 编写的 Unix Shell Demo',
+      en: 'Unix Shell Demo written purely in Rust',
     },
     description: {
       zh: '用 Rust 构建交互式 Unix shell，设计词法分析—语法分析—AST—执行器架构，支持引号、转义、波浪号展开、内置命令与外部程序。实现管道、文件描述符重定向、命令串联、&&/|| 短路求值及 PATH 查找，并为 shell 解析和进程行为编写单元与集成测试。',
@@ -206,8 +189,8 @@ export const projects: readonly Project[] = [
       kind: 'terminal',
       command: 'jsh',
       caption: {
-        zh: '从第一行代码开始。',
-        en: 'Start with the first line.',
+        zh: '交互式 shell',
+        en: 'interactive shell',
       },
     },
   },
@@ -224,12 +207,12 @@ export const projects: readonly Project[] = [
     },
     tags: ['C'],
     title: {
-      zh: '每一步，都多想几步。',
-      en: 'Every move. A few steps ahead.',
+      zh: '基于 Alpha–beta 剪枝的黑白棋 AI',
+      en: 'Reversi AI with alpha–beta search',
     },
     description: {
-      zh: '在 APS105 计算机基础课程的黑白棋比赛中，440 名学生中排名第 2。构建评估棋盘局面并选择最优落子的算法，结合极小极大搜索、迭代加深、走法排序和 Alpha–beta 剪枝，在固定时限内探索更深的博弈树。',
-      en: 'Ranked 2nd out of 440 students in the APS105 Computer Fundamentals Reversi competition. Built an algorithm to evaluate board positions and select optimal moves, using minimax, iterative deepening, move ordering and alpha–beta pruning to search deeper within a fixed time limit.',
+      zh: '在 APS105 计算机基础课程的黑白棋比赛中，440 名学生中排名第 2。构建评估棋盘局面并选择落子的算法，结合极小极大搜索、迭代加深、走法排序和 Alpha–beta 剪枝，在固定时限内探索更深的博弈树。',
+      en: 'Ranked 2nd out of 440 students in the APS105 Computer Fundamentals Reversi competition. Built an algorithm to evaluate board positions and choose moves, using minimax, iterative deepening, move ordering and alpha–beta pruning to search deeper within a fixed time limit.',
     },
     openSource: false,
     visual: {
@@ -249,30 +232,43 @@ export const projects: readonly Project[] = [
     tone: '#e8e5dd',
   },
   {
-    id: 'semestra',
-    name: 'Semestra',
+    id: 'semestra-next',
+    name: 'Semestra-Next',
     category: {
       zh: '全栈应用',
       en: 'FULL-STACK',
     },
     date: {
-      zh: '2025.11 — 2026.08 · 个人项目 · 开发者',
-      en: 'NOV 2025 — AUG 2026 · Personal project · Developer',
+      zh: '2025.11 — 至今 · 个人项目 · 开发者',
+      en: 'NOV 2025 — PRESENT · Personal project · Developer',
     },
-    tags: ['React 19', 'TypeScript', 'FastAPI', 'SQLAlchemy', 'SQLite'],
+    tags: ['React 19', 'TypeScript', 'FastAPI', 'SQLite', 'Pydantic AI'],
     title: {
-      zh: '让学业管理，井井有条。',
-      en: 'A little more order to student life.',
+      zh: '把整个学业放在一处：课程、成绩、课表、待办，还有一个什么都知道的 AI 助手。',
+      en: 'Your whole degree in one place: courses, grades, schedule, tasks, and an AI assistant that knows all of it.',
     },
     description: {
-      zh: '构思并设计覆盖课程、作业、GPA 和学术资源的全栈学业管理平台。制定产品需求，指导 AI 编码代理使用 React 19、TypeScript、FastAPI、SQLAlchemy 与 SQLite 实现，并迭代设计可扩展插件系统、Google OAuth 和多语言支持。',
-      en: 'Conceived and designed a full-stack platform for tracking courses, assignments, GPA and academic resources. Defined product requirements and directed AI coding agents to implement it with React 19, TypeScript, FastAPI, SQLAlchemy and SQLite, iteratively guiding the plugin system, Google OAuth and multilingual support.',
+      zh: 'Semestra 是给大学生用的学期规划工具。建好学业项目，加上学期和课程，其余的都会自动连起来：成绩簿算出当前成绩和期末需要考多少，日历知道你的讲座、实验和考试，截止日期变成待办，内置助手 Sem 可以用自然语言查看和修改这一切。这个仓库是 Semestra 的从零重写版。每个功能都是一个声明了类型化 capability 的模块，所以同一个操作在界面里、在助手里、在插件里、通过 MCP 都能用。',
+      en: 'Semestra is a semester planner for university students. Set up your program once, add terms and courses, and Semestra keeps the rest connected: the gradebook works out your current mark and what you need on the final, the calendar knows your lectures, labs and exams, deadlines turn into tasks, and Sem, the built-in assistant, can read and update all of it in plain language. This repository is a ground-up rewrite of the original Semestra. Every feature is a module that declares typed capabilities, so the same operation is available in the UI, to the assistant, to plugins and over MCP.',
     },
     repository: {
       owner: 'jinyuanZhou-Leo',
-      name: 'Semestra',
+      name: 'Semestra-Next',
     },
     openSource: true,
+    visual: {
+      kind: 'image',
+      src: {
+        zh: '/images/projects/semestra-next-grades-zh.webp',
+        en: '/images/projects/semestra-next-grades-en.webp',
+      },
+      alt: {
+        zh: 'Semestra 的课程成绩簿：考核列表、分类平均分、当前成绩，以及达到目标 GPA 所需的分数',
+        en: 'A course gradebook in Semestra: assessments, category averages, the current mark and the score needed to reach a target GPA',
+      },
+      width: 2160,
+      height: 1350,
+    },
     tone: '#dce2d3',
   },
   {
@@ -288,12 +284,12 @@ export const projects: readonly Project[] = [
     },
     tags: ['Python'],
     title: {
-      zh: '少一点手动，多一点时间。',
-      en: 'Less admin. More time.',
+      zh: '把学校 LMS 课表导出为日历',
+      en: 'School LMS timetable to calendar',
     },
     description: {
-      zh: '通过 Python 爬虫与网络库读取学校 LMS 数据，自动生成可导入的课程日历。优化解析逻辑，实现最高 2 倍速度提升，日历文件体积减少 50% 以上，让学生轻松导入课表。',
-      en: 'Fetched and processed school LMS data with Python web crawling and networking libraries to generate importable calendars. Optimized parsing for up to 2× speed and over 50% smaller files, making schedule imports easier for students.',
+      zh: '通过 Python 爬虫与网络库读取学校 LMS 数据，自动生成可导入的课程日历。优化解析逻辑，实现最高 2 倍速度提升，日历文件体积减少 50% 以上，方便同学把课表导入日历。',
+      en: 'Fetched and processed school LMS data with Python web crawling and networking libraries to generate importable calendars. Optimized parsing for up to 2× speed and over 50% smaller files, so students could import their timetables more easily.',
     },
     repository: {
       owner: 'jinyuanZhou-Leo',
@@ -315,8 +311,8 @@ export const projects: readonly Project[] = [
     },
     tags: ['Python'],
     title: {
-      zh: '模型，如何反复确认自己？',
-      en: 'How do models double-check themselves?',
+      zh: '大模型思维链中的自我验证',
+      en: 'Self-verification in LLM chain-of-thought',
     },
     description: {
       zh: '设计并开展实验，研究大语言模型参数量与思维链中重复自我验证行为的关系。搭建多线程 Python 实验流程，通过兼容 OpenAI 的 API 查询多个模型、采集推理轨迹并自动处理重复试验结果；设计并集成使用 Transformer 嵌入与逻辑回归的语义分类流程，识别自我验证语句。',
@@ -394,7 +390,7 @@ export const education: readonly Education[] = [
       zh: '计算机工程 BASc · PEY Co-op',
       en: 'Computer Engineering (BASc) · PEY Co-op',
     },
-    end: '2030',
+    end: '2029',
     expected: true,
     gpa: '3.84 / 4.00',
   },
@@ -404,6 +400,7 @@ export const skills: readonly string[] = [
   'Rust',
   'Python',
   'C/C++',
+  'Verilog',
   'HTML',
   'CSS',
   'JavaScript',
@@ -411,42 +408,5 @@ export const skills: readonly string[] = [
   'PyTorch',
   'Git',
   'SQLAlchemy',
-];
-
-export const abilities: readonly Ability[] = [
-  {
-    id: 'project-management',
-    label: {
-      zh: '项目管理',
-      en: 'Project management',
-    },
-  },
-  {
-    id: 'communication',
-    label: {
-      zh: '沟通',
-      en: 'communication',
-    },
-  },
-  {
-    id: 'teamwork',
-    label: {
-      zh: '团队协作',
-      en: 'teamwork',
-    },
-  },
-  {
-    id: 'critical-thinking',
-    label: {
-      zh: '批判性思维',
-      en: 'critical thinking',
-    },
-  },
-  {
-    id: 'research',
-    label: {
-      zh: '研究',
-      en: 'research',
-    },
-  },
+  'MQTT',
 ];

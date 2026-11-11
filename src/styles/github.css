@@ -1,6 +1,5 @@
 .github-section {
   width: 100%;
-  padding-top: 0;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -9,77 +8,45 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  /* The #github scene supplies --chapter-progress through its scroll timeline. */
+  /* The #github chapter supplies --chapter-progress while it crosses the viewport. */
   opacity: calc(
-    0.48 - clamp(0, (var(--chapter-progress, 0) - 0.4) / 0.55, 1) * 0.34
+    0.5 - clamp(0, (var(--chapter-progress, 0.5) - 0.55) / 0.4, 1) * 0.32
   );
   pointer-events: none;
-  transform: scale(calc(1.08 - var(--chapter-progress, 0) * 0.08));
+  transform: scale(calc(1.12 - var(--chapter-progress, 0.5) * 0.12));
   transform-origin: center;
   will-change: opacity, transform;
+}
+.github-section {
+  padding-block: clamp(90px, 14svh, 150px);
 }
 .github-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--line);
-  padding-top: 50px;
   gap: 20px;
 }
 .github-section .github-heading h2 {
   display: block;
   margin-top: 15px;
-  font-size: clamp(32px, 3.55vw, 52px);
-}
-.github-section .text-type-cursor {
-  margin-left: 0.12em;
-  font-weight: 400;
-}
-.text-type {
-  display: inline-block;
-  white-space: pre-wrap;
-  letter-spacing: -0.025em;
-}
-.text-type-content {
-  display: inline;
-}
-.text-type-cursor {
-  display: inline-block;
-  margin-left: 0.25rem;
-  animation: text-type-cursor-blink ease-in-out infinite alternate;
-}
-.text-type-cursor-hidden {
-  display: none;
-}
-@keyframes text-type-cursor-blink {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .text-type-cursor {
-    animation: none;
-  }
+  font-size: var(--type-h2);
 }
 .github-heading p {
-  font-size: var(--text-body);
-  color: var(--muted);
+  font-size: var(--type-body);
+  color: var(--tone-muted, var(--muted));
   margin-top: 10px;
 }
 .text-link {
   display: inline-flex;
   align-items: center;
   gap: 15px;
-  font-size: 12px;
+  font-size: var(--type-small);
   border-bottom: 1px solid;
   padding: 9px 0;
   min-height: 44px;
   background: none;
   white-space: nowrap;
-  transition: color 0.3s var(--ease);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 .text-link:hover {
   color: var(--accent);
@@ -88,8 +55,8 @@
   transform: translate(2px, -2px);
 }
 .github-status {
-  font-size: var(--text-small);
-  color: var(--muted);
+  font-size: var(--type-small);
+  color: var(--tone-muted, var(--muted));
   margin-top: 30px;
   display: flex;
   align-items: center;
@@ -102,15 +69,15 @@
 }
 .repo-item {
   padding: 18px 24px;
-  border-left: 1px solid var(--line);
-  transition: background 0.25s;
+  border-left: 1px solid var(--tone-line, var(--line));
+  transition: background-color var(--duration-fast) var(--ease-out);
 }
 .repo-item:first-child {
   padding-left: 0;
   border: 0;
 }
 .repo-item:hover {
-  background: #e9ebe3;
+  background: var(--color-fill);
 }
 .repo-item > div:first-child {
   display: flex;
@@ -118,22 +85,22 @@
   gap: 10px;
 }
 .github-section .repo-item h3 {
-  font-size: 16px;
+  font-size: var(--type-lead);
   overflow-wrap: anywhere;
 }
 .repo-item > p {
-  font-size: var(--text-small);
+  font-size: var(--type-small);
   margin-top: 8px;
-  color: var(--muted);
+  color: var(--tone-muted, var(--muted));
 }
 .repo-stats {
   display: flex;
   gap: 17px;
-  font-size: 12px;
+  font-size: var(--type-small);
   margin-top: 25px;
 }
 .repo-item .repo-date {
-  font-size: var(--text-small);
+  font-size: var(--type-small);
 }
 
 /* Reserve the live module's space so loading repositories cannot move anchor targets. */

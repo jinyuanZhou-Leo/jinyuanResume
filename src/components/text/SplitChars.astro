@@ -1,0 +1,25 @@
+---
+/**
+ * Splits short display text into characters for staggered motion. Assistive
+ * technology reads the hidden copy once instead of one letter at a time.
+ */
+interface Props {
+  text: string;
+}
+const lines = Astro.props.text.split('\n');
+---
+
+<span class="sr-only">{lines.join(' ')}</span>
+<span class="split-chars" aria-hidden="true">
+  {lines.map((line, index) => (
+    <>
+      {index > 0 && <br />}
+      <span class="split-word">
+        {[...line].map((char) => (
+          <span class="split-char">{char}</span>
+        ))}
+      </span>
+    </>
+  ))}
+  <slot />
+</span>

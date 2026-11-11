@@ -8,15 +8,15 @@ The upstream MIT + Commons Clause license is preserved in [licenses/react-bits.t
 Reference: [Grid Motion](https://reactbits.dev/backgrounds/grid-motion).
 Upstream source: `src/ts-default/Backgrounds/GridMotion/GridMotion.tsx` and `.css`.
 
-`src/components/ProjectGrid.astro` adapts the tilted, opposing-row composition into a static Astro component generated from the `projects` array. It links each source tile to the matching detailed project entry. The desktop-only `mountProjectOverview` lifecycle adds inert, aria-hidden visual copies after measuring the single semantic row, then restores that row during cleanup. Motion drives row positions from scroll progress without a pointer-driven ticker. Reduced-motion and print modes keep the semantic project list in a wrapping layout.
+`src/components/ProjectGrid.astro` adapts the tilted, opposing-row composition into a static Astro component generated from the `projects` array. It links each source tile to the matching project card. On desktop, `src/lib/motion/work.ts` adds a second, inert and aria-hidden row plus visual copies that fill both rows, drives the rows in opposite directions from scroll progress with GSAP ScrollTrigger, and leans them with scroll velocity. Cleanup removes every copy. Narrow screens, reduced-motion and print keep the single semantic row in a wrapping grid.
 
 ## GitHub background
 
 Reference: [Pixel Blast](https://reactbits.dev/backgrounds/pixel-blast).
 The upstream shader implementation is retained in `src/components/interactive/PixelBlast.jsx` with its stylesheet. The GitHub section uses olive green (`#526337`), low opacity and a slow speed to match the site's paper/tea palette. No typography or résumé content is rendered into the canvas.
 
-## Scroll chapters
+## Scroll choreography
 
-The page-level `mountMotion` lifecycle coordinates the project overview, chapter animations, background handoff and Lenis cleanup. `chapters.ts`, `about-journey.ts` and `ScrollStack.tsx` derive their timelines from the rendered records and register measured stops through `registerScrollStops` in `src/lib/scroll-stops.ts`. Semantic records use `data-reading-stop` as the shared fallback marker; the snap controller consumes chapter registrations when available and otherwise resolves those markers, instead of maintaining a second item-count or phase list. This keeps added experiences, schools and abilities readable without changing animation code. Mobile and reduced-motion layouts preserve linear reading order.
+The page-level `mountMotion` lifecycle in `src/lib/motion/index.ts` owns Lenis, anchor navigation and one GSAP `matchMedia` context; each chapter has its own module. Chapters derive their animations from the rendered records, so adding projects, experiences, schools or skills needs no animation changes.
 
-The GitHub section supplies one chapter progress value to its Pixel Blast wrapper. CSS controls the wrapper's opacity and centered scale while the shader continues its own paused/offscreen-aware rendering lifecycle. The background remains decorative and never carries résumé text.
+The GitHub chapter publishes a `--chapter-progress` value on its Astro wrapper while it crosses the viewport, and `PixelBlast.jsx` reads the same progress through ScrollTrigger. CSS controls the wrapper's opacity and centered scale while the shader continues its own paused/offscreen-aware rendering lifecycle. The background remains decorative and never carries résumé text.

@@ -33,7 +33,7 @@ const sections = Object.entries(t.nav);
     class="desktop-nav"
   >
     {sections.map(([id, label]) => (
-      <a href={`#${id}`} data-astro-reload>
+      <a href={`#${id}`} data-astro-reload data-nav={id}>
         {label}
       </a>
     ))}
@@ -61,7 +61,13 @@ const sections = Object.entries(t.nav);
         EN
       </a>
     </div>
-    <a class="header-blog" href={profile.blog} target="_blank" rel="noreferrer">
+    <a
+      class="header-blog"
+      href={profile.blog}
+      target="_blank"
+      rel="noreferrer"
+      data-magnetic
+    >
       {t.blog}
       <Icon name="arrow" size={14} />
     </a>
@@ -70,4 +76,5 @@ const sections = Object.entries(t.nav);
       <Icon name="download" size={15} />
     </a>
   </div>
+  <span class="scroll-progress" aria-hidden="true"></span>
 </header>

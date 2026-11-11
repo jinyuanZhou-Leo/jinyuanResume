@@ -4,30 +4,28 @@ import BrandIcon from './BrandIcon.astro';
 const { locale } = Astro.props as { locale: Locale };
 ---
 
-<!-- Only real projects are rendered. Desktop motion creates inert copies at runtime. -->
-<div class="project-overview" aria-label={content[locale].projects.overview}>
-  <div class="project-grid-stage">
-    <div class="project-grid-tilt">
-      <div class="project-grid-row" data-grid-row>
-        {projects.map((project) => (
-          <a
-            class="project-grid-tile"
-            style={project.tone ? `--tile-color:${project.tone}` : undefined}
-            href={`#${project.id}`}
-            data-astro-reload
-          >
-            <span class="grid-tile-category">{project.category[locale]}</span>
-            <div class="grid-tile-mark" aria-hidden="true">
-              <BrandIcon name={project.tags[0] ?? ''} size={56} />
-            </div>
-            <div class="grid-tile-caption">
-              <h3>{project.name}</h3>
-              <span aria-hidden="true">↗</span>
-            </div>
-            <span class="grid-tile-stack">{project.tags.join(' / ')}</span>
-          </a>
-        ))}
-      </div>
+<!-- Only real projects are rendered. Desktop motion adds inert copies to fill each row. -->
+<div class="project-drift" aria-label={content[locale].projects.overview}>
+  <div class="drift-tilt">
+    <div class="drift-row" data-drift-row>
+      {projects.map((project) => (
+        <a
+          class="drift-tile"
+          style={project.tone ? `--tile-color:${project.tone}` : undefined}
+          href={`#${project.id}`}
+          data-astro-reload
+        >
+          <span class="drift-tile-category">{project.category[locale]}</span>
+          <span class="drift-tile-mark" aria-hidden="true">
+            <BrandIcon name={project.tags[0] ?? ''} size={56} />
+          </span>
+          <span class="drift-tile-caption">
+            <span class="drift-tile-name">{project.name}</span>
+            <span aria-hidden="true">↗</span>
+          </span>
+          <span class="drift-tile-stack">{project.tags.join(' / ')}</span>
+        </a>
+      ))}
     </div>
   </div>
 </div>

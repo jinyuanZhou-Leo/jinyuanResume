@@ -2,6 +2,8 @@
 import { content, profile, type Locale } from '../../data/resume';
 import HeroGallery from '../HeroGallery.astro';
 import Icon from '../Icon.astro';
+import SplitChars from '../text/SplitChars.astro';
+import SplitLines from '../text/SplitLines.astro';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].hero;
 ---
@@ -15,21 +17,15 @@ const t = content[locale].hero;
       </span>
     </p>
     <h1 id="hero-title">
-      {profile.name.split(' ').map((part, i) => (
-        <>
-          {i > 0 && <br />}
-          {part}
-        </>
-      ))}
-      <span class="name-period">.</span>
+      <SplitChars text={profile.name.split(' ').join('\n')}>
+        <span class="name-period">.</span>
+      </SplitChars>
     </h1>
     <h2>
-      {t.line}
-      <br />
-      {t.emphasis}
+      <SplitLines text={t.line} />
     </h2>
     <p class="hero-description">{t.description}</p>
-    <a class="button button-dark" href="#work" data-astro-reload>
+    <a class="button button-dark" href="#work" data-astro-reload data-magnetic>
       {t.cta}
       <Icon name="down" size={18} />
     </a>
@@ -46,4 +42,5 @@ const t = content[locale].hero;
       <span aria-hidden="true">↓</span>
     </a>
   </div>
+  <span class="hero-shade" aria-hidden="true"></span>
 </section>

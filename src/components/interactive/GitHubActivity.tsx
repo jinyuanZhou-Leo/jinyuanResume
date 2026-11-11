@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { lazy, Suspense, useEffect, useState } from 'react';
 const PixelBlast = lazy(() => import('./PixelBlast.jsx'));
-import TextType from './TextType';
 import { content, profile, type Locale } from '../../data/resume';
 import {
   createRepositorySelectionKey,
@@ -50,19 +49,11 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
       <div className="github-heading">
         <div>
           <span className="eyebrow">OPEN SOURCE / GITHUB</span>
-          <TextType
-            as="h2"
-            id="github-title"
-            text={t.title}
-            data-reading-stop
-            typingSpeed={82}
-            initialDelay={280}
-            pauseDuration={2600}
-            loop={false}
-            startOnVisible
-            cursorCharacter="|"
-            cursorClassName="text-type-cursor"
-          />
+          <h2 id="github-title">
+            <span className="split-line">
+              <span className="split-line-inner">{t.title}</span>
+            </span>
+          </h2>
           <p>{t.subtitle}</p>
         </div>
         <a
@@ -104,9 +95,10 @@ export default function GitHubActivity({ locale }: { locale: Locale }) {
       {(data || !selectedRepositoryRefs.length) &&
         (data?.repos.length ? (
           <div className="repo-grid">
-            {data.repos.map((repo) => (
+            {data.repos.map((repo, index) => (
               <a
                 className="repo-item"
+                style={{ '--i': index } as Record<string, number>}
                 href={repo.html_url}
                 key={repo.html_url}
                 target="_blank"

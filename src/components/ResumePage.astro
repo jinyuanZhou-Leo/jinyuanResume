@@ -14,51 +14,30 @@ const { locale } = Astro.props as { locale: Locale };
 <Layout locale={locale}>
   <Header locale={locale} />
   <main id="main">
-    <div class="scroll-scene" id="top" data-scene-first>
-      <div class="scene-stage">
-        <div class="scene-content">
-          <Hero locale={locale} />
-        </div>
-      </div>
+    <!-- The opening stays behind while the rest of the résumé slides over it. -->
+    <div class="chapter chapter-hero" id="top">
+      <Hero locale={locale} />
     </div>
-    <div class="scroll-scene" id="work">
-      <div class="scene-stage">
-        <div class="scene-content">
-          <Projects locale={locale} />
-        </div>
+    <div class="sheet">
+      <div class="chapter" id="work">
+        <Projects locale={locale} />
       </div>
-    </div>
-    <div class="scroll-scene" id="experience" data-palette="muted">
-      <div class="scene-stage">
-        <div class="scene-content">
-          <Experience locale={locale} />
-        </div>
+      <div class="chapter" id="experience" data-tone="muted">
+        <Experience locale={locale} />
       </div>
-    </div>
-    <div class="scroll-scene" id="about">
-      <div class="scene-stage">
-        <div class="scene-content">
-          <About locale={locale} />
-        </div>
+      <div class="chapter" id="about">
+        <About locale={locale} />
       </div>
-    </div>
-    <!-- Animate the Astro wrapper without mutating React's hydration-owned DOM. -->
-    <div class="scroll-scene" id="github">
-      <div class="scene-stage">
-        <div class="scene-content">
-          <GitHubActivity
-            locale={locale}
-            client:visible={{ rootMargin: '150%' }}
-          />
-        </div>
+      <!-- Animate the Astro wrapper without mutating React's hydration-owned DOM. -->
+      <div class="chapter" id="github">
+        <GitHubActivity
+          locale={locale}
+          client:visible={{ rootMargin: '150%' }}
+        />
       </div>
     </div>
   </main>
-  <div class="scroll-scene" id="contact" data-palette="dark" data-scene-last>
-    <div class="scene-stage">
-      <div class="scene-content">
-        <Contact locale={locale} />
-      </div>
-    </div>
+  <div class="chapter chapter-contact" id="contact">
+    <Contact locale={locale} />
   </div>
 </Layout>

@@ -9,21 +9,23 @@ interface Props {
 const { experience, locale } = Astro.props;
 ---
 
-<article
-  class="experience-detail"
-  data-experience-id={experience.id}
-  data-reading-stop
->
+<article class="experience-detail" data-experience-id={experience.id}>
+  <span class="experience-rail" aria-hidden="true">
+    <span></span>
+  </span>
   <p class="experience-date">
-    <span class="status-dot" />
+    <span class="status-dot"></span>
     {formatPeriod(experience.start, experience.end, locale)}
   </p>
   <h3>{experience.role[locale]}</h3>
   <p class="company">{experience.company[locale]}</p>
   <p class="location">{experience.location[locale]}</p>
-  <ul>
-    {experience.points.map((point) => (
+  <ul class="experience-points">
+    {experience.points.map((point, i) => (
       <li>
+        <span class="point-index" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
         <p>{point[locale]}</p>
       </li>
     ))}

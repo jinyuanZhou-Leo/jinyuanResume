@@ -1,5 +1,6 @@
 ---
 import ExperienceItem from '../ExperienceItem.astro';
+import SplitLines from '../text/SplitLines.astro';
 import { content, experiences, type Locale } from '../../data/resume';
 const { locale } = Astro.props as { locale: Locale };
 const t = content[locale].experience;
@@ -8,8 +9,12 @@ const t = content[locale].experience;
 <section class="experience-section" aria-labelledby="experience-title">
   <div class="section experience-layout">
     <div class="experience-heading">
-      <p class="eyebrow">02 / {t.label}</p>
-      <h2 id="experience-title">{t.title}</h2>
+      <p class="eyebrow" data-reveal="eyebrow">
+        02 / {t.label}
+      </p>
+      <h2 id="experience-title" data-reveal="lines">
+        <SplitLines text={t.title} />
+      </h2>
     </div>
     <div class="experience-entries">
       {experiences.map((experience) => (

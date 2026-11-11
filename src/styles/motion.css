@@ -1,121 +1,426 @@
-/* One continuous reading surface; colors follow the current scroll position. */
-html {
-  scroll-padding-top: calc(var(--nav-height, var(--header-height)) + 18px);
+/*
+ * Layout and states that exist only while scroll choreography is running.
+ * `html.motion` is added by the motion controller; without it (no script,
+ * reduced motion, print) the page is a plain, fully visible document.
+ */
+
+/* Keep the opening hidden until its entrance is staged, with a failsafe. */
+.motion-pending :is(.site-header, .hero-content, .hero-gallery, .hero-bottom) {
+  visibility: hidden;
+  animation: motion-failsafe 0s 2.5s forwards;
 }
-@media screen and (prefers-reduced-motion: no-preference) {
-  .cinematic-scroll body {
-    background: var(--reading-paper, var(--paper));
-    color: var(--reading-ink, var(--ink));
+@keyframes motion-failsafe {
+  to {
+    visibility: visible;
   }
-  .cinematic-scroll .site-header {
-    color: var(--ink);
-  }
-  .cinematic-scroll .scroll-scene {
-    position: relative;
-  }
-  .cinematic-scroll .scene-content {
-    min-height: calc(100svh - var(--nav-height, var(--header-height)));
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-  }
-  .cinematic-scroll .scene-content > * {
-    width: 100%;
-  }
-  /* Only the photographic opening pins. The résumé then flows as one document. */
-  .cinematic-scroll #top {
-    margin-bottom: -45svh;
-  }
-  .cinematic-scroll #top::after {
-    content: '';
-    display: block;
-    height: 90svh;
-  }
-  .cinematic-scroll #top .scene-stage {
+}
+
+/* ——— Page stack (desktop) ———
+ * The résumé reads like a stack of pages. The cover (hero) and every chapter
+ * stay put once their last line reaches the bottom of the screen; the next
+ * chapter slides up over them with a rounded edge, and the page underneath
+ * settles back (a little smaller, a little darker). The footer closes the
+ * stack the same way. `--stick` is measured by the motion controller.
+ */
+@media (min-width: 761px) {
+  .motion #top {
     position: sticky;
-    top: min(
-      var(--nav-height, var(--header-height)),
-      calc(100svh - var(--scene-height))
-    );
+    top: 0;
+    z-index: 0;
   }
-  .cinematic-scroll #top .scene-content {
-    display: flow-root;
-    align-content: normal;
+  .motion .hero {
+    transform-origin: 50% 35%;
+    will-change: transform;
   }
-  .cinematic-scroll #top .hero {
-    max-height: none;
-    background: transparent;
+  .motion #top.is-covered .hero-gallery-photo {
+    animation-play-state: paused;
   }
-  .cinematic-scroll #work {
-    background: var(--reading-paper, var(--paper));
+  .motion .sheet {
+    position: relative;
+    z-index: var(--z-chapter);
+    background: var(--color-bg);
+    border-radius: var(--sheet-radius, 0px) var(--sheet-radius, 0px) 0 0;
+    box-shadow: var(--shadow-sheet);
   }
-  .cinematic-scroll .experience-section,
-  .cinematic-scroll .contact-section {
-    background: transparent;
-    color: inherit;
+  .motion main {
+    position: sticky;
+    top: var(--stick, 0px);
+    z-index: 0;
   }
-  .cinematic-scroll .github-section {
-    min-height: 0;
-    padding-block: clamp(64px, 8svh, 110px);
+  .motion .chapter-contact {
+    position: relative;
+    z-index: var(--z-chapter);
   }
-  .cinematic-scroll .github-heading {
-    border-top: 0;
-    padding-top: 0;
+  .motion .sheet > .chapter {
+    position: sticky;
+    top: var(--stick, 0px);
+    z-index: 0;
+    min-height: 100svh;
+    background: var(--tone-bg);
   }
-  .cinematic-scroll .contact-section .section {
-    padding-block: clamp(48px, 7svh, 85px);
+  .motion .sheet > .chapter + .chapter,
+  .motion .chapter-contact {
+    --enter: 1;
+    border-radius: calc((1 - var(--enter)) * var(--radius-sheet))
+      calc((1 - var(--enter)) * var(--radius-sheet)) 0 0;
+    box-shadow: var(--shadow-sheet);
+    overflow: clip;
   }
-  .cinematic-scroll
-    :is(
-      .section-intro,
-      .project-description,
-      .project-date,
-      .location,
-      .school-gpa,
-      .tags li,
-      .github-heading p,
-      .github-status,
-      .repo-item > p,
-      .contact-description,
-      .contact-label,
-      .footer-line,
-      .footer-motto,
-      .contact-bottom > .eyebrow,
-      .contact-item > svg,
-      .copy-email
-    ) {
-    color: var(--reading-muted, var(--muted));
+  /* The page underneath: scaled about the visible part of the chapter. */
+  .motion .chapter.is-receding {
+    transform: scale(calc(1 - var(--recede, 0) * 0.06));
+    transform-origin: 50% calc(100% - 50svh);
   }
-  .cinematic-scroll .school-gpa strong {
-    color: inherit;
-  }
-  .cinematic-scroll
-    :is(
-      .project-row,
-      .repo-item,
-      .contact-bottom,
-      .footer-line,
-      .experience-detail > ul:not(.tags) li
-    ) {
-    border-color: var(--reading-line, var(--line));
-  }
-  .cinematic-scroll .hero-image {
-    position: fixed;
-    top: var(--nav-height, var(--header-height));
-    height: calc(100svh - var(--nav-height, var(--header-height)));
+  .motion .chapter::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: var(--color-ink);
+    opacity: calc(var(--recede, 0) * 0.45);
     pointer-events: none;
   }
-}
-@media (prefers-reduced-motion: reduce), print {
-  .scene-stage,
-  .scene-content,
-  .hero-content,
-  .hero-image,
-  .featured-project,
-  .project-row,
-  [data-reading-reveal] {
-    opacity: 1 !important;
+  .motion .chapter.is-covered {
+    visibility: hidden;
+  }
+  /* Measuring pass: positions are read with every page in normal flow. */
+  .motion-measuring :is(main, #top, .sheet > .chapter) {
+    position: relative !important;
+    top: auto !important;
     transform: none !important;
-    filter: none !important;
+  }
+}
+
+/* ——— Drift band (desktop): rows become endless ribbons ——— */
+@media (min-width: 761px) {
+  .motion .project-drift {
+    padding-block: clamp(90px, 14svh, 170px);
+  }
+  .motion .drift-tilt {
+    padding-inline: 0;
+  }
+  .motion .drift-row,
+  .motion .drift-row[aria-hidden='true'] {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .motion .drift-tile {
+    flex: 0 0 clamp(240px, 22vw, 360px);
+  }
+}
+
+/* ——— Project reel (desktop): a pinned horizontal sequence ——— */
+@media (min-width: 761px) {
+  .motion .work-reel {
+    --card-width: min(78vw, 1180px);
+    --card-gap: clamp(28px, 3.5vw, 56px);
+    height: 100svh;
+    overflow: clip;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(18px, 3svh, 32px);
+    padding-top: var(--nav-height, var(--header-height));
+  }
+  .motion .reel-meta {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: 100%;
+    padding-block: 0;
+    font-size: var(--type-small);
+    color: var(--tone-muted, var(--muted));
+  }
+  .motion .reel-counter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .motion .reel-counter-window {
+    display: inline-block;
+    height: 1.1em;
+    overflow: clip;
+    font-size: 30px;
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-title);
+    line-height: 1.1;
+    color: var(--tone-ink, var(--ink));
+  }
+  .motion .reel-counter-digits {
+    display: grid;
+  }
+  .motion .reel-progress {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: var(--tone-line, var(--line));
+  }
+  .motion .reel-progress > span {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+  .motion .reel-hint {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .motion .reel-track {
+    display: flex;
+    gap: var(--card-gap);
+    width: max-content;
+    max-width: none;
+    margin: 0;
+    padding: 0 calc((100vw - var(--card-width)) / 2);
+    will-change: transform;
+  }
+  .motion .reel-card {
+    flex: 0 0 var(--card-width);
+  }
+  .motion .project-card {
+    height: min(
+      calc(100svh - var(--nav-height, var(--header-height)) - 150px),
+      680px
+    );
+    will-change: transform, opacity;
+  }
+  .motion .project-visual {
+    height: 100%;
+  }
+  .motion .project-artwork {
+    will-change: transform;
+  }
+  /* Copy in the focused card settles in; neighbours wait quietly. */
+  .motion .project-details > * {
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      translate var(--duration-slower) var(--ease-out);
+  }
+  /* Resting cards keep their name and one-line summary, dimmed. */
+  .motion .reel-card:not(.is-active) .project-details > * {
+    opacity: 0;
+    translate: 0 28px;
+  }
+  .motion
+    .reel-card:not(.is-active)
+    .project-details
+    > :is(.project-heading, .project-tagline) {
+    opacity: 0.45;
+    translate: 0 0;
+  }
+  .motion .reel-card.is-active .project-details > :nth-child(2) {
+    transition-delay: 0.06s;
+  }
+  .motion .reel-card.is-active .project-details > :nth-child(3) {
+    transition-delay: 0.12s;
+  }
+  .motion .reel-card.is-active .project-details > :nth-child(4) {
+    transition-delay: 0.18s;
+  }
+  .motion .reel-card.is-active .project-details > :nth-child(5) {
+    transition-delay: 0.24s;
+  }
+}
+
+/* ——— Experience: a pulse marks the current role ——— */
+.motion .status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--accent);
+  animation: status-pulse 2.4s var(--ease) infinite;
+}
+@keyframes status-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* ——— About: education timeline ——— */
+.motion .education-marker {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  margin: -7px 0 0 -7px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 6px var(--color-accent-wash);
+  will-change: transform;
+}
+.motion .education-year {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  translate: -50% 0;
+  font-size: var(--type-small);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+.motion .school-node {
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    scale var(--duration-medium) var(--ease-out);
+}
+.motion .school.is-reached .school-node {
+  background: var(--color-accent);
+  scale: 1.25;
+}
+@media (max-width: 760px) {
+  .motion .education-marker {
+    margin: -7px 0 0 -7px;
+  }
+  .motion .education-year {
+    display: none;
+  }
+}
+
+/* ——— About: toolkit backlight ——— */
+.motion .toolkit-item {
+  transform-style: preserve-3d;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    translate var(--duration-medium) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+.motion .toolkit-item.is-lit {
+  background: var(--color-accent-wash);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+.motion .toolkit-item.is-lit .toolkit-icon {
+  color: var(--color-accent);
+}
+.motion .toolkit-icon {
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+/* ——— About ——— */
+.motion .greeting-star {
+  animation: star-spin 14s linear infinite;
+}
+@keyframes star-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ——— GitHub: entrance driven by a class on the Astro wrapper ——— */
+.motion
+  #github
+  :is(
+    .github-heading .eyebrow,
+    .github-heading p,
+    .github-heading .text-link,
+    .github-status
+  ) {
+  opacity: 0;
+  translate: 0 22px;
+  transition:
+    opacity var(--duration-slower) var(--ease-out),
+    translate var(--duration-slower) var(--ease-out);
+}
+.motion #github .github-heading .split-line-inner {
+  translate: 0 115%;
+  transition: translate var(--duration-slower) var(--ease-out) 0.08s;
+}
+.motion #github .repo-item {
+  opacity: 0;
+  transform: perspective(900px) rotateX(-28deg) translateY(40px);
+  transform-origin: 50% 0;
+}
+.motion #github.is-inview .repo-item {
+  animation: repo-rise var(--duration-slower) var(--ease-out)
+    calc(0.35s + var(--i, 0) * 0.09s) forwards;
+}
+@keyframes repo-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.motion
+  #github.is-inview
+  :is(
+    .github-heading .eyebrow,
+    .github-heading p,
+    .github-heading .text-link,
+    .github-status
+  ) {
+  opacity: 1;
+  translate: 0 0;
+}
+.motion #github.is-inview .github-heading p {
+  transition-delay: 0.18s;
+}
+.motion #github.is-inview .github-heading .text-link {
+  transition-delay: 0.26s;
+}
+.motion #github.is-inview .github-status {
+  transition-delay: 0.32s;
+}
+.motion #github.is-inview .github-heading .split-line-inner {
+  translate: 0 0;
+}
+.motion #github:focus-within :is(.repo-item, .github-heading *) {
+  opacity: 1;
+}
+
+/* ——— Pointer ——— */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 45%, transparent);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition:
+    width var(--duration-medium) var(--ease-out),
+    height var(--duration-medium) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    opacity 0.3s;
+}
+.cursor-ring.is-hover {
+  width: 64px;
+  height: 64px;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--accent-light) 45%, transparent);
+}
+.cursor-ring.is-dark {
+  border-color: color-mix(in srgb, var(--color-inverse-ink) 50%, transparent);
+}
+.cursor-ring.is-dark.is-hover {
+  background: color-mix(in srgb, var(--accent-light) 25%, transparent);
+}
+.cursor-ring.is-down {
+  width: 26px;
+  height: 26px;
+}
+.motion [data-magnetic] {
+  transition-property: background-color, color, border-color;
+}
+
+@media print {
+  .cursor-ring {
+    display: none;
   }
 }

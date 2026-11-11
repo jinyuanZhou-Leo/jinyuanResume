@@ -10,7 +10,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid var(--steel-border);
+  border-bottom: 1px solid var(--color-line-glass);
 }
 .wordmark {
   display: flex;
@@ -20,8 +20,8 @@
 .brand-mark {
   position: relative;
   font-size: 47px;
-  font-weight: 700;
-  letter-spacing: -0.08em;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-brand);
   line-height: 1;
 }
 .brand-mark > span {
@@ -31,21 +31,21 @@
   right: -9px;
 }
 .wordmark-name {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: var(--type-micro);
+  letter-spacing: var(--tracking-wide);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-heading);
   margin-left: 5px;
 }
 .desktop-nav {
   display: flex;
   gap: 34px;
-  font-size: 13px;
+  font-size: var(--type-ui);
 }
 .desktop-nav a {
   position: relative;
   padding-block: 12px;
-  transition: color 0.3s var(--ease);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 .desktop-nav a:hover {
   color: var(--accent);
@@ -60,8 +60,9 @@
   right: 0;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.38s var(--ease);
+  transition: transform var(--duration-base) var(--ease-out);
 }
+.desktop-nav a.is-active::after,
 .desktop-nav a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -72,19 +73,19 @@
   gap: 7px;
   padding: 9px 14px;
   min-height: 40px;
-  border-radius: var(--control-radius);
+  border-radius: var(--radius-xs);
   color: var(--paper);
   background: var(--ink);
   transition:
-    color 0.3s var(--ease),
-    background-color 0.3s var(--ease);
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
 }
 .header-blog:hover {
   color: var(--paper);
   background: var(--accent);
 }
 .header-blog svg {
-  transition: transform 0.35s var(--ease);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 .header-blog:hover svg {
   transform: translate(2px, -2px);
@@ -93,7 +94,7 @@
   display: flex;
   align-items: center;
   gap: 28px;
-  font-size: 12px;
+  font-size: var(--type-small);
 }
 .language-switch {
   display: flex;
@@ -105,17 +106,17 @@
   min-width: 24px;
   text-align: center;
   color: var(--muted);
-  transition: color 0.3s var(--ease);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 .language-switch a:hover {
   color: var(--accent);
 }
 .language-switch a[aria-current] {
   color: var(--ink);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 .language-switch > span {
-  color: #a4a69c;
+  color: var(--color-subtle);
 }
 .header-download {
   display: flex;
@@ -124,10 +125,24 @@
   border-bottom: 1px solid var(--ink);
   padding-block: 9px;
   transition:
-    color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 }
 .header-download:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+.desktop-nav a.is-active {
+  color: var(--accent);
+}
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
 }

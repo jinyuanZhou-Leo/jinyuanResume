@@ -4,18 +4,20 @@ import { educationDate } from '../lib/content';
 interface Props {
   school: Education;
   locale: Locale;
+  /** Where this school sits on the About timeline. */
+  year?: string;
 }
-const { school, locale } = Astro.props;
+const { school, locale, year } = Astro.props;
 ---
 
-<article class="journey-school" data-school-id={school.id} data-reading-stop>
-  <span class="journey-node" aria-hidden="true" />
+<article class="school" data-school-id={school.id} data-year={year}>
+  <span class="school-node" aria-hidden="true"></span>
   <p class="project-date">{educationDate(school, locale)}</p>
   <h3>{school.name[locale]}</h3>
   <p>{school.degree[locale]}</p>
   {school.gpa && (
     <p class="school-gpa">
-      GPA <strong>{school.gpa}</strong>
+      GPA <strong data-count={school.gpa.split(' ')[0]}>{school.gpa}</strong>
     </p>
   )}
   {school.note && <p>{school.note[locale]}</p>}

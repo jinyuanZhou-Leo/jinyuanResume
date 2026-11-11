@@ -3,7 +3,8 @@
 // Adaptations: theme, lazy mounting, visibility/reduced-motion lifecycle, Three Timer.
 import { Effect, EffectComposer, EffectPass, RenderPass } from 'postprocessing';
 import { useEffect, useRef, useState } from 'react';
-import { scroll } from 'motion';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import './PixelBlast.css';
 
@@ -339,7 +340,7 @@ const PixelBlast = ({
   const containerRef = useRef(null);
   const visibilityRef = useRef({ visible: true });
   const speedRef = useRef(speed);
-  // Motion owns the scroll measurement. The render loop only consumes this ref,
+  // ScrollTrigger owns the scroll measurement. The render loop only consumes this ref,
   // so it never needs to synchronously read layout or computed styles.
   const chapterProgressRef = useRef(0);
 
@@ -353,15 +354,17 @@ const PixelBlast = ({
     const chapter = container?.closest('#github');
     if (!chapter) return;
 
-    return scroll(
-      (progress) => {
-        chapterProgressRef.current = clamp(progress, 0, 1);
+    gsap.registerPlugin(ScrollTrigger);
+    // The chapter's passage through the viewport drives the field's evolution.
+    const trigger = ScrollTrigger.create({
+      trigger: chapter,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        chapterProgressRef.current = clamp(self.progress, 0, 1);
       },
-      {
-        target: chapter,
-        offset: ['start start', 'end end'],
-      },
-    );
+    });
+    return () => trigger.kill();
   }, []);
   useEffect(() => {
     const container = containerRef.current;

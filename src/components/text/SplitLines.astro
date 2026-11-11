@@ -1,0 +1,16 @@
+---
+/**
+ * Renders explicit lines as masked spans so headings can rise into view
+ * without runtime text splitting. The markup stays readable without script.
+ */
+interface Props {
+  text: string;
+}
+const lines = Astro.props.text.split('\n');
+---
+
+{lines.map((line) => (
+  <span class="split-line">
+    <span class="split-line-inner">{line}</span>
+  </span>
+))}

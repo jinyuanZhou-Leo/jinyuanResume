@@ -8,6 +8,7 @@ import {
   siHtml5,
   siJavascript,
   siMqtt,
+  siPydantic,
   siPytorch,
   siPython,
   siQdrant,
@@ -42,6 +43,7 @@ const technologies: Record<string, SimpleIcon> = {
   SQLite: siSqlite,
   'Qdrant / RAG': siQdrant,
   MQTT: siMqtt,
+  'Pydantic AI': siPydantic,
 };
 
 const platforms = {
