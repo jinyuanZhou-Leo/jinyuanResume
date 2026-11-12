@@ -1,4 +1,9 @@
-import { galleryMotionStyle, galleryPhotos } from '../data/hero-gallery';
+import {
+  galleryMotionStyle,
+  galleryPhotos,
+  gallerySrcset,
+  galleryTileSizes,
+} from '../data/hero-gallery';
 
 const CHANGE_INTERVAL = 4500;
 const FADE_DURATION = 1400;
@@ -49,6 +54,10 @@ export function mountHeroGallery() {
     );
     const nextIndex = available[Math.floor(Math.random() * available.length)];
     const nextPhoto = new Image();
+    // Set sizes and srcset before src so the browser picks the right file.
+    nextPhoto.sizes =
+      galleryTileSizes[Number(tiles[tileIndex].dataset.photoIndex)];
+    nextPhoto.srcset = gallerySrcset(galleryPhotos[nextIndex]);
     nextPhoto.src = galleryPhotos[nextIndex].src;
     nextPhoto.alt = '';
     nextPhoto.className = 'hero-gallery-photo';

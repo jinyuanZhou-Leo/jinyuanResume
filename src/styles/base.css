@@ -10,6 +10,10 @@ html {
 body {
   margin: 0;
   font-family: var(--font-body);
+  /* Manrope's x-height (0.54). While web fonts load, the system fallback is
+     scaled to match, so text keeps its size when Manrope swaps in. Noto Sans SC
+     measures 0.543, so Chinese text is effectively unchanged. */
+  font-size-adjust: 0.54;
   color: var(--tone-ink, var(--ink));
   background: var(--tone-bg, var(--paper));
   -webkit-font-smoothing: antialiased;
