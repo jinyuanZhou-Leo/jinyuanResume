@@ -41,6 +41,28 @@ export const galleryPhotos: readonly GalleryPhoto[] = [
   { src: '/images/gallery/IMG_7518.webp', orientation: 'portrait' },
 ];
 
+// Pre-resized copies sit next to each original as `<name>-w<width>.webp`.
+const GALLERY_WIDTHS = [640, 960, 1280] as const;
+
+export function gallerySrcset(photo: GalleryPhoto) {
+  const fullWidth = photo.orientation === 'portrait' ? 1350 : 1800;
+  const base = photo.src.replace(/\.webp$/, '');
+  return [
+    ...GALLERY_WIDTHS.map((width) => `${base}-w${width}.webp ${width}w`),
+    `${photo.src} ${fullWidth}w`,
+  ].join(', ');
+}
+
+// Rendered width of each tile slot, including the cover crop and Ken Burns zoom.
+// Phones stack two columns; wider screens use the four-column grid in hero.css.
+export const galleryTileSizes: readonly string[] = [
+  '(max-width: 760px) 50vw, max(45vw, 75svh)',
+  '(max-width: 760px) 50vw, max(42vw, 60svh)',
+  '(max-width: 760px) 50vw, max(22vw, 45svh)',
+  '(max-width: 760px) 50vw, max(22vw, 40svh)',
+  '(max-width: 760px) 50vw, max(42vw, 55svh)',
+];
+
 export function galleryMotionStyle(index: number) {
   // Distribute all photos around the circle; adjacent entries point far apart.
   const angle =

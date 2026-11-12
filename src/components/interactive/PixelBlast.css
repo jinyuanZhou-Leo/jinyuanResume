@@ -3,4 +3,10 @@
   height: 100%;
   position: relative;
   overflow: hidden;
+  /* Let the browser skip painting the field while it is far off screen; the
+     component pauses its render loop on contentvisibilityautostatechange.
+     The host positions this box (inset: 0), so size containment cannot
+     collapse it; the intrinsic size only covers unpositioned use. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 500px;
 }

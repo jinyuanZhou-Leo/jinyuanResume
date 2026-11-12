@@ -1,6 +1,7 @@
 // React Bits Pixel Blast source: https://reactbits.dev/backgrounds/pixel-blast
 // Upstream MIT + Commons Clause: docs/licenses/react-bits.txt.
-// Adaptations: theme, lazy mounting, visibility/reduced-motion lifecycle, Three Timer.
+// Adaptations: theme, lazy mounting, visibility/reduced-motion lifecycle, Three Timer,
+// content-visibility render skipping.
 import { Effect, EffectComposer, EffectPass, RenderPass } from 'postprocessing';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -401,6 +402,15 @@ const PixelBlast = ({
         threeRef.current.raf = requestAnimationFrame(animationRef.current);
       }
     };
+    // Prefer the browser's own render-skipping signal from content-visibility:
+    // it resumes just before the field scrolls into view. Older browsers fall
+    // back to IntersectionObserver.
+    const supportsContentVisibility =
+      'contentVisibility' in document.documentElement.style;
+    const onContentVisibility = (event) => {
+      intersecting = !event.skipped;
+      sync();
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
         intersecting = entry.isIntersecting;
@@ -410,7 +420,12 @@ const PixelBlast = ({
     );
     const covered = new MutationObserver(sync);
     if (autoPauseOffscreen) {
-      observer.observe(container);
+      if (supportsContentVisibility)
+        container.addEventListener(
+          'contentvisibilityautostatechange',
+          onContentVisibility,
+        );
+      else observer.observe(container);
       if (chapter)
         covered.observe(chapter, {
           attributes: true,
@@ -421,6 +436,10 @@ const PixelBlast = ({
     document.addEventListener('visibilitychange', resume);
     updateMotionPreference();
     return () => {
+      container.removeEventListener(
+        'contentvisibilityautostatechange',
+        onContentVisibility,
+      );
       observer.disconnect();
       covered.disconnect();
       media.removeEventListener('change', updateMotionPreference);
