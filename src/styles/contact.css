@@ -3,6 +3,20 @@
   background: var(--dark);
   color: var(--paper);
 }
+/* The dark footer fills its whole screen-tall chapter, top to bottom, with
+ * the content centred inside it. */
+.chapter-contact {
+  background: var(--dark);
+}
+.chapter-contact > .contact-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.contact-section > .section {
+  width: 100%;
+}
 .contact-section .section {
   padding-top: 85px;
   padding-bottom: 26px;
