@@ -66,33 +66,42 @@ export function mountPointer(): Cleanup {
     ...document.querySelectorAll<HTMLElement>('[data-magnetic]'),
   ];
   magnets.forEach((magnet) => {
-    const toMX = gsap.quickTo(magnet, 'x', {
-      duration: 0.5,
-      ease: ease.soft,
-    });
-    const toMY = gsap.quickTo(magnet, 'y', {
-      duration: 0.5,
-      ease: ease.soft,
-    });
+    // The elastic return uses `overwrite`, which kills any quickTo tweens on
+    // the same element, and a killed quickTo never moves the target again.
+    // So each hover ends the return and builds fresh quickTo setters.
+    let toMX: gsap.QuickToFunc | undefined;
+    let toMY: gsap.QuickToFunc | undefined;
+    let settle: gsap.core.Tween | undefined;
+    const follow = () => {
+      settle?.kill();
+      settle = undefined;
+      toMX = gsap.quickTo(magnet, 'x', { duration: 0.5, ease: ease.soft });
+      toMY = gsap.quickTo(magnet, 'y', { duration: 0.5, ease: ease.soft });
+      return [toMX, toMY] as const;
+    };
+    magnet.addEventListener('pointerenter', follow, { signal, passive: true });
     magnet.addEventListener(
       'pointermove',
       (event) => {
+        const [x, y] = toMX && toMY ? [toMX, toMY] : follow();
         const box = magnet.getBoundingClientRect();
-        toMX((event.clientX - (box.left + box.width / 2)) * 0.32);
-        toMY((event.clientY - (box.top + box.height / 2)) * 0.4);
+        x((event.clientX - (box.left + box.width / 2)) * 0.32);
+        y((event.clientY - (box.top + box.height / 2)) * 0.4);
       },
       { signal, passive: true },
     );
     magnet.addEventListener(
       'pointerleave',
-      () =>
-        gsap.to(magnet, {
+      () => {
+        toMX = toMY = undefined;
+        settle = gsap.to(magnet, {
           x: 0,
           y: 0,
           duration: 1.1,
           ease: 'elastic.out(1, 0.35)',
           overwrite: true,
-        }),
+        });
+      },
       { signal },
     );
   });
