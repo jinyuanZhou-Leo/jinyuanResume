@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { clamp, scatter } from './math';
-import { duration, ease, stagger } from './tokens';
+import { clamp, reelTravel, scatter } from './math';
+import { duration, ease, pace, stagger } from './tokens';
 import type { Cleanup } from './types';
 
 /**
@@ -119,29 +119,48 @@ function mountEducation(desktop: boolean): Cleanup {
     ),
     { autoAlpha: 0 },
   );
-  const travel = gsap.fromTo(
-    fill,
-    { [desktop ? 'scaleX' : 'scaleY']: 0 },
-    {
-      [desktop ? 'scaleX' : 'scaleY']: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: block,
-        start: desktop ? 'top 80%' : 'top 75%',
-        end: desktop ? 'bottom 55%' : 'bottom 60%',
-        scrub: 0.6,
-        onRefresh: (self) => {
-          measure();
-          render(self.progress);
+  const scale = desktop ? 'scaleX' : 'scaleY';
+  const setFill = gsap.quickSetter(fill, scale);
+  const intro = block.closest<HTMLElement>('.about-intro');
+  // Desktop: heading and timeline hold as one screen while the marker
+  // travels, resting on the first and the last school before moving on.
+  // Narrow screens scrub through the timeline in normal flow.
+  const travel = (progress: number) => {
+    const moved = desktop ? reelTravel(progress, pace.aboutRest) : progress;
+    setFill(moved);
+    render(moved);
+  };
+  const trigger = ScrollTrigger.create(
+    desktop && intro
+      ? {
+          trigger: intro,
+          start: 'top top',
+          end: () => `+=${window.innerHeight * pace.about}`,
+          pin: true,
+          anticipatePin: 1,
+          onRefresh: (self) => {
+            measure();
+            travel(self.progress);
+          },
+          onUpdate: (self) => travel(self.progress),
+        }
+      : {
+          trigger: block,
+          start: 'top 75%',
+          end: 'bottom 60%',
+          onRefresh: (self) => {
+            measure();
+            travel(self.progress);
+          },
+          onUpdate: (self) => travel(self.progress),
         },
-        onUpdate: (self) => render(self.progress),
-      },
-    },
   );
+  setFill(0);
   render(0);
 
   return () => {
-    travel.scrollTrigger?.kill();
+    trigger.kill();
+    gsap.set(fill, { clearProps: 'transform' });
     openings.forEach((timeline) => timeline.kill());
     reached = schools.map(() => false);
     schools.forEach((school) => school.classList.remove('is-reached'));

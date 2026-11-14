@@ -4,6 +4,10 @@
   /* The full-screen toolkit closes the chapter. */
   padding-bottom: 0;
 }
+.about-intro {
+  display: grid;
+  gap: clamp(90px, 14svh, 160px);
+}
 .about-heading h2 {
   margin-top: 20px;
 }

@@ -90,6 +90,23 @@
   }
 }
 
+/* ——— About intro (desktop): one held screen for the timeline ——— */
+@media (min-width: 761px) {
+  /* Both parts are whole screens, so they meet without an extra gap. */
+  .motion .about {
+    gap: 0;
+  }
+  .motion .about-intro {
+    min-height: var(--screen-height);
+    align-content: center;
+    padding-top: var(--nav-height, var(--header-height));
+  }
+  /* The bounce past either end would expose the pages stacked underneath. */
+  html.motion {
+    overscroll-behavior-y: none;
+  }
+}
+
 /* ——— Drift band (desktop): rows become endless ribbons ——— */
 @media (min-width: 761px) {
   .motion .project-drift {

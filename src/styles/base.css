@@ -9,6 +9,8 @@ html {
 
 body {
   margin: 0;
+  /* Full-bleed pieces (the contact motto) never widen the page. */
+  overflow-x: clip;
   font-family: var(--font-body);
   /* Manrope's x-height (0.54). While web fonts load, the system fallback is
      scaled to match, so text keeps its size when Manrope swaps in. Noto Sans SC
