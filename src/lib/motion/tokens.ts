@@ -41,3 +41,14 @@ export const stagger = {
   loose: 0.08,
   wide: 0.12,
 } as const;
+
+/**
+ * Scroll pacing for pinned sequences, in multiples of the distance they would
+ * otherwise cover. Chapter rests between pages live in CSS (--chapter-hold).
+ */
+export const pace = {
+  /** Scroll per pixel of horizontal reel travel. */
+  reel: 1.5,
+  /** Rest at each end of the reel, in viewport heights. */
+  reelHold: 0.45,
+} as const;
