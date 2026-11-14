@@ -1,7 +1,5 @@
 # Jinyuan Zhou · Personal résumé
 
-面向招聘方的中英双语个人简历。内容来源为 `Jinyuan_Zhou_CV_2026_V2.1.pdf`，展示工程项目、实习、教育、技能及社交联系方式。
-
 ## 开发
 
 需要 Node.js 22.12+ 与 pnpm 12。当前使用 Astro 7.3、React 19.3、GSAP 3.15（ScrollTrigger）、Lenis、SWR 2 和 Lucide。
