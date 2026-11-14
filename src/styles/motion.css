@@ -19,8 +19,9 @@
  * The résumé reads like a stack of pages. The cover (hero) and every chapter
  * stay put once their last line reaches the bottom of the screen; the next
  * chapter slides up over them with a rounded edge, and the page underneath
- * settles back (a little smaller, a little darker). The footer closes the
- * stack the same way. `--stick` is measured by the motion controller.
+ * settles back (a little smaller, a little darker). The dark footer is not
+ * part of the stack: it follows the last page flush, in normal flow, so no
+ * pages ever show behind it. `--stick` is measured by the motion controller.
  */
 @media (min-width: 761px) {
   .motion #top {
@@ -42,15 +43,6 @@
     border-radius: var(--sheet-radius, 0px) var(--sheet-radius, 0px) 0 0;
     box-shadow: var(--shadow-sheet);
   }
-  .motion main {
-    position: sticky;
-    top: var(--stick, 0px);
-    z-index: 0;
-  }
-  .motion .chapter-contact {
-    position: relative;
-    z-index: var(--z-chapter);
-  }
   .motion .sheet > .chapter {
     position: sticky;
     top: var(--stick, 0px);
@@ -59,12 +51,10 @@
   }
   /* Scroll room between pages: the page underneath stays stuck and fully in
    * view while it passes, so each chapter rests before the next arrives. */
-  .motion .sheet > .chapter + .chapter,
-  .motion .chapter-contact {
+  .motion .sheet > .chapter + .chapter {
     margin-top: var(--chapter-hold);
   }
-  .motion .sheet > .chapter + .chapter,
-  .motion .chapter-contact {
+  .motion .sheet > .chapter + .chapter {
     --enter: 1;
     border-radius: calc((1 - var(--enter)) * var(--radius-sheet))
       calc((1 - var(--enter)) * var(--radius-sheet)) 0 0;
@@ -83,7 +73,7 @@
     visibility: hidden;
   }
   /* Measuring pass: positions are read with every page in normal flow. */
-  .motion-measuring :is(main, #top, .sheet > .chapter) {
+  .motion-measuring :is(#top, .sheet > .chapter) {
     position: relative !important;
     top: auto !important;
     transform: none !important;
