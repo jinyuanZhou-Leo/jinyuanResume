@@ -51,4 +51,8 @@ export const pace = {
   reel: 1.5,
   /** Rest at each end of the reel, in viewport heights. */
   reelHold: 0.45,
+  /** How long the About timeline holds, in viewport heights. */
+  about: 1.6,
+  /** Share of that hold spent resting at each end of the timeline. */
+  aboutRest: 0.15,
 } as const;

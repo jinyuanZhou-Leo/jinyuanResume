@@ -53,7 +53,16 @@
 }
 .contact-marquee {
   overflow: clip;
-  margin: 10px calc(var(--gutter) * -1) 28px;
+  /* Full bleed: the motto runs edge to edge on any width, fading at both
+   * ends instead of cutting at the content column. */
+  margin: 10px calc(50% - 50vw) 28px;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
   padding-block: 8px;
   user-select: none;
 }
