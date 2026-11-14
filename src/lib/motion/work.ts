@@ -1,8 +1,14 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { clamp, focusDistance, reelIndex, reelScrollFor } from './math';
+import {
+  clamp,
+  focusDistance,
+  reelIndex,
+  reelScrollFor,
+  reelTravel,
+} from './math';
 import type { Cleanup, MotionScope } from './types';
-import { ease, stagger } from './tokens';
+import { ease, pace, stagger } from './tokens';
 
 /**
  * Two tilted rows of project tiles drift past each other with the scroll and
@@ -186,6 +192,19 @@ function mountReel(scope: MotionScope): Cleanup {
     measure();
     return centers.length > 1 ? centers[count - 1] - centers[0] : 0;
   };
+  // The pinned range is longer than the travel itself: each card gets more
+  // scroll than its width, and the first and last cards rest before the reel
+  // starts moving and before the page releases it.
+  let distance = 0;
+  let hold = 0;
+  const length = () => {
+    distance = travel();
+    const rest = window.innerHeight * pace.reelHold;
+    const total = distance * pace.reel + rest * 2;
+    hold = total ? rest / total : 0;
+    return total;
+  };
+  const setX = gsap.quickSetter(track, 'x', 'px');
   const setters = surfaces.map((surface) => ({
     scale: gsap.quickSetter(surface, 'scale'),
     opacity: gsap.quickSetter(surface, 'opacity'),
@@ -206,7 +225,9 @@ function mountReel(scope: MotionScope): Cleanup {
       });
   };
   const render = (progress: number) => {
-    const x = Number(gsap.getProperty(track, 'x')) || 0;
+    const moved = reelTravel(progress, hold);
+    const x = -distance * moved;
+    setX(x);
     const viewport = window.innerWidth;
     centers.forEach((center, i) => {
       const d = focusDistance(center + x, viewport);
@@ -215,33 +236,27 @@ function mountReel(scope: MotionScope): Cleanup {
       setters[i].opacity(1 - reach * 0.55);
       artSetters[i]?.(d * -18);
     });
-    if (bar) gsap.set(bar, { scaleX: progress });
-    setActive(reelIndex(progress, count));
+    if (bar) gsap.set(bar, { scaleX: moved });
+    setActive(reelIndex(progress, count, hold));
   };
-  const tween = gsap.to(track, {
-    x: () => -travel(),
-    ease: 'none',
-    scrollTrigger: {
-      trigger: reel,
-      start: 'top top',
-      end: () => `+=${travel()}`,
-      pin: true,
-      scrub: true,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-      onUpdate: (self) => render(self.progress),
-      onRefresh: (self) => {
-        measure();
-        render(self.progress);
-      },
-    },
+  const trigger = ScrollTrigger.create({
+    trigger: reel,
+    start: 'top top',
+    end: () => `+=${length()}`,
+    pin: true,
+    anticipatePin: 1,
+    onUpdate: (self) => render(self.progress),
+    onRefresh: (self) => render(self.progress),
   });
-  const trigger = tween.scrollTrigger!;
+  const stopFor = (index: number) =>
+    reelScrollFor(index, count, trigger.start, trigger.end, hold);
   // Resting inside the reel always lands on a whole card.
   const settle = () => {
     if (!trigger.isActive) return;
-    const index = reelIndex(trigger.progress, count);
-    const y = reelScrollFor(index, count, trigger.start, trigger.end);
+    // The resting zones at either end are free; only travel snaps.
+    const moved = reelTravel(trigger.progress, hold);
+    if (moved <= 0 || moved >= 1) return;
+    const y = stopFor(reelIndex(trigger.progress, count, hold));
     if (Math.abs(y - window.scrollY) > 2)
       scope.lenis.scrollTo(y, {
         duration: 0.8,
@@ -252,24 +267,23 @@ function mountReel(scope: MotionScope): Cleanup {
   scope.registerAnchor((element) => {
     const index = cards.findIndex((card) => card.contains(element));
     if (index < 0) return undefined;
-    return reelScrollFor(index, count, trigger.start, trigger.end);
+    return stopFor(index);
   });
   // Keyboard focus inside a neighbouring card brings that card to the centre.
   const onFocus = (event: FocusEvent) => {
     const index = cards.findIndex((card) =>
       card.contains(event.target as Node),
     );
-    if (index >= 0 && index !== active)
-      scope.navigate(reelScrollFor(index, count, trigger.start, trigger.end));
+    if (index >= 0 && index !== active) scope.navigate(stopFor(index));
   };
   track.addEventListener('focusin', onFocus);
-  measure();
-  render(0);
   return () => {
     ScrollTrigger.removeEventListener('scrollEnd', settle);
     track.removeEventListener('focusin', onFocus);
     cards.forEach((card) => card.classList.remove('is-active'));
-    gsap.set([...surfaces, ...artworks.filter(Boolean)], { clearProps: 'all' });
+    gsap.set([track, ...surfaces, ...artworks.filter(Boolean)], {
+      clearProps: 'all',
+    });
     if (bar) gsap.set(bar, { clearProps: 'all' });
     if (digits) gsap.set(digits, { clearProps: 'all' });
   };

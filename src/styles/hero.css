@@ -1,7 +1,6 @@
 .hero {
   min-height: 710px;
-  height: calc(100svh - var(--header-height));
-  max-height: 940px;
+  height: calc(var(--screen-height) - var(--header-height));
   position: relative;
   overflow: hidden;
   background: var(--color-bg-sunken);

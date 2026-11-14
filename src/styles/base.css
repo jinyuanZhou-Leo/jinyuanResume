@@ -136,6 +136,15 @@ h2 {
 .chapter {
   position: relative;
 }
+/* Every chapter fills at least one screen; shorter content sits centred. */
+@media screen {
+  .chapter:not(#top) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--screen-height);
+  }
+}
 
 .sr-only {
   position: absolute;

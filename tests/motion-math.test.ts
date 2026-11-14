@@ -7,6 +7,7 @@ import {
   progressBetween,
   reelIndex,
   reelScrollFor,
+  reelTravel,
   scatter,
   travelDuration,
   wrap,
@@ -70,4 +71,25 @@ test('marquee wrapping and anchor easing stay within range', () => {
   assert.equal(easeInOutExpo(1), 1);
   assert.ok(Math.abs(easeInOutExpo(0.5) - 0.5) < 1e-9);
   assert.ok(travelDuration(100) >= 0.9 && travelDuration(1e6) <= 1.9);
+});
+
+test('reel stops round-trip with resting zones at both ends', () => {
+  for (const hold of [0.1, 0.2, 0.3]) {
+    const count = 5;
+    const start = 900;
+    const end = 9900;
+    const first = reelScrollFor(0, count, start, end, hold);
+    const last = reelScrollFor(count - 1, count, start, end, hold);
+    assert.equal(first, start + hold * (end - start));
+    assert.equal(last, end - hold * (end - start));
+    for (let index = 0; index < count; index++) {
+      const y = reelScrollFor(index, count, start, end, hold);
+      assert.equal(
+        reelIndex(progressBetween(y, start, end), count, hold),
+        index,
+      );
+    }
+    assert.equal(reelTravel(hold / 2, hold), 0);
+    assert.equal(reelTravel(1 - hold / 2, hold), 1);
+  }
 });

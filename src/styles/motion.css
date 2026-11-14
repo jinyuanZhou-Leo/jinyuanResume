@@ -55,8 +55,13 @@
     position: sticky;
     top: var(--stick, 0px);
     z-index: 0;
-    min-height: 100svh;
     background: var(--tone-bg);
+  }
+  /* Scroll room between pages: the page underneath stays stuck and fully in
+   * view while it passes, so each chapter rests before the next arrives. */
+  .motion .sheet > .chapter + .chapter,
+  .motion .chapter-contact {
+    margin-top: var(--chapter-hold);
   }
   .motion .sheet > .chapter + .chapter,
   .motion .chapter-contact {
@@ -109,7 +114,7 @@
   .motion .work-reel {
     --card-width: min(78vw, 1180px);
     --card-gap: clamp(28px, 3.5vw, 56px);
-    height: 100svh;
+    height: var(--screen-height);
     overflow: clip;
     display: flex;
     flex-direction: column;
