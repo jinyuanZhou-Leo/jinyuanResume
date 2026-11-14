@@ -60,6 +60,17 @@ function mountDrift(desktop: boolean): Cleanup {
   fill(original, tiles);
   fill(second, [...tiles].reverse());
   const rows = [original, second];
+  // The band holds at the centre of the screen for a moment while the rows
+  // keep drifting, so the overview can be read before the reel takes over.
+  const hold = ScrollTrigger.create({
+    trigger: band,
+    start: 'center center',
+    end: () => `+=${window.innerHeight * pace.drift}`,
+    pin: true,
+    anticipatePin: 1,
+  });
+  // The drift spans the whole visit, including the hold.
+  const span = () => `bottom+=${window.innerHeight * pace.drift} top`;
   const travel = () => original.scrollWidth * 0.32;
   gsap.fromTo(
     original,
@@ -70,7 +81,7 @@ function mountDrift(desktop: boolean): Cleanup {
       scrollTrigger: {
         trigger: band,
         start: 'top bottom',
-        end: 'bottom top',
+        end: span,
         scrub: true,
         invalidateOnRefresh: true,
       },
@@ -85,7 +96,7 @@ function mountDrift(desktop: boolean): Cleanup {
       scrollTrigger: {
         trigger: band,
         start: 'top bottom',
-        end: 'bottom top',
+        end: span,
         scrub: true,
         invalidateOnRefresh: true,
       },
@@ -98,7 +109,7 @@ function mountDrift(desktop: boolean): Cleanup {
   ScrollTrigger.create({
     trigger: band,
     start: 'top bottom',
-    end: 'bottom top',
+    end: span,
     onUpdate: (self) => {
       const skew = clamp(self.getVelocity() / -320, -7, 7);
       lean.forEach((to) => to(skew));
@@ -130,7 +141,10 @@ function mountDrift(desktop: boolean): Cleanup {
       })
       .fromTo(tilt, { rotate: -7 }, { rotate: 0, scale: 0.86, ease: 'none' }, 0)
       .to(band, { autoAlpha: 0, ease: 'power2.in' }, 0);
-  return () => added.forEach((element) => element.remove());
+  return () => {
+    hold.kill();
+    added.forEach((element) => element.remove());
+  };
 }
 
 /**

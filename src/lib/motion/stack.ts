@@ -8,20 +8,18 @@ import type { Cleanup } from './types';
  * each chapter holds still once its last line reaches the bottom of the
  * screen, the next chapter slides over it with a rounded top edge that
  * flattens as it lands, and the page underneath settles back and darkens.
- * The footer closes the stack the same way, so every boundary on the page
- * follows one rule. The hero curtain (hero.ts) is the first instance.
+ * The hero curtain (hero.ts) is the first instance. The dark footer is not
+ * stacked: it follows the last page in normal flow, flush.
  */
 export function mountStack(): Cleanup {
   const root = document.documentElement;
-  const main = document.querySelector<HTMLElement>('main');
   const pages = [
     ...document.querySelectorAll<HTMLElement>('.sheet > .chapter'),
   ];
-  const contact = document.querySelector<HTMLElement>('.chapter-contact');
-  if (!main || pages.length < 2) return () => {};
+  if (pages.length < 2) return () => {};
 
   // A page sticks when its bottom meets the viewport's bottom.
-  const sticky = [...pages, main];
+  const sticky = pages;
   const measure = () => {
     const viewport = window.innerHeight;
     sticky.forEach((page) =>
@@ -45,7 +43,6 @@ export function mountStack(): Cleanup {
   const pairs: [under: HTMLElement, over: HTMLElement][] = pages
     .slice(1)
     .map((over, index) => [pages[index], over]);
-  if (contact) pairs.push([pages[pages.length - 1], contact]);
 
   pairs.forEach(([under, over]) => {
     const landing = { trigger: over, start: 'top bottom', end: 'top top' };
@@ -85,7 +82,7 @@ export function mountStack(): Cleanup {
     ScrollTrigger.removeEventListener('refreshInit', onRefreshInit);
     ScrollTrigger.removeEventListener('refresh', onRefresh);
     root.classList.remove('motion-measuring');
-    [...sticky, ...pages, ...(contact ? [contact] : [])].forEach((page) => {
+    pages.forEach((page) => {
       page.style.removeProperty('--stick');
       page.style.removeProperty('--enter');
       page.style.removeProperty('--recede');
