@@ -40,7 +40,7 @@ export const content: Record<Locale, SiteCopy> = {
       description: '大二 · BASc · PEY Co-op',
       cta: '了解更多',
       location: '加拿大 · 多伦多',
-      caption: '平时拍的一些照片',
+      caption: '我的日常',
       scroll: '向下滚动',
     },
     projects: {
@@ -59,7 +59,7 @@ export const content: Record<Locale, SiteCopy> = {
     about: {
       label: 'ABOUT',
       title: '多伦多大学\n计算机工程',
-      skills: '常用技术',
+      skills: '我的技能',
     },
     github: {
       title: '开源项目',
@@ -70,7 +70,7 @@ export const content: Record<Locale, SiteCopy> = {
       live: 'GitHub 数据同步于',
       updated: '最近推送',
       stars: '星标',
-      forks: '派生',
+      forks: 'Fork',
       visit: '前往 GitHub',
       empty: '暂无公开仓库',
     },
@@ -108,7 +108,7 @@ export const content: Record<Locale, SiteCopy> = {
       description: 'Second year · BASc · PEY Co-op',
       cta: 'Learn more',
       location: 'Toronto, Canada',
-      caption: 'A few photos I’ve taken',
+      caption: 'My daily life',
       scroll: 'SCROLL',
     },
     projects: {
@@ -207,7 +207,7 @@ export const projects: readonly Project[] = [
     },
     tags: ['C'],
     title: {
-      zh: '基于 Alpha–beta 剪枝的黑白棋 AI',
+      zh: '基于 Alpha–beta 剪枝的黑白棋算法',
       en: 'Reversi AI with alpha–beta search',
     },
     description: {
@@ -244,7 +244,7 @@ export const projects: readonly Project[] = [
     },
     tags: ['React 19', 'TypeScript', 'FastAPI', 'SQLite', 'Pydantic AI'],
     title: {
-      zh: '把整个学业放在一处：课程、成绩、课表、待办，还有一个什么都知道的 AI 助手。',
+      zh: '把整个学业放在一处：课程、成绩、课表、待办，还有长程学业Agent Sem。',
       en: 'Your whole degree in one place: courses, grades, schedule, tasks, and an AI assistant that knows all of it.',
     },
     description: {
@@ -366,12 +366,12 @@ export const education: readonly Education[] = [
   {
     id: 'nfsl',
     name: {
-      zh: '南京外国语学校 · 中加国际高中',
+      zh: '南京外国语学校',
       en: 'Nanjing Foreign Language School',
     },
     degree: {
-      zh: 'BC Dogwood Diploma',
-      en: 'British Columbia Academy · BC Dogwood Diploma',
+      zh: '高中',
+      en: 'High School Diploma',
     },
     start: '2022',
     end: '2025',
@@ -387,8 +387,8 @@ export const education: readonly Education[] = [
       en: 'University of Toronto',
     },
     degree: {
-      zh: '计算机工程 BASc · PEY Co-op',
-      en: 'Computer Engineering (BASc) · PEY Co-op',
+      zh: '计算机工程 BASc',
+      en: 'Computer Engineering (BASc)',
     },
     end: '2029',
     expected: true,
